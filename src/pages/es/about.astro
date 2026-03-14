@@ -1,12 +1,12 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { translations } from "../i18n/translations";
+import Layout from "../../layouts/Layout.astro";
+import { translations } from "../../i18n/translations";
 
-const target = "/#about";
-const t = translations.en.redirect;
+const target = "/es/#about";
+const t = translations.es.redirect;
 ---
 
-<Layout lang="en" title={t.title} description={t.description}>
+<Layout lang="es" title={t.title} description={t.description}>
   <Fragment slot="head">
     <meta http-equiv="refresh" content={`0;url=${target}`} />
   </Fragment>

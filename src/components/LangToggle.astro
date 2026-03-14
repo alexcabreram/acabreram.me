@@ -1,0 +1,15 @@
+---
+const isSpanish = Astro.url.pathname === "/es" || Astro.url.pathname.startsWith("/es/");
+const target = isSpanish ? "/" : "/es/";
+const label = isSpanish ? "EN" : "ES";
+const switchTo = isSpanish ? "English" : "Spanish";
+---
+
+<a
+  href={target}
+  aria-label={`Switch language to ${switchTo}`}
+  onclick="document.cookie='lang=manual;path=/;max-age=31536000'"
+  class="inline-flex items-center rounded-full border border-seiryu/45 bg-surface/40 px-4 py-2 font-ui text-xs font-medium uppercase tracking-[0.28em] text-text hover:-translate-y-0.5 hover:border-seiryu-hi hover:bg-seiryu/10 hover:text-seiryu-hi sm:text-sm"
+>
+  {label}
+</a>

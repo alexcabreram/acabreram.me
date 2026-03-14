@@ -1,27 +1,29 @@
 ---
 import "../styles/global.css";
+import { translations, type Locale } from "../i18n/translations";
 
 interface Props {
+  lang?: Locale;
   title?: string;
   description?: string;
 }
 
-const {
-  title = "Alejandro Cabrera Martínez — acabreram.me",
-  description = "Copilot Solution Engineer at Microsoft Spain, 2024 MVP, professor, speaker, and homelab builder exploring AI agents, cloud, and self-hosted infrastructure."
-} = Astro.props;
+const { lang = "en", title, description } = Astro.props;
+const meta = translations[lang].meta;
+const resolvedTitle = title ?? meta.title;
+const resolvedDescription = description ?? meta.description;
 
 const siteUrl = Astro.site ?? new URL("https://acabreram.me");
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 ---
 
 <!doctype html>
-<html lang="en" class="bg-background text-text">
+<html lang={lang} class="bg-background text-text">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <meta name="description" content={description} />
+    <meta name="description" content={resolvedDescription} />
     <meta name="theme-color" content="#080C10" />
     <meta name="color-scheme" content="dark" />
     <link rel="canonical" href={canonical} />
@@ -30,16 +32,16 @@ const canonical = new URL(Astro.url.pathname, siteUrl).toString();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:title" content={resolvedTitle} />
+    <meta property="og:description" content={resolvedDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="acabreram.me" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:title" content={resolvedTitle} />
+    <meta name="twitter:description" content={resolvedDescription} />
 
     <slot name="head" />
-    <title>{title}</title>
+    <title>{resolvedTitle}</title>
   </head>
   <body class="min-h-screen bg-background text-text antialiased">
     <div class="relative isolate overflow-x-clip">
