@@ -1,0 +1,22 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const target = "/#about";
+---
+
+<Layout title="About — Alejandro Cabrera Martínez" description="Redirecting to the about section on the homepage.">
+  <Fragment slot="head">
+    <meta http-equiv="refresh" content={`0;url=${target}`} />
+  </Fragment>
+
+  <section class="section-shell flex min-h-screen items-center justify-center py-24 text-center">
+    <div class="reveal max-w-xl rounded-[1.75rem] border border-seiryu/20 bg-surface px-8 py-10">
+      <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu">Redirecting</p>
+      <h1 class="mt-4 font-display text-4xl text-text">Taking you to the full story.</h1>
+      <p class="mt-4 font-body text-lg leading-relaxed text-text/78">
+        If the redirect does not happen automatically, continue to the
+        <a href={target} class="text-seiryu hover:text-seiryu-hi">about section</a>.
+      </p>
+    </div>
+  </section>
+</Layout>

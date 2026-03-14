@@ -1,0 +1,118 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-seiryu-hi: #00D4FF;
+  --color-seiryu: #00B4D8;
+  --color-seiryu-lo: #0077A8;
+  --color-jade: #2ECC8A;
+  --color-gold: #E8C96A;
+  --color-background: #080C10;
+  --color-surface: #0E1520;
+  --color-surface-2: #131D2A;
+  --color-text: #E0EEF5;
+  --color-muted: #4A6272;
+
+  --font-display: "DM Serif Display", serif;
+  --font-ui: "DM Sans", sans-serif;
+  --font-body: "Source Serif 4", serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --ease-fluid: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    color-scheme: dark;
+  }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top, rgba(0, 180, 216, 0.16) 0%, rgba(8, 12, 16, 0) 36%),
+      linear-gradient(180deg, #080c10 0%, #080c10 100%);
+    color: var(--color-text);
+    font-family: var(--font-ui);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: rgba(0, 212, 255, 0.22);
+    color: var(--color-text);
+  }
+
+  a {
+    transition:
+      color 200ms var(--ease-fluid),
+      border-color 200ms var(--ease-fluid),
+      background-color 200ms var(--ease-fluid),
+      transform 200ms var(--ease-fluid),
+      box-shadow 200ms var(--ease-fluid);
+  }
+}
+
+.section-shell {
+  width: min(100% - 2.5rem, 72rem);
+  margin-inline: auto;
+}
+
+.reveal {
+  animation: fade-up 800ms var(--ease-fluid) both;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0.5625rem;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(0, 212, 255, 0.32), rgba(0, 119, 168, 0.1));
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 640px) {
+  .section-shell {
+    width: min(100% - 4rem, 72rem);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .reveal {
+    opacity: 0;
+    animation-timeline: view();
+    animation-range: entry 12% cover 28%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}

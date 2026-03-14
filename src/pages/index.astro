@@ -1,0 +1,229 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const buildCards = [
+  {
+    icon: "☁️",
+    title: "AI & Cloud",
+    body: "Copilot Solution Engineer at Microsoft Spain. Helping enterprises adopt AI — and building my own agents on the side."
+  },
+  {
+    icon: "🏠",
+    title: "Homelab",
+    body: "Self-hosted monitoring, media automation, and networking on a UGREEN NAS + Mac Mini. Docker Compose, Prometheus, Alertmanager, Uptime Kuma — everything as code."
+  },
+  {
+    icon: "🤖",
+    title: "AI Agents",
+    body: "Local LLMs with Ollama, multi-agent orchestration with OpenClaw, and a Telegram bot that manages my infrastructure while I sleep."
+  }
+];
+
+const nasServices = ["Prometheus", "Grafana", "Alertmanager", "Sonarr", "Radarr", "Jellyfin", "AdGuard", "NPM", "n8n"];
+const macMiniServices = ["Ollama", "Open WebUI", "OpenClaw", "GitHub Actions Runner"];
+const storyPoints = [
+  "Copilot Solution Engineer @ Microsoft Spain",
+  "2024 Microsoft MVP",
+  "Professor @ The Valley Business & Tech School",
+  "Career path: Law (UC3M) → Call center → IT Support → M365 Dev → Tech Lead (Sogeti) → Microsoft",
+  "Speaker & mentor in tech communities",
+  "Gaming culture: Twitch (Destiny), Pokémon, WoW",
+  "By night: homelab builder, AI agent tinkerer"
+];
+---
+
+<Layout>
+  <main>
+    <section id="top" class="relative flex min-h-screen items-center overflow-hidden">
+      <div class="section-shell relative flex w-full items-center justify-center py-28">
+        <div class="absolute left-0 top-8 sm:top-10">
+          <div
+            aria-hidden="true"
+            class="absolute -left-8 -top-8 h-28 w-28 rounded-full bg-[radial-gradient(circle,_rgba(0,212,255,0.32)_0%,_rgba(0,180,216,0.18)_40%,_transparent_74%)] blur-2xl"
+          ></div>
+          <a href="#top" class="relative font-mono text-base font-semibold tracking-[0.34em] text-seiryu-hi sm:text-lg">
+            acm.
+          </a>
+        </div>
+
+        <div class="reveal max-w-4xl text-left">
+          <p class="mb-6 font-ui text-xs font-medium uppercase tracking-[0.34em] text-muted sm:text-sm">
+            Copilot Solution Engineer @ Microsoft · 2024 MVP · Professor
+          </p>
+          <h1 class="max-w-4xl font-display text-5xl leading-tight text-text sm:text-6xl lg:text-7xl">
+            Alejandro (Alex) Cabrera Martínez
+          </h1>
+          <p class="mt-6 max-w-3xl font-body text-xl italic leading-relaxed text-text/88 sm:text-2xl">
+            Building AI adoption by day, training dragons by night.
+          </p>
+          <div class="mt-10 flex flex-wrap gap-4 font-ui text-sm font-medium text-text sm:text-base">
+            <a
+              href="/blog"
+              class="inline-flex items-center gap-2 rounded-full border border-seiryu/45 bg-surface/40 px-5 py-3 hover:-translate-y-0.5 hover:border-seiryu-hi hover:bg-seiryu/10 hover:text-seiryu-hi"
+            >
+              Blog →
+            </a>
+            <a
+              href="https://github.com/alexcabreram"
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-2 rounded-full border border-seiryu/45 bg-surface/40 px-5 py-3 hover:-translate-y-0.5 hover:border-seiryu-hi hover:bg-seiryu/10 hover:text-seiryu-hi"
+            >
+              GitHub →
+            </a>
+            <a
+              href="https://www.linkedin.com/in/alexcabreram/"
+              target="_blank"
+              rel="noreferrer"
+              class="inline-flex items-center gap-2 rounded-full border border-seiryu/45 bg-surface/40 px-5 py-3 hover:-translate-y-0.5 hover:border-seiryu-hi hover:bg-seiryu/10 hover:text-seiryu-hi"
+            >
+              LinkedIn →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="build" class="py-24 sm:py-28">
+      <div class="section-shell">
+        <div class="reveal max-w-2xl">
+          <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">What I Build</p>
+          <h2 class="mt-4 font-display text-4xl leading-tight text-text sm:text-5xl">Systems with a pulse.</h2>
+          <p class="mt-5 font-body text-lg leading-relaxed text-text/80">
+            Enterprise AI, personal infrastructure, and the layer where automation becomes habit.
+          </p>
+        </div>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {
+            buildCards.map((card) => (
+              <article class="reveal group rounded-[1.75rem] border border-white/6 bg-surface p-7 transition duration-300 hover:-translate-y-1 hover:border-seiryu-lo hover:[box-shadow:0_24px_80px_rgba(0,119,168,0.18)]">
+                <div class="flex items-center gap-4">
+                  <span class="text-2xl">{card.icon}</span>
+                  <h3 class="font-ui text-xl font-semibold text-text">{card.title}</h3>
+                </div>
+                <p class="mt-5 font-body text-lg leading-relaxed text-text/78">{card.body}</p>
+              </article>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="stack" class="py-24 sm:py-28">
+      <div class="section-shell">
+        <div class="reveal max-w-3xl">
+          <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">The Stack</p>
+          <h2 class="mt-4 font-display text-4xl leading-tight text-text sm:text-5xl">A homelab with two brains and one dragon handler.</h2>
+          <p class="mt-5 font-body text-lg leading-relaxed text-text/80">
+            Infrastructure lives on the NAS. Local inference and orchestration run on the Mac Mini. Telegram is the interface that ties it together.
+          </p>
+        </div>
+
+        <div class="relative mt-14">
+          <div
+            aria-hidden="true"
+            class="absolute inset-x-[18%] top-1/2 hidden h-px -translate-y-1/2 bg-gradient-to-r from-jade/35 via-gold/75 to-seiryu/35 lg:block"
+          ></div>
+          <div class="relative grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+            <article class="reveal rounded-[2rem] border border-jade/20 bg-surface p-8 [box-shadow:0_24px_80px_rgba(46,204,138,0.08)]">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-jade">Infra node</p>
+                  <h3 class="mt-3 font-display text-3xl text-text">UGREEN DXP2800 NAS</h3>
+                </div>
+                <span class="rounded-full border border-jade/25 bg-jade/10 px-3 py-1 font-mono text-xs text-jade">192.168.69.5</span>
+              </div>
+              <div class="mt-8 flex flex-wrap gap-3">
+                {
+                  nasServices.map((service) => (
+                    <span class="rounded-full border border-jade/20 bg-jade/10 px-3 py-2 font-ui text-sm text-jade">{service}</span>
+                  ))
+                }
+              </div>
+            </article>
+
+            <div class="reveal flex justify-center">
+              <div class="rounded-[1.75rem] border border-gold/30 bg-surface-2 px-7 py-6 text-center [box-shadow:0_20px_60px_rgba(232,201,106,0.12)]">
+                <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-gold">Telegram Bot</p>
+                <h3 class="mt-3 font-mono text-lg font-semibold text-text">@homelabguardbot</h3>
+                <div class="mt-4 flex flex-wrap justify-center gap-2">
+                  <span class="rounded-full border border-gold/25 bg-gold/10 px-3 py-1.5 font-ui text-xs text-gold">Multi-agent</span>
+                  <span class="rounded-full border border-gold/25 bg-gold/10 px-3 py-1.5 font-ui text-xs text-gold">4 topics</span>
+                </div>
+              </div>
+            </div>
+
+            <article class="reveal rounded-[2rem] border border-seiryu/20 bg-surface p-8 [box-shadow:0_24px_80px_rgba(0,180,216,0.08)]">
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-seiryu">AI node</p>
+                  <h3 class="mt-3 font-display text-3xl text-text">Mac Mini</h3>
+                </div>
+                <span class="rounded-full border border-seiryu/25 bg-seiryu/10 px-3 py-1 font-mono text-xs text-seiryu">192.168.69.10</span>
+              </div>
+              <div class="mt-8 flex flex-wrap gap-3">
+                {
+                  macMiniServices.map((service) => (
+                    <span class="rounded-full border border-seiryu/20 bg-seiryu/10 px-3 py-2 font-ui text-sm text-seiryu">{service}</span>
+                  ))
+                }
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="py-24 sm:py-28">
+      <div class="section-shell grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+        <div class="reveal lg:sticky lg:top-24">
+          <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">About</p>
+          <h2 class="mt-4 font-display text-4xl leading-tight text-text sm:text-5xl">
+            From Law school to Cloud Engineering — the scenic route through tech.
+          </h2>
+          <p class="mt-6 font-body text-xl leading-relaxed text-text/82">
+            By day, I help CIOs and CISOs adopt AI governance at scale. By night, I build my own AI agents on a NAS and a Mac Mini. It&apos;s not theory — it&apos;s practice.
+          </p>
+        </div>
+
+        <div class="space-y-8">
+          <ol class="timeline reveal space-y-6 pl-8">
+            {
+              storyPoints.map((point) => (
+                <li class="relative">
+                  <span class="absolute -left-[1.93rem] top-2 h-3 w-3 rounded-full border border-seiryu-hi/60 bg-background shadow-[0_0_0_4px_rgba(0,180,216,0.12)]"></span>
+                  <p class="font-body text-lg leading-relaxed text-text/80">{point}</p>
+                </li>
+              ))
+            }
+          </ol>
+
+          <aside class="reveal rounded-[1.75rem] border border-gold/20 bg-surface-2 p-7 [box-shadow:0_20px_60px_rgba(232,201,106,0.08)]">
+            <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-gold">Differentiator</p>
+            <p class="mt-4 font-body text-xl leading-relaxed text-text">
+              “By day, I help CIOs and CISOs adopt AI governance at scale. By night, I build my own AI agents on a NAS and a Mac Mini. It&apos;s not theory — it&apos;s practice.”
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-white/6 py-10">
+    <div class="section-shell text-center">
+      <p class="font-mono text-sm tracking-[0.22em] text-seiryu">acm.</p>
+      <p class="mt-4 font-body text-base text-muted">
+        Built with Astro · Hosted on Cloudflare
+      </p>
+      <p class="mt-2 font-body text-base italic text-muted">
+        Posts drafted with AI agents, shipped by a human.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-5 font-ui text-sm font-medium text-text/80">
+        <a href="https://github.com/alexcabreram" target="_blank" rel="noreferrer" class="hover:text-seiryu-hi">GitHub</a>
+        <a href="https://www.linkedin.com/in/alexcabreram/" target="_blank" rel="noreferrer" class="hover:text-seiryu-hi">LinkedIn</a>
+        <a href="#" class="hover:text-seiryu-hi">RSS</a>
+      </div>
+    </div>
+  </footer>
+</Layout>
