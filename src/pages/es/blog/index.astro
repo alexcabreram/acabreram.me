@@ -1,5 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import BlogNav from "../../../components/BlogNav.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("blog", ({ data }) => {
@@ -8,18 +9,16 @@ const posts = (await getCollection("blog", ({ data }) => {
 
 const formatDate = (date: Date) =>
   date.toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" });
+
+const getReadingTime = (body: string | undefined) => Math.max(1, Math.ceil((body?.split(/\s+/).length ?? 0) / 230));
 ---
 
 <Layout lang="es" title="Blog — acabreram.me" description="Posts sobre infraestructura, agentes de IA, arquitectura cloud y experimentos con homelab.">
-  <main id="main-content">
-    <section class="py-20 sm:py-24">
-      <div class="section-shell">
-        <div class="mb-4">
-          <a href="/es/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
-            <span>←</span> Inicio
-          </a>
-        </div>
+  <BlogNav lang="es" />
 
+  <main id="main-content">
+    <section class="py-10 sm:py-16">
+      <div class="section-shell">
         <p
           class="mb-2 font-mono text-[10px] uppercase tracking-[0.2em]"
           style="color: var(--color-seiryu)"
@@ -56,9 +55,12 @@ const formatDate = (date: Date) =>
                 <p class="mt-1.5 text-sm text-muted line-clamp-2">
                   {post.data.description}
                 </p>
-                <time class="mt-3 block font-mono text-[11px] text-muted/60">
-                  {formatDate(post.data.date)}
-                </time>
+                <div class="mt-3 flex items-center gap-3">
+                  <time class="font-mono text-[11px] text-muted/60">
+                    {formatDate(post.data.date)}
+                  </time>
+                  <span class="font-mono text-[11px] text-muted/40">· {getReadingTime(post.body)} min</span>
+                </div>
               </a>
             ))}
           </div>

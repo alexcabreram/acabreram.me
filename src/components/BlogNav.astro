@@ -1,0 +1,37 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+
+interface Props {
+  lang?: "en" | "es";
+}
+
+const { lang = "en" } = Astro.props;
+const homeHref = lang === "es" ? "/es/" : "/";
+const blogHref = lang === "es" ? "/es/blog/" : "/blog/";
+const langToggleHref = lang === "es" ? "/blog/" : "/es/blog/";
+const langLabel = lang === "es" ? "EN" : "ES";
+---
+
+<nav class="section-shell flex items-center justify-between py-5" aria-label="Site navigation">
+  <a href={homeHref} class="brand-mark inline-flex items-center gap-2.5 font-mono text-sm font-semibold tracking-[0.34em] text-seiryu-hi sm:text-base">
+    <img src="/dragon-nav.png" alt="Seiryū" class="h-5 w-5" />
+    <span>acm.</span>
+  </a>
+
+  <div class="flex items-center gap-3">
+    <a
+      href={blogHref}
+      class="font-mono text-[10px] uppercase tracking-wider text-muted transition-colors hover:text-seiryu"
+    >
+      Blog
+    </a>
+    <a
+      href={langToggleHref}
+      class="control-pill inline-flex h-8 w-8 items-center justify-center rounded-full font-mono text-[10px] font-semibold uppercase tracking-wider text-text hover:-translate-y-0.5 sm:h-9 sm:w-9"
+      aria-label={lang === "es" ? "Switch to English" : "Cambiar a español"}
+    >
+      {langLabel}
+    </a>
+    <ThemeToggle />
+  </div>
+</nav>

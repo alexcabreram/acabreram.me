@@ -511,13 +511,25 @@
   }
 }
 
+/* ── Scroll progress bar ── */
+.blog-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--color-seiryu);
+  z-index: 50;
+  transition: width 50ms linear;
+}
+
 /* ── Blog prose ── */
 .prose {
   color: var(--text);
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.75;
-  max-width: 65ch;
+  max-width: 100%;
 }
 
 .prose h2 {
