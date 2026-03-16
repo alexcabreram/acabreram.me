@@ -1,12 +1,10 @@
 <button
   type="button"
   data-theme-toggle
-  class="control-pill inline-flex h-10 w-10 items-center justify-center rounded-full font-ui text-base text-text hover:-translate-y-0.5 sm:h-11 sm:w-11 sm:text-lg"
+  class="control-pill inline-flex h-10 w-10 items-center justify-center rounded-full text-lg leading-none text-text hover:-translate-y-0.5 sm:h-11 sm:w-11"
   aria-label="Switch to light theme"
-  title="Toggle theme"
 >
-  <span data-theme-icon aria-hidden="true">🌙</span>
-  <span class="sr-only">Toggle theme</span>
+  <span data-theme-icon aria-hidden="true">☾</span>
 </button>
 
 <script is:inline>
@@ -46,11 +44,10 @@
         const nextTheme = theme === "light" ? "dark" : "light";
 
         if (icon) {
-          icon.textContent = theme === "light" ? "☀️" : "🌙";
+          icon.textContent = theme === "light" ? "☀" : "☾";
         }
 
         button.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
-        button.setAttribute("title", `Switch to ${nextTheme} theme`);
         button.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
       });
     };

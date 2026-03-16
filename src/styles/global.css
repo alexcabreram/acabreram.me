@@ -243,6 +243,26 @@
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--seiryu) 12%, transparent);
 }
 
+.brand-mark:hover .wordmark-dragon,
+.brand-mark:focus-visible .wordmark-dragon {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 0.8rem color-mix(in srgb, var(--seiryu-hi) 44%, transparent));
+}
+
+.hero-dragon {
+  opacity: 0.07;
+  filter: drop-shadow(0 0 2.6rem color-mix(in srgb, var(--seiryu) 18%, transparent));
+}
+
+:root[data-theme="light"] .hero-dragon {
+  opacity: 0.06;
+}
+
+.closing-dragon {
+  opacity: 0.52;
+  filter: drop-shadow(0 0 1.35rem color-mix(in srgb, var(--seiryu) 22%, transparent));
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;
