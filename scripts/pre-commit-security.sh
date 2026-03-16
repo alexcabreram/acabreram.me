@@ -33,7 +33,7 @@ fi
 # API keys / tokens patterns
 SECRETS=$(echo "$STAGED" | grep -v '\.png$\|\.jpg$\|\.ico$\|\.woff2\?$\|pre-commit' | \
   xargs -I{} git show "::{}" 2>/dev/null | \
-  grep -nEi 'sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}|AKIA[A-Z0-9]{16}|Bearer [a-zA-Z0-9\-._~+/]+=*' || true)
+  grep -nEi 'sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}|AKIA[A-Z0-9]{16}|Bearer [a-zA-Z0-9_.~+/-]+=*' || true)
 
 if [ -n "$SECRETS" ]; then
   echo -e "${RED}❌ Potential secrets/tokens found:${NC}"
