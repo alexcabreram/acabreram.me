@@ -70,8 +70,42 @@ const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 
     <slot name="head" />
     <title>{resolvedTitle}</title>
+
+    <!-- JSON-LD structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "name": "acabreram.me",
+          "url": siteUrl.toString(),
+          "description": resolvedDescription,
+          "inLanguage": lang
+        },
+        {
+          "@type": "Person",
+          "name": "Alex Cabrera",
+          "alternateName": "Alejandro Cabrera Martínez",
+          "url": siteUrl.toString(),
+          "jobTitle": "Copilot Solution Engineer",
+          "worksFor": { "@type": "Organization", "name": "Microsoft" },
+          "sameAs": [
+            "https://linkedin.com/in/alexcabreram",
+            "https://github.com/alexcabreram"
+          ],
+          "knowsAbout": ["Azure", "AI Agents", "Docker", "Infrastructure as Code", "Cloud Architecture"]
+        }
+      ]
+    })} />
   </head>
   <body class="min-h-screen bg-background text-text antialiased">
+    <!-- Skip to content link — accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-sm focus:border focus:border-[var(--color-seiryu)] focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-[var(--color-seiryu)] focus:outline-none"
+    >
+      Skip to content
+    </a>
     <div class="relative isolate overflow-x-clip">
       <div
         aria-hidden="true"

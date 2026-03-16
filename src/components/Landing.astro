@@ -111,9 +111,9 @@ const aboutPhotos = [
 ---
 
 <Layout lang={lang}>
-  <main>
+  <main id="main-content">
     <!-- Fix 6: reduce hero dead space — use min-h-[85vh] and push content up -->
-    <section id="top" class="relative flex min-h-[85vh] items-center overflow-hidden">
+    <section id="top" aria-label="Hero" class="relative flex min-h-[85vh] items-center overflow-hidden">
       <div class="section-shell relative flex w-full items-center justify-center py-20 sm:py-24">
         <img
           src="/dragon-hero.png"
@@ -189,7 +189,7 @@ const aboutPhotos = [
       </div>
     </section>
 
-    <section id="build" class="py-14 sm:py-18">
+    <section id="build" aria-label="What I Build" class="py-14 sm:py-18">
       <div class="section-shell">
         <div class="reveal max-w-2xl">
           <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">{t.build.label}</p>
@@ -219,7 +219,7 @@ const aboutPhotos = [
       </div>
     </section>
 
-    <section id="stack" class="py-14 sm:py-18">
+    <section id="stack" aria-label="The Stack" class="py-14 sm:py-18">
       <div class="section-shell">
         <div class="reveal max-w-3xl">
           <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">{t.stack.label}</p>
@@ -302,7 +302,7 @@ const aboutPhotos = [
       </div>
     </section>
 
-    <section id="about" class="py-14 sm:py-18">
+    <section id="about" aria-label="About" class="py-14 sm:py-18">
       <div class="section-shell">
         <div class="reveal max-w-3xl">
           <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">{t.about.label}</p>
@@ -388,7 +388,7 @@ const aboutPhotos = [
     </section>
   </main>
 
-  <footer class="border-t py-10" style="border-color: var(--border-subtle)">
+  <footer role="contentinfo" class="border-t py-10" style="border-color: var(--border-subtle)">
     <div class="section-shell text-center">
       <p class="font-mono text-sm tracking-[0.22em] text-seiryu">acm.</p>
       <p class="mt-4 font-body text-base text-muted">
