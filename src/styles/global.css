@@ -352,15 +352,16 @@
 .stack-flow {
   position: relative;
   justify-self: center;
-  width: 2px;
+  width: 3px;
   min-height: 5rem;
 }
 
 .stack-flow--vertical {
-  width: 2px;
+  width: 3px;
   min-height: 4rem;
 }
 
+/* Glowing background trail */
 .stack-flow--vertical::before {
   content: "";
   position: absolute;
@@ -368,13 +369,15 @@
   border-radius: 999px;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--flow-start) 18%, transparent),
-    color-mix(in srgb, var(--flow-start) 56%, transparent),
-    color-mix(in srgb, var(--flow-end) 60%, transparent),
-    color-mix(in srgb, var(--flow-end) 18%, transparent)
+    color-mix(in srgb, var(--flow-start) 12%, transparent),
+    color-mix(in srgb, var(--flow-start) 40%, transparent),
+    color-mix(in srgb, var(--flow-end) 44%, transparent),
+    color-mix(in srgb, var(--flow-end) 12%, transparent)
   );
+  animation: flow-breathe 4s ease-in-out infinite;
 }
 
+/* Primary particle */
 .stack-flow--vertical::after {
   content: "";
   position: absolute;
@@ -385,13 +388,15 @@
   border-radius: 999px;
   background: var(--seiryu-hi);
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--seiryu-hi) 70%, transparent),
-    0 0 32px color-mix(in srgb, var(--seiryu) 40%, transparent);
+    0 0 12px color-mix(in srgb, var(--flow-start) 80%, transparent),
+    0 0 28px color-mix(in srgb, var(--flow-start) 50%, transparent),
+    0 0 48px color-mix(in srgb, var(--flow-end) 30%, transparent);
   transform: translate(-50%, 0);
-  animation: pulse-flow-vertical 3.6s linear infinite;
+  animation: pulse-flow-vertical 3s ease-in-out infinite;
   will-change: transform, opacity;
 }
 
+/* Horizontal/default flow */
 .stack-flow::before {
   content: "";
   position: absolute;
@@ -399,11 +404,12 @@
   border-radius: 999px;
   background: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--flow-start) 18%, transparent),
-    color-mix(in srgb, var(--flow-start) 56%, transparent),
-    color-mix(in srgb, var(--flow-end) 60%, transparent),
-    color-mix(in srgb, var(--flow-end) 18%, transparent)
+    color-mix(in srgb, var(--flow-start) 12%, transparent),
+    color-mix(in srgb, var(--flow-start) 40%, transparent),
+    color-mix(in srgb, var(--flow-end) 44%, transparent),
+    color-mix(in srgb, var(--flow-end) 12%, transparent)
   );
+  animation: flow-breathe 4s ease-in-out infinite;
 }
 
 .stack-flow::after {
@@ -416,15 +422,43 @@
   border-radius: 999px;
   background: var(--seiryu-hi);
   box-shadow:
-    0 0 18px color-mix(in srgb, var(--seiryu-hi) 70%, transparent),
-    0 0 32px color-mix(in srgb, var(--seiryu) 40%, transparent);
+    0 0 12px color-mix(in srgb, var(--flow-start) 80%, transparent),
+    0 0 28px color-mix(in srgb, var(--flow-start) 50%, transparent),
+    0 0 48px color-mix(in srgb, var(--flow-end) 30%, transparent);
   transform: translate(-50%, 0);
-  animation: pulse-flow-vertical 3.6s linear infinite;
+  animation: pulse-flow-vertical 3s ease-in-out infinite;
   will-change: transform, opacity;
 }
 
 .timeline-dot {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--seiryu) 12%, transparent);
+}
+
+/* Second flow particle — staggered behind the primary */
+.flow-particle-2 {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 0.5rem;
+  width: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--flow-end) 90%, var(--flow-start));
+  box-shadow:
+    0 0 10px color-mix(in srgb, var(--flow-end) 70%, transparent),
+    0 0 24px color-mix(in srgb, var(--flow-end) 40%, transparent);
+  transform: translate(-50%, 0);
+  animation: pulse-flow-vertical 3s ease-in-out 1.5s infinite;
+  will-change: transform, opacity;
+  opacity: 0;
+}
+
+@media (min-width: 1024px) {
+  .stack-flow:not(.stack-flow--vertical) .flow-particle-2 {
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    animation: pulse-flow 3s ease-in-out 1.5s infinite;
+  }
 }
 
 .brand-mark:hover .wordmark-dragon,
@@ -450,41 +484,58 @@
 
 @keyframes pulse-flow {
   0% {
-    transform: translate(0, -50%) scale(0.88);
+    transform: translate(0, -50%) scale(0.6);
     opacity: 0;
   }
 
-  10% {
+  8% {
     opacity: 1;
+    transform: translate(0, -50%) scale(1);
   }
 
-  90% {
+  92% {
     opacity: 1;
+    transform: translate(calc(100% - 0.75rem), -50%) scale(1);
   }
 
   100% {
-    transform: translate(calc(100% - 0.75rem), -50%) scale(1);
+    transform: translate(calc(100% - 0.75rem), -50%) scale(0.6);
     opacity: 0;
   }
 }
 
 @keyframes pulse-flow-vertical {
   0% {
-    transform: translate(-50%, 0) scale(0.88);
+    transform: translate(-50%, 0) scale(0.6);
     opacity: 0;
   }
 
-  10% {
+  8% {
     opacity: 1;
+    transform: translate(-50%, 0) scale(1);
   }
 
-  90% {
+  92% {
     opacity: 1;
+    transform: translate(-50%, calc(100% - 0.75rem)) scale(1);
   }
 
   100% {
-    transform: translate(-50%, calc(100% - 0.75rem)) scale(1);
+    transform: translate(-50%, calc(100% - 0.75rem)) scale(0.6);
     opacity: 0;
+  }
+}
+
+@keyframes flow-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+    filter: blur(0px);
+  }
+
+  50% {
+    opacity: 1;
+    filter: blur(1px);
   }
 }
 
@@ -511,27 +562,27 @@
 }
 
 @media (min-width: 1024px) {
-  .stack-flow {
+  .stack-flow:not(.stack-flow--vertical) {
     width: 100%;
     min-height: 0;
-    height: 2px;
+    height: 3px;
   }
 
-  .stack-flow::before {
+  .stack-flow:not(.stack-flow--vertical)::before {
     background: linear-gradient(
       90deg,
-      color-mix(in srgb, var(--flow-start) 18%, transparent),
-      color-mix(in srgb, var(--flow-start) 56%, transparent),
-      color-mix(in srgb, var(--flow-end) 60%, transparent),
-      color-mix(in srgb, var(--flow-end) 18%, transparent)
+      color-mix(in srgb, var(--flow-start) 12%, transparent),
+      color-mix(in srgb, var(--flow-start) 40%, transparent),
+      color-mix(in srgb, var(--flow-end) 44%, transparent),
+      color-mix(in srgb, var(--flow-end) 12%, transparent)
     );
   }
 
-  .stack-flow::after {
+  .stack-flow:not(.stack-flow--vertical)::after {
     left: 0;
     top: 50%;
     transform: translate(0, -50%);
-    animation: pulse-flow 3.6s linear infinite;
+    animation: pulse-flow 3s ease-in-out infinite;
   }
 }
 
@@ -569,6 +620,15 @@
   .stack-flow::after {
     animation: none;
     opacity: 0.85;
+  }
+
+  .stack-flow::before {
+    animation: none;
+  }
+
+  .flow-particle-2 {
+    animation: none;
+    opacity: 0.6;
   }
 }
 
