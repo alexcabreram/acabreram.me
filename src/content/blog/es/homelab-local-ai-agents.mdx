@@ -11,17 +11,17 @@ draft: false
 
 Compré un NAS para guardar archivos. Ese era el plan. En serio, solo eso.
 
-Luego pensé "¿no molaría que también fuese mi servidor de media?" Después vino la monitorización. Después el reverse proxy. Después los agentes de IA. Y aquí estamos — con un proyecto de infraestructura completo que no planifiqué pero del que estoy bastante orgulloso, la verdad.
+Luego pensé "¿no molaría que también fuese mi servidor de media?" Después vino la monitorización. Después el reverse proxy. Después los agentes de IA. Y... bueno, aquí estamos. Un proyecto de infraestructura completo que no planifiqué pero del que estoy bastante orgulloso, la verdad.
 
-Si alguna vez has caído en el rabbit hole del homelab, sabes exactamente de lo que hablo. Si no... bueno, considéralo una advertencia. 😄
+Si alguna vez has caído en el rabbit hole del homelab, sabes exactamente de lo que hablo. Si no, considéralo una advertencia 😄
 
 ## Dos máquinas, cero facturas de cloud
 
-Todo corre en dos cajas encima de mi escritorio:
+Todo corre en dos cajas encima de mi escritorio.
 
-Un **UGREEN DXP2800 NAS** que se encarga de todo lo pesado — almacenamiento, automatización de media (Sonarr, Radarr y compañía), monitorización con Prometheus y Grafana, y reverse proxy. A estas alturas hace bastante más que guardar archivos, la verdad.
+Un **UGREEN DXP2800 NAS** que se encarga de almacenamiento, automatización de media (Sonarr, Radarr y compañía), monitorización con Prometheus y Grafana, y reverse proxy. A estas alturas hace bastante más que guardar archivos, la verdad.
 
-Un **Mac Mini** que hace de cerebro. Ejecuta **Ollama** nativamente en Apple Silicon — inferencia de LLMs acelerada por GPU sin pagar ni una llamada a API. Encima, **OpenClaw** orquesta los agentes de IA y **Open WebUI** me da una interfaz tipo ChatGPT para hablar con modelos locales. Todo esto corriendo en una caja del tamaño de un sándwich.
+Y un **Mac Mini** que hace de cerebro. Ejecuta **Ollama** nativamente en Apple Silicon, así que tengo inferencia de LLMs acelerada por GPU sin pagar ni una llamada a API. **OpenClaw** encima orquesta los agentes de IA, y **Open WebUI** me da una interfaz tipo ChatGPT para hablar con modelos locales. Todo esto. En una caja del tamaño de un sándwich.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -33,52 +33,58 @@ Un **Mac Mini** que hace de cerebro. Ejecuta **Ollama** nativamente en Apple Sil
 └─────────────────────────────────────────────────────────┘
 ```
 
-## La parte divertida — agentes de IA que hacen cosas de verdad
+## Agentes de IA que hacen cosas de verdad
 
-Aquí es donde se pone interesante. Tengo un grupo privado de Telegram con canales por topics, y cada uno está conectado a un agente de IA diferente a través de OpenClaw:
+Vale, aquí es donde se pone divertido. Tengo un grupo privado de Telegram con canales por topics, y cada uno está conectado a un agente de IA diferente a través de OpenClaw:
 
 | Agente | Canal | Qué hace |
 |--------|-------|----------|
-| `main` | #assistant | Mi IA personal — responde preguntas, hace brainstorming, piensa en voz alta conmigo |
-| `monitor` | #monitoring | Recibe alertas de Prometheus vía n8n — solo logs y notificaciones, sin chatter de IA |
-| `media` | #media | "Añade The Bear temporada 4" → hecho, habla con Jellyseerr |
+| `main` | #assistant | Mi IA personal. Responde preguntas, hace brainstorming, piensa en voz alta conmigo |
+| `monitor` | #monitoring | Recibe alertas de Prometheus vía n8n. Sin respuesta IA, solo logs y notificaciones |
+| `media` | #media | "Añade The Bear temporada 4" y listo, habla con Jellyseerr |
 | `devops` | #devops | Estado de contenedores, troubleshooting de Docker |
 
-Todo corre con modelos Llama locales. Ningún dato sale de mi red. Y cuando necesito razonamiento más potente para algo complejo, cambio a Azure OpenAI con un `/model azure/gpt-4o` y vuelvo cuando termino. Lo mejor de los dos mundos.
+Todo corre con modelos Llama locales. Ningún dato sale de mi red. Cuando necesito algo más potente (análisis de código complejo, por ejemplo), cambio a Azure OpenAI con `/model azure/gpt-4o` y vuelvo cuando termino. Lo mejor de los dos mundos.
 
-## Monitorizando todo (porque duermo mejor así)
+## Monitorizando todo
+
+Porque duermo mejor así.
 
 Prometheus scrapea cada contenedor y endpoint. Grafana lo hace bonito. Las reglas de alerta detectan problemas de disco, crashes de contenedores y líos de memoria antes de que yo me entere.
 
-Uptime Kuma añade health checks HTTP — si Jellyfin se cae a las 3am, mi móvil vibra. No es que lo vaya a arreglar a las 3am, pero al menos lo *sé*. Hay algo reconfortante en eso.
+Uptime Kuma añade health checks HTTP. Si Jellyfin se cae a las 3am, mi móvil vibra. No es que lo vaya a arreglar a las 3am, seamos realistas, pero al menos lo *sé*.
 
-## El stack de media (a.k.a. por qué mi familia aguanta el NAS)
+## El stack de media
 
-Sonarr, Radarr, Prowlarr, Bazarr, Jellyfin, Jellyseerr. En casa todos pueden pedir películas y series desde el móvil sin saber que toda esta infraestructura existe.
+También conocido como "la razón por la que mi familia aguanta el NAS."
 
-Cuando funciona — y normalmente funciona — nadie se entera. Cuando algo se rompe, todo el mundo se entera al instante. Eso es la infraestructura invisible.
+Sonarr, Radarr, Prowlarr, Bazarr, Jellyfin, Jellyseerr. En casa todos pueden pedir películas y series desde el móvil sin saber que toda esta infraestructura existe detrás.
+
+Cuando funciona (y normalmente funciona), nadie se entera. Cuando algo se rompe, todo el mundo se entera. Al instante.
 
 ## Cosas que me mordieron por el camino
 
-Todo homelab tiene sus historias de "acabo de tirarme 4 horas debuggeando esto". Aquí van las mías — si a alguien le ahorran tiempo, ya habrá merecido la pena:
+Todo homelab tiene sus historias de "acabo de tirarme 4 horas debuggeando esto". Aquí van las mías, por si a alguien le ahorran tiempo.
 
-**UGOS Pro bloquea el puerto 53 en 0.0.0.0.** No entendía por qué AdGuard Home no arrancaba. El SO reserva ese puerto. Tienes que hacer bind a la IP específica de la interfaz. Me llevó más tiempo del que me gustaría admitir.
+**UGOS Pro bloquea el puerto 53 en 0.0.0.0.** No entendía por qué AdGuard Home no arrancaba. Resulta que el SO reserva ese puerto. Tienes que hacer bind a la IP específica de la interfaz. Me llevó más tiempo del que me gustaría admitir encontrarlo.
 
-**OrbStack ≠ Docker Desktop.** En el Mac Mini, `host.docker.internal` no resuelve de forma fiable. La solución es vergonzosamente simple — usa la IP LAN real en tus variables de entorno. Pero no es obvio cuando estás metido en networking de Docker a medianoche.
+**OrbStack ≠ Docker Desktop.** En el Mac Mini, `host.docker.internal` no resuelve de forma fiable. ¿La solución? Usar la IP LAN real en tus variables de entorno. Simple, pero no obvio cuando estás metido en networking de Docker a medianoche.
 
-**Imágenes Docker con UIDs hardcodeados en UGOS Pro.** El usuario SSH no puede hacer `chown` en volúmenes Docker porque el daemon corre como root pero tú no. ¿Workaround? Ejecutar `chown` dentro de un contenedor Alpine desechable. No es bonito, pero funciona.
+**Imágenes Docker con UIDs hardcodeados en UGOS Pro.** El usuario SSH no puede hacer `chown` en volúmenes Docker porque el daemon corre como root pero tú no. Workaround: ejecutar `chown` dentro de un contenedor Alpine desechable. No es bonito, pero funciona.
 
-**Los LLMs locales son mejores de lo que esperaba.** Para tareas de infraestructura — resumir logs, responder preguntas de Docker, redactar alertas — un modelo 7B en Apple Silicon es más rápido que cualquier llamada a API. Genuinamente esperaba depender mucho más de Azure OpenAI de lo que realmente lo hago.
+**Los LLMs locales son mejores de lo que esperaba.** Para tareas de infra (resumir logs, responder preguntas de Docker, redactar alertas) un modelo 7B en Apple Silicon es más rápido que cualquier llamada a API. De verdad esperaba depender mucho más de Azure OpenAI de lo que realmente lo hago.
 
 ## Qué se viene
 
-- **Cloudflare Tunnel** — acceder a servicios desde fuera sin abrir puertos
-- **Agentes de marca personal** — la idea es mandar un mensaje de Telegram tipo "escribe algo sobre este artículo" y recibir un borrador de blog + post de LinkedIn
-- **Wildcard HTTPS** — renovación automática de certificados vía Cloudflare DNS challenge
+Algunas cosas que quiero atacar pronto:
 
-El homelab no se termina nunca. Pero sinceramente, esa es la mejor parte.
+- **Cloudflare Tunnel** para poder acceder a servicios desde fuera sin abrir puertos
+- **Agentes de marca personal** donde mando un mensaje de Telegram tipo "escribe algo sobre este artículo" y recibo un borrador de blog + post de LinkedIn
+- **Wildcard HTTPS** con renovación automática de certificados vía Cloudflare DNS challenge
 
-Si a alguien le ayuda a dar su siguiente paso en self-hosting o IA local, ya habrá merecido la pena escribirlo. 💙
+El homelab no se termina nunca. Pero esa es sinceramente la mejor parte.
+
+Si a alguien le ayuda a dar su siguiente paso en self-hosting o IA local, ya habrá merecido la pena escribirlo 💙
 
 ---
 
