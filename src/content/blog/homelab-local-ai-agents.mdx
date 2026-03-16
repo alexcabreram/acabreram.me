@@ -1,27 +1,27 @@
 ---
 title: "How I built a self-hosted homelab with local AI agents"
-description: "A deep dive into my homelab architecture: a UGREEN NAS, a Mac Mini running local LLMs, AI agent orchestration via OpenClaw, and full observability — all managed as code."
+description: "The story of how a NAS, a Mac Mini, and too much curiosity turned into a self-hosted AI playground with agents that actually do stuff."
 date: 2026-03-16
 tags: ["homelab", "ai-agents", "docker", "infrastructure"]
 lang: en
 draft: false
 ---
 
-## The premise
+## How it all started
 
-I wanted infrastructure that thinks for itself. Not a Raspberry Pi running Pi-hole — a real stack where local AI agents monitor services, respond to alerts, and orchestrate tasks across machines. All without sending a single byte to external APIs unless I choose to.
+I bought a NAS to store files. That's it. That was the plan.
 
-This is what I built.
+Then I thought "wouldn't it be cool if it also ran my media server?" Then came monitoring. Then a reverse proxy. Then AI agents. And here we are — a full infrastructure project that I definitely didn't plan but I'm honestly quite proud of.
 
-## The hardware
+If you've ever fallen down the homelab rabbit hole, you know exactly what I mean. If you haven't... well, consider this your warning. 😄
 
-Two machines. That's it.
+## Two machines, zero cloud bills
 
-**UGREEN DXP2800 NAS** — the backbone. Runs UGOS Pro (Debian-based), handles storage, media automation, monitoring, and reverse proxy. Sits on a dedicated VLAN segment.
+The whole setup runs on two boxes sitting on my desk:
 
-**Mac Mini M-series** — the brain. Runs Ollama natively on Apple Silicon (Metal GPU acceleration), plus OpenClaw for AI agent orchestration and Open WebUI for a ChatGPT-like interface to local models.
+A **UGREEN DXP2800 NAS** that handles storage, media automation (the whole Sonarr/Radarr stack), monitoring with Prometheus and Grafana, and reverse proxy. It's basically a tiny server pretending to be a NAS. It does a lot more than storing files at this point.
 
-## The stack
+A **Mac Mini** that acts as the brain. It runs **Ollama** natively on Apple Silicon — GPU-accelerated LLM inference without paying a single API call. On top of that, **OpenClaw** orchestrates AI agents and **Open WebUI** gives me a ChatGPT-like interface to talk to local models. All of this running on a box the size of a sandwich.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -33,59 +33,53 @@ Two machines. That's it.
 └─────────────────────────────────────────────────────────┘
 ```
 
-Everything runs in Docker. Every stack is a `docker-compose.yml` in a git repo. No ClickOps, no manual SSH config that gets lost.
+## The fun part — AI agents that actually do things
 
-## AI agents — the interesting part
+This is where things get interesting. I have a private Telegram group with topic channels, and each one is connected to a different AI agent through OpenClaw:
 
-The centerpiece is **OpenClaw**, an open-source messaging gateway that connects to Telegram and orchestrates multiple AI agents. I run a private Telegram group with 4 topic channels, each routed to a specialized agent:
+| Agent | Channel | What it does |
+|-------|---------|-------------|
+| `main` | #assistant | My personal AI — answers questions, brainstorms ideas, thinks out loud with me |
+| `monitor` | #monitoring | Gets Prometheus alerts via n8n — just logs and notifications, no AI chatter |
+| `media` | #media | "Add The Bear season 4" → done, it talks to Jellyseerr |
+| `devops` | #devops | Container health checks, Docker troubleshooting |
 
-| Agent | Topic | What it does |
-|-------|-------|-------------|
-| `main` | #assistant | General AI assistant powered by Ollama |
-| `monitor` | #monitoring | Receives alerts from Prometheus/n8n (no LLM reply) |
-| `media` | #media | Manages Jellyseerr content requests |
-| `devops` | #devops | Docker container status and infrastructure tools |
+Everything runs on local Llama models. No data leaves my network. And when I need heavier reasoning for something complex, I switch to Azure OpenAI with a quick `/model azure/gpt-4o` and come back when I'm done. Best of both worlds.
 
-When Prometheus fires an alert, n8n catches the webhook and posts to `#monitoring`. When I want to check container health, I message `#devops`. The AI agent responds using local Llama models — no API costs, no data leaving my network.
+## Monitoring everything (because I sleep better that way)
 
-For tasks that need more reasoning power, I can switch to Azure OpenAI with a single command: `/model azure/gpt-4o`.
+Prometheus scrapes every container and endpoint. Grafana makes it pretty. Alert rules catch disk pressure, container crashes, and memory issues before I even notice.
 
-## Observability
+Uptime Kuma adds HTTP health checks — if Jellyfin goes down at 3am, my phone buzzes. Not that I'll fix it at 3am, but at least I *know*. There's comfort in that.
 
-Full Prometheus + Grafana stack on the NAS. Every Docker container, every service endpoint, scraped and graphed. Alert rules for disk space, container restarts, memory pressure, and service health.
+## The media stack (a.k.a. why my family puts up with the NAS)
 
-Uptime Kuma provides the HTTP monitoring layer — simple ping checks for all services with Telegram notifications.
+Sonarr, Radarr, Prowlarr, Bazarr, Jellyfin, Jellyseerr. Everyone at home can request movies and series from their phones without knowing any of this infrastructure exists.
 
-## Media automation
+When it works — and it usually does — nobody notices. When something breaks, everyone notices immediately. That's invisible infrastructure for you.
 
-The *arr stack handles media automation: Sonarr for series, Radarr for movies, Prowlarr for indexers, Bazarr for subtitles. Jellyfin serves it all. Jellyseerr lets family members request content without touching the backend.
+## Things that bit me along the way
 
-## Networking
+Every homelab has its "I just spent 4 hours debugging this" stories. Here are mine — hopefully they save someone else some time:
 
-**Nginx Proxy Manager** runs on a macvlan network with its own dedicated IP, acting as reverse proxy for all internal services under `*.acabreram.tech`.
+**UGOS Pro blocks port 53 on 0.0.0.0.** I couldn't figure out why AdGuard Home wouldn't start. The OS reserves that port. You need to bind to the specific interface IP. Took me way longer than I'd like to admit.
 
-**AdGuard Home** handles DNS with custom rewrites pointing `*.acabreram.tech` to the NPM instance.
+**OrbStack ≠ Docker Desktop.** On the Mac Mini, `host.docker.internal` doesn't resolve reliably. The fix is embarrassingly simple — just use the actual LAN IP in your env vars. But it's not obvious when you're deep in Docker networking at midnight.
 
-**Cloudflare** manages the public domain and will soon handle external access via Cloudflare Tunnel — no open ports.
+**Docker images with hardcoded UIDs on UGOS Pro.** The SSH user can't `chown` Docker volumes because the daemon runs as root but you don't. Workaround? Run `chown` inside a throwaway Alpine container. Not pretty, but it works.
 
-## What I learned
+**Local LLMs are better than I expected.** For infrastructure tasks — summarizing logs, answering Docker questions, drafting alerts — a 7B model on Apple Silicon is faster than any API roundtrip. I genuinely expected to depend on Azure OpenAI much more than I actually do.
 
-1. **UGOS Pro has quirks.** Port 53 is blocked on `0.0.0.0`. Docker images with fixed UIDs need explicit `chown` workarounds. The SSH user can't change permissions on Docker volumes — you have to run `chown` inside ephemeral containers.
+## What's coming next
 
-2. **OrbStack ≠ Docker Desktop.** On the Mac Mini, `host.docker.internal` doesn't resolve reliably. Always use the actual LAN IP in environment variables.
+- **Cloudflare Tunnel** — access services from outside without opening ports
+- **AI brand agents** — the idea is to send a Telegram message like "write something about this article" and get back a blog draft + LinkedIn post
+- **Wildcard HTTPS** — automated cert renewal via Cloudflare DNS challenge
 
-3. **Local LLMs are good enough.** For infrastructure tasks — summarizing logs, drafting alerts, answering questions about Docker — a 7B parameter model running on Metal is faster and cheaper than any API call.
+The homelab is never finished. But honestly? That's the best part about it.
 
-4. **Everything as code matters.** When I bricked my Grafana config, I redeployed from the repo in 2 minutes. When I messed up DNS, the compose file was the single source of truth.
-
-## What's next
-
-- **Cloudflare Tunnel** for external access without open ports
-- **Brand agents** — AI agents that draft blog posts and social media content from a Telegram message
-- **Wildcard HTTPS** with automated cert renewal via Cloudflare DNS challenge
-
-The homelab is never done. That's the point.
+If any of this helps someone take their next step into self-hosting or local AI — it was worth writing. 💙
 
 ---
 
-*Built with curiosity, shipped with Docker.*
+*Built with curiosity. Shipped with `docker compose up -d`.*

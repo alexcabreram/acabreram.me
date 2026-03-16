@@ -1,11 +1,11 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import Layout from "../../../layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
 
 export async function getStaticPaths() {
-  const posts = await getCollection("blog", ({ data }) => !data.draft && data.lang === "en");
+  const posts = await getCollection("blog", ({ data }) => !data.draft && data.lang === "es");
   return posts.map((post) => ({
-    params: { slug: post.id },
+    params: { slug: post.id.replace('es/', '') },
     props: { post },
   }));
 }
@@ -14,11 +14,11 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 
 const formatDate = (date: Date) =>
-  date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  date.toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" });
 ---
 
 <Layout
-  lang={post.data.lang ?? "en"}
+  lang="es"
   title={`${post.data.title} — acabreram.me`}
   description={post.data.description}
 >
@@ -26,8 +26,8 @@ const formatDate = (date: Date) =>
     <article class="py-20 sm:py-24">
       <div class="section-shell max-w-2xl">
         <div class="mb-6">
-          <a href="/blog/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
-            <span>←</span> All posts
+          <a href="/es/blog/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
+            <span>←</span> Todos los posts
           </a>
         </div>
 
@@ -48,7 +48,7 @@ const formatDate = (date: Date) =>
             </time>
             {post.data.updatedDate && (
               <span class="font-mono text-[11px] text-muted/40">
-                · Updated {formatDate(post.data.updatedDate)}
+                · Actualizado {formatDate(post.data.updatedDate)}
               </span>
             )}
           </div>
@@ -59,8 +59,8 @@ const formatDate = (date: Date) =>
         </div>
 
         <footer class="mt-14 border-t pt-6" style="border-color: var(--border-subtle)">
-          <a href="/blog/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
-            <span>←</span> All posts
+          <a href="/es/blog/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
+            <span>←</span> Todos los posts
           </a>
         </footer>
       </div>
