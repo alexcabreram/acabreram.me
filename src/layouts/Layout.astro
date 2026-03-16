@@ -18,14 +18,37 @@ const canonical = new URL(Astro.url.pathname, siteUrl).toString();
 ---
 
 <!doctype html>
-<html lang={lang} class="bg-background text-text">
+<html lang={lang} data-theme="dark" class="bg-background text-text">
   <head>
+    <script is:inline>
+      (() => {
+        const storageKey = "acm-theme";
+        const root = document.documentElement;
+        let theme = "dark";
+
+        try {
+          const stored = localStorage.getItem(storageKey);
+          if (stored === "light" || stored === "dark") {
+            theme = stored;
+          } else if (typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: light)").matches) {
+            theme = "light";
+          }
+        } catch {
+          if (typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: light)").matches) {
+            theme = "light";
+          }
+        }
+
+        root.setAttribute("data-theme", theme);
+        root.style.colorScheme = theme;
+      })();
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={resolvedDescription} />
     <meta name="theme-color" content="#080C10" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -47,7 +70,8 @@ const canonical = new URL(Astro.url.pathname, siteUrl).toString();
     <div class="relative isolate overflow-x-clip">
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem] bg-[radial-gradient(circle_at_top,_rgba(0,212,255,0.18),_transparent_45%)]"
+        class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem]"
+        style="background: radial-gradient(circle at top, var(--hero-radial), transparent 45%)"
       ></div>
       <slot />
     </div>
