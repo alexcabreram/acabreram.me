@@ -33,15 +33,18 @@ type Translation = {
     infraLabel: string;
     aiLabel: string;
     botLabel: string;
+    cloudLabel: string;
     tags: {
       infra: string;
       ai: string;
       multiAgent: string;
       topics: string;
+      cloud: string;
     };
   };
   about: {
     label: string;
+    fullName: string;
     title: string;
     description: string;
     storyPoints: string[];
@@ -71,7 +74,7 @@ export const translations = {
     },
     hero: {
       role: "Copilot Solution Engineer @ Microsoft · 2024 MVP · Professor",
-      name: "Alex Cabrera Martínez",
+      name: "Alex Cabrera",
       tagline: "Building AI adoption by day, training dragons by night.",
       cta: {
         blog: "Blog",
@@ -100,21 +103,24 @@ export const translations = {
     },
     stack: {
       label: "The Stack",
-      title: "A homelab with two brains and one dragon handler.",
+      title: "A homelab with two brains, one dragon handler, and an Azure lifeline.",
       description:
-        "Infrastructure lives on the NAS. Local inference and orchestration run on the Mac Mini. Telegram is the interface that ties it together.",
+        "Infrastructure lives on the NAS. Local inference and orchestration run on the Mac Mini. Telegram is the interface that ties it together. And when local models aren't enough, Azure fills the gap.",
       infraLabel: "The NAS",
       aiLabel: "The Brain",
       botLabel: "The Interface",
+      cloudLabel: "The Cloud",
       tags: {
         infra: "LAN · Docker",
         ai: "macOS · Metal GPU",
         multiAgent: "Multi-agent",
-        topics: "4 topics"
+        topics: "4 topics",
+        cloud: "Azure · GitHub"
       }
     },
     about: {
       label: "About",
+      fullName: "Alejandro Cabrera Martínez",
       title: "From Law school to Cloud Engineering — the scenic route through tech.",
       description:
         "By day, I help CIOs and CISOs adopt AI governance at scale. By night, I build my own AI agents on a NAS and a Mac Mini. It's not theory — it's practice.",
@@ -125,7 +131,7 @@ export const translations = {
         "Speaker & mentor in tech communities"
       ],
       careerPath:
-        "I started studying Law, worked in a call center, pivoted to IT support, then became an M365 developer and Tech Lead at Sogeti. Now I'm at Microsoft, helping enterprises adopt AI. The scenic route — but every stop taught me something."
+        "I started studying Law, worked in a call center, pivoted to IT support, then became an M365 developer and Tech Lead at Sogeti. Now I'm at Microsoft, helping enterprises adopt AI. The scenic route shaped Alejandro Cabrera Martínez every step of the way."
     },
     footer: {
       builtWith: "Built with Astro · Hosted on Cloudflare",
@@ -149,7 +155,7 @@ export const translations = {
     },
     hero: {
       role: "Copilot Solution Engineer @ Microsoft · 2024 MVP · Professor",
-      name: "Alex Cabrera Martínez",
+      name: "Alex Cabrera",
       tagline: "Construyendo adopción de IA de día, entrenando dragones de noche.",
       cta: {
         blog: "Blog",
@@ -178,21 +184,24 @@ export const translations = {
     },
     stack: {
       label: "El Stack",
-      title: "Un homelab con dos cerebros y un domador de dragones.",
+      title: "Un homelab con dos cerebros, un domador de dragones y una línea directa con Azure.",
       description:
-        "La infraestructura vive en el NAS. La inferencia local y la orquestación corren en el Mac Mini. Telegram es la interfaz que lo une todo.",
+        "La infraestructura vive en el NAS. La inferencia local y la orquestación corren en el Mac Mini. Telegram es la interfaz que lo une todo. Y cuando los modelos locales no llegan, Azure cubre la diferencia.",
       infraLabel: "El NAS",
       aiLabel: "El Cerebro",
       botLabel: "La Interfaz",
+      cloudLabel: "La Nube",
       tags: {
         infra: "LAN · Docker",
         ai: "macOS · Metal GPU",
         multiAgent: "Multi-agent",
-        topics: "4 topics"
+        topics: "4 topics",
+        cloud: "Azure · GitHub"
       }
     },
     about: {
       label: "Sobre mí",
+      fullName: "Alejandro Cabrera Martínez",
       title: "De Derecho a Cloud Engineering — la ruta panorámica por la tecnología.",
       description:
         "De día, ayudo a CIOs y CISOs a adoptar gobernanza de IA a escala. De noche, construyo mis propios agentes de IA en un NAS y un Mac Mini. No es teoría — es práctica.",
@@ -203,7 +212,7 @@ export const translations = {
         "Speaker y mentor en comunidades tech"
       ],
       careerPath:
-        "Empecé estudiando Derecho, trabajé en un call center, pivoté a soporte IT, después fui desarrollador M365 y Tech Lead en Sogeti. Ahora estoy en Microsoft, ayudando a empresas a adoptar IA. La ruta panorámica — pero cada parada me enseñó algo."
+        "Empecé estudiando Derecho, trabajé en un call center, pivoté a soporte IT, después fui desarrollador M365 y Tech Lead en Sogeti. Ahora estoy en Microsoft, ayudando a empresas a adoptar IA. La ruta panorámica fue construyendo a Alejandro Cabrera Martínez en cada parada."
     },
     footer: {
       builtWith: "Hecho con Astro · Alojado en Cloudflare",

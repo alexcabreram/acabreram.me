@@ -1,0 +1,90 @@
+---
+interface PathNode {
+  tag: "path";
+  d: string;
+}
+
+interface CircleNode {
+  tag: "circle";
+  cx: number;
+  cy: number;
+  r: number;
+}
+
+type SvgNode = PathNode | CircleNode;
+type IconName =
+  | "prometheus"
+  | "grafana"
+  | "alertmanager"
+  | "sonarr"
+  | "radarr"
+  | "jellyfin"
+  | "adguard"
+  | "npm"
+  | "n8n"
+  | "ollama"
+  | "openWebui"
+  | "openclaw"
+  | "githubActions"
+  | "azureOpenAI"
+  | "githubCopilot"
+  | "cloudflare"
+  | "claudeCode";
+
+interface Props {
+  label: string;
+  icon: IconName;
+  tone: "jade" | "seiryu" | "azure";
+}
+
+const { label, icon, tone } = Astro.props;
+
+const toneStyles: Record<string, string> = {
+  jade: "--service-accent: var(--jade); --service-shadow: var(--shadow-jade);",
+  seiryu: "--service-accent: var(--seiryu); --service-shadow: var(--shadow-seiryu);",
+  azure: "--service-accent: var(--azure); --service-shadow: var(--shadow-azure);"
+};
+const toneStyle = toneStyles[tone];
+
+const iconMap: Record<IconName, SvgNode[]> = {
+  prometheus: [{ tag: "path", d: "M8 1C8 1 3 6 3 9.5C3 12 5.2 14 8 14C10.8 14 13 12 13 9.5C13 6 8 1 8 1ZM8 12.5C6.1 12.5 4.5 11 4.5 9.5C4.5 7.5 8 3 8 3C8 3 11.5 7.5 11.5 9.5C11.5 11 9.9 12.5 8 12.5Z" }],
+  grafana: [
+    { tag: "path", d: "M2 12L5 7L8 9L11 4L14 6V13H2V12Z" },
+    { tag: "circle", cx: 5, cy: 7, r: 1 },
+    { tag: "circle", cx: 8, cy: 9, r: 1 },
+    { tag: "circle", cx: 11, cy: 4, r: 1 }
+  ],
+  alertmanager: [{ tag: "path", d: "M8 2C5.8 2 4 3.8 4 6V9L2 12H14L12 9V6C12 3.8 10.2 2 8 2ZM8 15C6.9 15 6 14.1 6 13H10C10 14.1 9.1 15 8 15Z" }],
+  sonarr: [{ tag: "path", d: "M2 4.5C2 3.7 2.7 3 3.5 3h9C13.3 3 14 3.7 14 4.5v6c0 .8-.7 1.5-1.5 1.5H9.7l1.1 1.8H5.2l1.1-1.8H3.5C2.7 12 2 11.3 2 10.5v-6ZM3.5 4.5v6h9v-6h-9Z" }],
+  radarr: [{ tag: "path", d: "M2 3h12v10H2V3Zm2 1.5v7h8v-7H4Zm-1 0h1v2H3v-2Zm0 3h1v2H3v-2Zm9-3h1v2h-1v-2Zm0 3h1v2h-1v-2Z" }],
+  jellyfin: [{ tag: "path", d: "M5 3.5v9l7-4.5-7-4.5Z" }],
+  adguard: [{ tag: "path", d: "M8 1L2 4V8C2 11.3 4.7 14.3 8 15C11.3 14.3 14 11.3 14 8V4L8 1ZM8 8V3L12 5V8C12 10.2 10.3 12.4 8 13V8Z" }],
+  npm: [{ tag: "path", d: "M8 1.5A6.5 6.5 0 1 0 8 14.5A6.5 6.5 0 0 0 8 1.5ZM6.3 3.9C5.8 4.8 5.5 5.9 5.4 7.2H2.9A5.1 5.1 0 0 1 6.3 3.9ZM2.9 8.8h2.5c.1 1.3.4 2.4.9 3.3A5.1 5.1 0 0 1 2.9 8.8ZM8 13c-.6-.7-1.2-2.2-1.3-4.2h2.6C9.2 10.8 8.6 12.3 8 13ZM6.7 7.2C6.8 5.2 7.4 3.7 8 3c.6.7 1.2 2.2 1.3 4.2H6.7ZM9.7 12.1c.5-.9.8-2 .9-3.3h2.5A5.1 5.1 0 0 1 9.7 12.1ZM10.6 7.2c-.1-1.3-.4-2.4-.9-3.3a5.1 5.1 0 0 1 3.4 3.3h-2.5Z" }],
+  n8n: [{ tag: "path", d: "M9.8 1.8l.4 1.5c.3.1.6.2.9.4l1.4-.7l1.1 1.9l-1.2.9c.1.3.1.6.1 1s0 .7-.1 1l1.2.9l-1.1 1.9l-1.4-.7c-.3.2-.6.3-.9.4l-.4 1.5H6.2l-.4-1.5c-.3-.1-.6-.2-.9-.4l-1.4.7L2.4 9.6l1.2-.9a4 4 0 0 1 0-2l-1.2-.9L3.5 3l1.4.7c.3-.2.6-.3.9-.4l.4-1.5h3.6ZM8 5.5A2.5 2.5 0 1 0 8 10.5A2.5 2.5 0 0 0 8 5.5Z" }],
+  ollama: [{ tag: "path", d: "M5.2 3.2a2.2 2.2 0 0 1 4 1a2.1 2.1 0 0 1 2.1 2.1c0 .3 0 .5-.1.8a2.2 2.2 0 0 1 .8 1.7A2.2 2.2 0 0 1 9.8 11H9v1.2A1.8 1.8 0 0 1 7.2 14H7a2 2 0 0 1-2-2v-1H4.2A2.2 2.2 0 0 1 2 8.8c0-.7.3-1.3.8-1.7a2 2 0 0 1-.1-.8a2.1 2.1 0 0 1 2.1-2.1a2.6 2.6 0 0 1 .4-1ZM6 4.5A1.1 1.1 0 0 0 4.9 5.6l.1.4l-.8.5a1.1 1.1 0 0 0 .6 2h1.3V12a.9.9 0 0 0 1.8 0V8.6h1.5a1.1 1.1 0 0 0 .6-2l-.8-.5l.1-.4A1.1 1.1 0 0 0 8.1 4.5l-.4.1L7.4 4l-.3.6-.4-.1Z" }],
+  openWebui: [{ tag: "path", d: "M2 3.5C2 2.7 2.7 2 3.5 2h9C13.3 2 14 2.7 14 3.5v9c0 .8-.7 1.5-1.5 1.5h-9C2.7 14 2 13.3 2 12.5v-9ZM3.5 5H12.5V3.5h-9V5Zm0 1.5v6h9v-6h-9Z" }],
+  openclaw: [{ tag: "path", d: "M8 1.5l1 1.5h2c.8 0 1.5.7 1.5 1.5v4c0 .8-.7 1.5-1.5 1.5h-.5l1 2h-2l-.8-1.5H7.3L6.5 12h-2l1-2H5c-.8 0-1.5-.7-1.5-1.5v-4C3.5 3.7 4.2 3 5 3h2l1-1.5ZM6.2 6.2a.8.8 0 1 0 0 1.6a.8.8 0 0 0 0-1.6Zm3.6 0a.8.8 0 1 0 0 1.6a.8.8 0 0 0 0-1.6ZM6 9h4v.8H6V9Z" }],
+  githubActions: [{ tag: "path", d: "M9.8 1.5c1.7.4 3.3 2 3.7 3.7l-2.1 2.1l-1.6-.5l-.8.8l2 2l-1.1 1.1l-2-2l-.8.8l.5 1.6l-2.1 2.1c-1.7-.4-3.3-2-3.7-3.7l2.2-2.2l1.7.4l.7-.7l-2-2l1.1-1.1l2 2l.7-.7l-.4-1.7l2.2-2.2ZM10.8 4.3a1 1 0 1 0 0 2a1 1 0 0 0 0-2Z" }],
+  azureOpenAI: [{ tag: "path", d: "M8 1L2.5 4.5V11.5L8 15L13.5 11.5V4.5L8 1ZM8 3L11.5 5.2V7L8 9.2L4.5 7V5.2L8 3ZM4.5 8.5L7.2 10.3V12.8L4.5 11V8.5ZM8.8 10.3L11.5 8.5V11L8.8 12.8V10.3Z" }],
+  githubCopilot: [{ tag: "path", d: "M5.5 3C4.1 3 3 4.3 3 6v1.3c-.6.4-1 1-1 1.7v1c0 1.1.9 2 2 2h.3C5 12.6 6.4 13 8 13s3-.4 3.7-1H12c1.1 0 2-.9 2-2V9c0-.7-.4-1.3-1-1.7V6c0-1.7-1.1-3-2.5-3h-5ZM5 7a1 1 0 1 1 0 2a1 1 0 0 1 0-2Zm6 0a1 1 0 1 1 0 2a1 1 0 0 1 0-2Z" }],
+  cloudflare: [{ tag: "path", d: "M11.3 10.6c.1-.3.1-.6-.1-.8c-.2-.2-.4-.3-.7-.3H5.2c-.1 0-.2 0-.2-.1c0-.1 0-.2.1-.2l.1-.1c.2-.1.4-.2.6-.2h5.6c.8 0 1.5.5 1.8 1.2l.3.8c0 .1.1.1.1.1h.6c1 0 1.8-.7 1.8-1.8c0-.9-.7-1.6-1.5-1.8a3 3 0 0 0-5.8-.5a2.2 2.2 0 0 0-3.5 1.5c-.8.2-1.4 1-1.4 1.9c0 1.1.9 2 2 2h5.1c.2 0 .3-.1.3-.2l.2-.5Z" }],
+  claudeCode: [{ tag: "path", d: "M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13ZM5.8 5c.3-.5.8-.5 1.1 0l2.9 5c.3.5 0 1-.5 1H3.4c-.5 0-.8-.5-.5-1L5.8 5Zm3.9 0c.3-.5.8-.5 1.1 0l1.5 2.5c.3.5 0 1-.5 1H8.2c-.5 0-.8-.5-.5-1L9.7 5Z" }]
+};
+---
+
+<span class="stack-service-chip inline-flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 font-ui text-sm leading-none" style={toneStyle}>
+  <span class="stack-service-chip__icon flex h-8 w-8 shrink-0 items-center justify-center rounded-full" aria-hidden="true">
+    <svg viewBox="0 0 16 16" class="h-4 w-4 fill-current" focusable="false">
+      {
+        iconMap[icon].map((node) =>
+          node.tag === "path" ? (
+            <path d={node.d}></path>
+          ) : (
+            <circle cx={node.cx} cy={node.cy} r={node.r}></circle>
+          )
+        )
+      }
+    </svg>
+  </span>
+  <span>{label}</span>
+</span>

@@ -2,17 +2,64 @@
 import Layout from "../layouts/Layout.astro";
 import { translations, type Locale } from "../i18n/translations";
 import LangToggle from "./LangToggle.astro";
+import StackServiceChip from "./StackServiceChip.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
 interface Props {
   lang: Locale;
 }
 
+type ServiceIcon =
+  | "prometheus"
+  | "grafana"
+  | "alertmanager"
+  | "sonarr"
+  | "radarr"
+  | "jellyfin"
+  | "adguard"
+  | "npm"
+  | "n8n"
+  | "ollama"
+  | "openWebui"
+  | "openclaw"
+  | "githubActions"
+  | "azureOpenAI"
+  | "githubCopilot"
+  | "cloudflare"
+  | "claudeCode";
+
+type ServiceEntry = {
+  label: string;
+  icon: ServiceIcon;
+};
+
 const { lang } = Astro.props;
 const t = translations[lang];
 
-const nasServices = ["Prometheus", "Grafana", "Alertmanager", "Sonarr", "Radarr", "Jellyfin", "AdGuard", "NPM", "n8n"];
-const macMiniServices = ["Ollama", "Open WebUI", "OpenClaw", "GitHub Actions Runner"];
+const nasServices: ServiceEntry[] = [
+  { label: "Prometheus", icon: "prometheus" },
+  { label: "Grafana", icon: "grafana" },
+  { label: "Alertmanager", icon: "alertmanager" },
+  { label: "Sonarr", icon: "sonarr" },
+  { label: "Radarr", icon: "radarr" },
+  { label: "Jellyfin", icon: "jellyfin" },
+  { label: "AdGuard", icon: "adguard" },
+  { label: "NPM", icon: "npm" },
+  { label: "n8n", icon: "n8n" }
+];
+const macMiniServices: ServiceEntry[] = [
+  { label: "Ollama", icon: "ollama" },
+  { label: "Open WebUI", icon: "openWebui" },
+  { label: "OpenClaw", icon: "openclaw" },
+  { label: "GitHub Actions Runner", icon: "githubActions" }
+];
+const cloudServices: ServiceEntry[] = [
+  { label: "Azure OpenAI", icon: "azureOpenAI" },
+  { label: "GitHub Copilot", icon: "githubCopilot" },
+  { label: "GitHub Actions", icon: "githubActions" },
+  { label: "Cloudflare", icon: "cloudflare" },
+  { label: "Claude Code", icon: "claudeCode" }
+];
 const aboutPhotos = [
   {
     src: "/photos/speaking-microsoft.jpg",
@@ -52,7 +99,7 @@ const aboutPhotos = [
     <section id="top" class="relative flex min-h-screen items-center overflow-hidden">
       <div class="section-shell relative flex w-full items-center justify-center py-28">
         <img
-          src="/dragon.png"
+          src="/dragon-hero.png"
           alt=""
           aria-hidden="true"
           class="hero-dragon absolute -right-16 top-1/2 hidden w-[26rem] -translate-y-1/2 select-none lg:block xl:w-[34rem]"
@@ -65,7 +112,7 @@ const aboutPhotos = [
             style="background: radial-gradient(circle, color-mix(in srgb, var(--seiryu-hi) 32%, transparent) 0%, color-mix(in srgb, var(--seiryu) 18%, transparent) 40%, transparent 74%)"
           ></div>
           <a href="#top" class="brand-mark relative inline-flex items-center gap-3 font-mono text-base font-semibold tracking-[0.34em] text-seiryu-hi sm:text-lg">
-            <img src="/dragon.png" alt="Seiryū" class="wordmark-dragon h-6 w-6" />
+            <img src="/dragon-nav.png" alt="Seiryū" class="wordmark-dragon h-6 w-6" />
             <span>acm.</span>
           </a>
         </div>
@@ -165,53 +212,72 @@ const aboutPhotos = [
           </p>
         </div>
 
-        <div class="relative mt-14">
-          <div
-            aria-hidden="true"
-            class="absolute inset-x-[18%] top-1/2 hidden h-px -translate-y-1/2 bg-gradient-to-r from-jade/35 via-gold/75 to-seiryu/35 lg:block"
-          ></div>
-          <div class="relative grid gap-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
-            <article class="reveal rounded-[2rem] border border-jade/20 bg-surface p-8 transition duration-300 hover:-translate-y-1 hover:border-jade/35" style="box-shadow: var(--shadow-jade)">
+        <div class="mt-14 flex flex-col items-center gap-5">
+          <!-- Cloud node: sits above the local infrastructure -->
+          <article class="reveal stack-node w-full max-w-2xl rounded-[2rem] bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--azure); --stack-shadow: var(--shadow-azure)">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-azure">{t.stack.cloudLabel}</p>
+                <h3 class="mt-3 font-display text-3xl text-text">Azure & Cloud</h3>
+              </div>
+              <span class="stack-meta-chip rounded-full px-3 py-1 font-mono text-xs" style="--stack-accent: var(--azure)">{t.stack.tags.cloud}</span>
+            </div>
+            <div class="mt-8 stack-service-grid text-azure">
+              {
+                cloudServices.map((service) => <StackServiceChip label={service.label} icon={service.icon} tone="azure" />)
+              }
+            </div>
+          </article>
+
+          <!-- Vertical flow: cloud → local row -->
+          <div aria-hidden="true" class="reveal stack-flow stack-flow--vertical" style="--flow-start: var(--azure); --flow-end: var(--gold)"></div>
+
+          <!-- Local infrastructure row -->
+          <div class="grid w-full gap-5 lg:grid-cols-[minmax(0,1fr)_5.5rem_15rem_5.5rem_minmax(0,1fr)] lg:items-center">
+            <article class="reveal stack-node rounded-[2rem] bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--jade); --stack-shadow: var(--shadow-jade)">
               <div class="flex items-center justify-between gap-4">
                 <div>
                   <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-jade">{t.stack.infraLabel}</p>
                   <h3 class="mt-3 font-display text-3xl text-text">UGREEN DXP2800 NAS</h3>
                 </div>
-                <span class="rounded-full border border-jade/25 bg-jade/10 px-3 py-1 font-mono text-xs text-jade">{t.stack.tags.infra}</span>
+                <span class="stack-meta-chip rounded-full px-3 py-1 font-mono text-xs" style="--stack-accent: var(--jade)">{t.stack.tags.infra}</span>
               </div>
-              <div class="mt-8 flex flex-wrap gap-3">
+              <div class="mt-8 stack-service-grid text-jade">
                 {
-                  nasServices.map((service) => (
-                    <span class="rounded-full border border-jade/20 bg-jade/10 px-3 py-2 font-ui text-sm text-jade">{service}</span>
-                  ))
+                  nasServices.map((service) => <StackServiceChip label={service.label} icon={service.icon} tone="jade" />)
                 }
               </div>
             </article>
 
-            <div class="reveal flex justify-center">
-              <div class="rounded-[1.75rem] border border-gold/30 bg-surface-2 px-7 py-6 text-center" style="box-shadow: var(--shadow-gold)">
-                <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-gold">{t.stack.botLabel}</p>
-                <h3 class="mt-3 font-mono text-lg font-semibold text-text">@homelabguardbot</h3>
-                <div class="mt-4 flex flex-wrap justify-center gap-2">
-                  <span class="rounded-full border border-gold/25 bg-gold/10 px-3 py-1.5 font-ui text-xs text-gold">{t.stack.tags.multiAgent}</span>
-                  <span class="rounded-full border border-gold/25 bg-gold/10 px-3 py-1.5 font-ui text-xs text-gold">{t.stack.tags.topics}</span>
-                </div>
-              </div>
-            </div>
+            <div aria-hidden="true" class="reveal stack-flow" style="--flow-start: var(--jade); --flow-end: var(--gold)"></div>
 
-            <article class="reveal rounded-[2rem] border border-seiryu/20 bg-surface p-8 transition duration-300 hover:-translate-y-1 hover:border-seiryu/35" style="box-shadow: var(--shadow-seiryu)">
+            <article class="reveal stack-node rounded-[1.85rem] bg-surface-2 px-7 py-7 text-center transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--gold); --stack-shadow: var(--shadow-gold)">
+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-gold/20 bg-gold/10 text-gold">
+                <svg viewBox="0 0 16 16" class="h-6 w-6 fill-current" aria-hidden="true">
+                  <path d="M2 5.5C2 4.7 2.7 4 3.5 4h9c.8 0 1.5.7 1.5 1.5v5c0 .8-.7 1.5-1.5 1.5h-3L8 14l-1.5-2H3.5C2.7 12 2 11.3 2 10.5v-5ZM4.5 6.5h7v1h-7v-1Zm0 2h4.5v1H4.5v-1Z"></path>
+                </svg>
+              </div>
+              <p class="mt-5 font-ui text-xs font-medium uppercase tracking-[0.34em] text-gold">{t.stack.botLabel}</p>
+              <h3 class="mt-3 font-mono text-lg font-semibold text-text">@homelabguardbot</h3>
+              <div class="mt-5 flex flex-wrap justify-center gap-2.5">
+                <span class="stack-meta-chip rounded-full px-3 py-1.5 font-ui text-xs" style="--stack-accent: var(--gold)">{t.stack.tags.multiAgent}</span>
+                <span class="stack-meta-chip rounded-full px-3 py-1.5 font-ui text-xs" style="--stack-accent: var(--gold)">{t.stack.tags.topics}</span>
+              </div>
+            </article>
+
+            <div aria-hidden="true" class="reveal stack-flow" style="--flow-start: var(--gold); --flow-end: var(--seiryu)"></div>
+
+            <article class="reveal stack-node rounded-[2rem] bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--seiryu); --stack-shadow: var(--shadow-seiryu)">
               <div class="flex items-center justify-between gap-4">
                 <div>
                   <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-seiryu">{t.stack.aiLabel}</p>
                   <h3 class="mt-3 font-display text-3xl text-text">Mac Mini</h3>
                 </div>
-                <span class="rounded-full border border-seiryu/25 bg-seiryu/10 px-3 py-1 font-mono text-xs text-seiryu">{t.stack.tags.ai}</span>
+                <span class="stack-meta-chip rounded-full px-3 py-1 font-mono text-xs" style="--stack-accent: var(--seiryu)">{t.stack.tags.ai}</span>
               </div>
-              <div class="mt-8 flex flex-wrap gap-3">
+              <div class="mt-8 stack-service-grid text-seiryu">
                 {
-                  macMiniServices.map((service) => (
-                    <span class="rounded-full border border-seiryu/20 bg-seiryu/10 px-3 py-2 font-ui text-sm text-seiryu">{service}</span>
-                  ))
+                  macMiniServices.map((service) => <StackServiceChip label={service.label} icon={service.icon} tone="seiryu" />)
                 }
               </div>
             </article>
@@ -224,7 +290,10 @@ const aboutPhotos = [
       <div class="section-shell">
         <div class="reveal max-w-3xl">
           <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu sm:text-sm">{t.about.label}</p>
-          <h2 class="mt-4 font-display text-4xl leading-tight text-text sm:text-5xl">
+          <p class="formal-nameplate mt-5 inline-flex items-center rounded-full px-4 py-2 font-display text-2xl tracking-[0.08em] text-muted sm:text-3xl">
+            {t.about.fullName}
+          </p>
+          <h2 class="mt-5 font-display text-4xl leading-tight text-text sm:text-5xl">
             {t.about.title}
           </h2>
           <p class="mt-6 font-body text-xl leading-relaxed text-text/82">
@@ -272,7 +341,7 @@ const aboutPhotos = [
     <section class="py-10 sm:py-14">
       <div class="section-shell">
         <div class="reveal text-center">
-          <img src="/dragon.png" alt="" aria-hidden="true" class="closing-dragon mx-auto h-10 w-10" />
+          <img src="/dragon-nav.png" alt="" aria-hidden="true" class="closing-dragon mx-auto h-10 w-10" />
           <p class="mt-5 font-display text-3xl leading-tight text-seiryu sm:text-4xl">{t.footer.closing}</p>
         </div>
       </div>
