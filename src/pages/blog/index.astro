@@ -1,0 +1,69 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog", ({ data }) => {
+  return !data.draft && data.lang === "en";
+})).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const formatDate = (date: Date) =>
+  date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<Layout lang="en" title="Blog — acabreram.me" description="Posts about infrastructure, AI agents, cloud architecture, and homelab experiments.">
+  <main id="main-content">
+    <section class="py-20 sm:py-24">
+      <div class="section-shell">
+        <div class="mb-4">
+          <a href="/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
+            <span>←</span> Home
+          </a>
+        </div>
+
+        <p
+          class="mb-2 font-mono text-[10px] uppercase tracking-[0.2em]"
+          style="color: var(--color-seiryu)"
+        >
+          Blog
+        </p>
+        <h1 class="mb-3 text-3xl font-bold tracking-tight text-text sm:text-4xl">
+          Posts
+        </h1>
+        <p class="mb-10 max-w-xl text-sm text-muted">
+          Infrastructure, AI agents, cloud architecture, and homelab experiments. Drafted with AI agents, shipped by a human.
+        </p>
+
+        {posts.length === 0 ? (
+          <p class="text-sm text-muted italic">No posts yet. First one is brewing.</p>
+        ) : (
+          <div class="flex flex-col gap-6">
+            {posts.map((post) => (
+              <a
+                href={`/blog/${post.id}/`}
+                class="group block border border-[var(--border-subtle)] p-5 transition-colors hover:border-[var(--color-seiryu)] sm:p-6"
+                style="border-radius: 2px"
+              >
+                <div class="flex flex-wrap items-center gap-2 mb-2">
+                  {post.data.tags.map((tag: string) => (
+                    <span class="font-mono text-[10px] uppercase tracking-wider text-seiryu">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <h2 class="text-lg font-semibold text-text group-hover:text-seiryu transition-colors sm:text-xl">
+                  {post.data.title}
+                </h2>
+                <p class="mt-1.5 text-sm text-muted line-clamp-2">
+                  {post.data.description}
+                </p>
+                <time class="mt-3 block font-mono text-[11px] text-muted/60">
+                  {formatDate(post.data.date)}
+                </time>
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+</Layout>
