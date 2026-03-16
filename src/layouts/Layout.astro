@@ -6,15 +6,19 @@ interface Props {
   lang?: Locale;
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { lang = "en", title, description } = Astro.props;
+const { lang = "en", title, description, ogImage } = Astro.props;
 const meta = translations[lang].meta;
 const resolvedTitle = title ?? meta.title;
 const resolvedDescription = description ?? meta.description;
 
 const siteUrl = Astro.site ?? new URL("https://acabreram.me");
 const canonical = new URL(Astro.url.pathname, siteUrl).toString();
+const resolvedOgImage = ogImage
+  ? new URL(ogImage, siteUrl).toString()
+  : new URL("/og-image.png", siteUrl).toString();
 ---
 
 <!doctype html>
@@ -61,7 +65,7 @@ const canonical = new URL(Astro.url.pathname, siteUrl).toString();
     <meta property="og:description" content={resolvedDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="acabreram.me" />
-    <meta property="og:image" content={new URL("/og-image.png", siteUrl).toString()} />
+    <meta property="og:image" content={resolvedOgImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />

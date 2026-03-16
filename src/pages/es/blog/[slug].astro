@@ -25,6 +25,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 230));
   lang="es"
   title={`${post.data.title} — acabreram.me`}
   description={post.data.description}
+  ogImage={`/og/${post.id}.png`}
 >
   <div class="blog-progress" aria-hidden="true"></div>
 
@@ -32,6 +33,17 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 230));
 
   <main id="main-content">
     <article class="py-10 sm:py-16">
+      <!-- Hero image -->
+      <div class="section-shell mb-6" style="max-width: 720px">
+        <img
+          src={`/og/${post.id}.png`}
+          alt={post.data.title}
+          class="w-full rounded-sm"
+          style="border: 1px solid var(--border-subtle)"
+          loading="eager"
+        />
+      </div>
+
       <div class="section-shell" style="max-width: 720px">
 
         <header class="mb-8">
