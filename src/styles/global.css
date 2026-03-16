@@ -269,6 +269,17 @@
   box-shadow: var(--shadow-soft);
 }
 
+.cert-badge {
+  border: 1px solid var(--border-subtle);
+  background: color-mix(in srgb, var(--surface) 80%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+.cert-badge:hover {
+  border-color: color-mix(in srgb, var(--seiryu) 30%, var(--border-strong));
+  box-shadow: var(--shadow-seiryu);
+}
+
 .stack-node {
   position: relative;
   overflow: hidden;

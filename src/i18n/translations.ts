@@ -49,6 +49,7 @@ type Translation = {
     description: string;
     storyPoints: string[];
     careerPath: string;
+    certsLabel: string;
   };
   footer: {
     builtWith: string;
@@ -131,7 +132,8 @@ export const translations = {
         "Speaker & mentor in tech communities"
       ],
       careerPath:
-        "I started studying Law, worked in a call center, pivoted to IT support, then became an M365 developer and Tech Lead at Sogeti. Now I'm at Microsoft, helping enterprises adopt AI. The scenic route shaped Alejandro Cabrera Martínez every step of the way."
+        "I started studying Law, worked in a call center, pivoted to IT support, then became an M365 developer and Tech Lead at Sogeti. Now I'm at Microsoft, helping enterprises adopt AI. The scenic route shaped Alejandro Cabrera Martínez every step of the way.",
+      certsLabel: "Certifications"
     },
     footer: {
       builtWith: "Built with Astro · Hosted on Cloudflare",
@@ -212,7 +214,8 @@ export const translations = {
         "Speaker y mentor en comunidades tech"
       ],
       careerPath:
-        "Empecé estudiando Derecho, trabajé en un call center, pivoté a soporte IT, después fui desarrollador M365 y Tech Lead en Sogeti. Ahora estoy en Microsoft, ayudando a empresas a adoptar IA. La ruta panorámica fue construyendo a Alejandro Cabrera Martínez en cada parada."
+        "Empecé estudiando Derecho, trabajé en un call center, pivoté a soporte IT, después fui desarrollador M365 y Tech Lead en Sogeti. Ahora estoy en Microsoft, ayudando a empresas a adoptar IA. La ruta panorámica fue construyendo a Alejandro Cabrera Martínez en cada parada.",
+      certsLabel: "Certificaciones"
     },
     footer: {
       builtWith: "Hecho con Astro · Alojado en Cloudflare",
