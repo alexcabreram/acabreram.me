@@ -363,113 +363,52 @@
 .stack-flow {
   position: relative;
   justify-self: center;
-  width: 3px;
+  width: 20px;
   min-height: 5rem;
 }
 
 .stack-flow--vertical {
-  width: 3px;
-  min-height: 4rem;
+  width: 20px;
+  min-height: 4.5rem;
 }
 
-/* Glowing background trail */
-.stack-flow--vertical::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--flow-start) 12%, transparent),
-    color-mix(in srgb, var(--flow-start) 40%, transparent),
-    color-mix(in srgb, var(--flow-end) 44%, transparent),
-    color-mix(in srgb, var(--flow-end) 12%, transparent)
-  );
-  animation: flow-breathe 4s ease-in-out infinite;
+/* SVG connector styling */
+.stack-flow__svg {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--flow-start) 40%, transparent));
 }
 
-/* Primary particle */
-.stack-flow--vertical::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  height: 0.75rem;
-  width: 0.75rem;
-  border-radius: 999px;
-  background: var(--seiryu-hi);
-  box-shadow:
-    0 0 12px color-mix(in srgb, var(--flow-start) 80%, transparent),
-    0 0 28px color-mix(in srgb, var(--flow-start) 50%, transparent),
-    0 0 48px color-mix(in srgb, var(--flow-end) 30%, transparent);
-  transform: translate(-50%, 0);
-  animation: pulse-flow-vertical 3s ease-in-out infinite;
-  will-change: transform, opacity;
+/* Packet stream animations */
+.flow-packets--1 {
+  animation: flowPacket1 1.8s linear infinite;
+}
+.flow-packets--2 {
+  animation: flowPacket2 2.8s linear infinite;
+  animation-delay: -0.9s;
+}
+.flow-packets--3 {
+  animation: flowPacket3 4s linear infinite;
+  animation-delay: -2s;
 }
 
-/* Horizontal/default flow */
-.stack-flow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--flow-start) 12%, transparent),
-    color-mix(in srgb, var(--flow-start) 40%, transparent),
-    color-mix(in srgb, var(--flow-end) 44%, transparent),
-    color-mix(in srgb, var(--flow-end) 12%, transparent)
-  );
-  animation: flow-breathe 4s ease-in-out infinite;
+@keyframes flowPacket1 {
+  from { stroke-dashoffset: 21; }
+  to { stroke-dashoffset: 0; }
 }
 
-.stack-flow::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  height: 0.75rem;
-  width: 0.75rem;
-  border-radius: 999px;
-  background: var(--seiryu-hi);
-  box-shadow:
-    0 0 12px color-mix(in srgb, var(--flow-start) 80%, transparent),
-    0 0 28px color-mix(in srgb, var(--flow-start) 50%, transparent),
-    0 0 48px color-mix(in srgb, var(--flow-end) 30%, transparent);
-  transform: translate(-50%, 0);
-  animation: pulse-flow-vertical 3s ease-in-out infinite;
-  will-change: transform, opacity;
+@keyframes flowPacket2 {
+  from { stroke-dashoffset: 25.5; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes flowPacket3 {
+  from { stroke-dashoffset: 66; }
+  to { stroke-dashoffset: 0; }
 }
 
 .timeline-dot {
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--seiryu) 12%, transparent);
-}
-
-/* Second flow particle — staggered behind the primary */
-.flow-particle-2 {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  height: 0.5rem;
-  width: 0.5rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--flow-end) 90%, var(--flow-start));
-  box-shadow:
-    0 0 10px color-mix(in srgb, var(--flow-end) 70%, transparent),
-    0 0 24px color-mix(in srgb, var(--flow-end) 40%, transparent);
-  transform: translate(-50%, 0);
-  animation: pulse-flow-vertical 3s ease-in-out 1.5s infinite;
-  will-change: transform, opacity;
-  opacity: 0;
-}
-
-@media (min-width: 1024px) {
-  .stack-flow:not(.stack-flow--vertical) .flow-particle-2 {
-    left: 0;
-    top: 50%;
-    transform: translate(0, -50%);
-    animation: pulse-flow 3s ease-in-out 1.5s infinite;
-  }
 }
 
 .brand-mark:hover .wordmark-dragon,
@@ -491,63 +430,6 @@
   opacity: 0.62;
   filter: drop-shadow(0 0 2rem color-mix(in srgb, var(--seiryu) 36%, transparent))
     drop-shadow(0 0 4rem color-mix(in srgb, var(--seiryu-hi) 18%, transparent));
-}
-
-@keyframes pulse-flow {
-  0% {
-    transform: translate(0, -50%) scale(0.6);
-    opacity: 0;
-  }
-
-  8% {
-    opacity: 1;
-    transform: translate(0, -50%) scale(1);
-  }
-
-  92% {
-    opacity: 1;
-    transform: translate(calc(100% - 0.75rem), -50%) scale(1);
-  }
-
-  100% {
-    transform: translate(calc(100% - 0.75rem), -50%) scale(0.6);
-    opacity: 0;
-  }
-}
-
-@keyframes pulse-flow-vertical {
-  0% {
-    transform: translate(-50%, 0) scale(0.6);
-    opacity: 0;
-  }
-
-  8% {
-    opacity: 1;
-    transform: translate(-50%, 0) scale(1);
-  }
-
-  92% {
-    opacity: 1;
-    transform: translate(-50%, calc(100% - 0.75rem)) scale(1);
-  }
-
-  100% {
-    transform: translate(-50%, calc(100% - 0.75rem)) scale(0.6);
-    opacity: 0;
-  }
-}
-
-@keyframes flow-breathe {
-  0%,
-  100% {
-    opacity: 0.5;
-    filter: blur(0px);
-  }
-
-  50% {
-    opacity: 1;
-    filter: blur(1px);
-  }
 }
 
 @keyframes fade-up {
@@ -576,24 +458,7 @@
   .stack-flow:not(.stack-flow--vertical) {
     width: 100%;
     min-height: 0;
-    height: 3px;
-  }
-
-  .stack-flow:not(.stack-flow--vertical)::before {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--flow-start) 12%, transparent),
-      color-mix(in srgb, var(--flow-start) 40%, transparent),
-      color-mix(in srgb, var(--flow-end) 44%, transparent),
-      color-mix(in srgb, var(--flow-end) 12%, transparent)
-    );
-  }
-
-  .stack-flow:not(.stack-flow--vertical)::after {
-    left: 0;
-    top: 50%;
-    transform: translate(0, -50%);
-    animation: pulse-flow 3s ease-in-out infinite;
+    height: 20px;
   }
 }
 
@@ -637,9 +502,12 @@
     animation: none;
   }
 
-  .flow-particle-2 {
+  .flow-packets--1,
+  .flow-packets--2,
+  .flow-packets--3 {
     animation: none;
-    opacity: 0.6;
+    stroke-dasharray: none;
+    stroke-opacity: 0.3;
   }
 }
 

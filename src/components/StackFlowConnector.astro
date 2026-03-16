@@ -1,0 +1,132 @@
+---
+interface Props {
+  direction: "horizontal" | "vertical";
+  colorStart: string;
+  colorEnd: string;
+}
+
+const { direction, colorStart, colorEnd } = Astro.props;
+const isVertical = direction === "vertical";
+---
+
+<div
+  class:list={["stack-flow", { "stack-flow--vertical": isVertical }]}
+  aria-hidden="true"
+  style={`--flow-start: ${colorStart}; --flow-end: ${colorEnd};`}
+>
+  {isVertical ? (
+    <svg
+      class="stack-flow__svg"
+      width="20"
+      height="100%"
+      viewBox="0 0 20 100"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id={`grad-v-${colorStart.replace(/[^a-z0-9]/gi, "")}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color={colorStart} stop-opacity="0.14" />
+          <stop offset="50%" stop-color={colorStart} stop-opacity="0.22" />
+          <stop offset="100%" stop-color={colorEnd} stop-opacity="0.14" />
+        </linearGradient>
+      </defs>
+      {/* Track line */}
+      <line
+        x1="10" y1="0" x2="10" y2="100"
+        stroke={`url(#grad-v-${colorStart.replace(/[^a-z0-9]/gi, "")})`}
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+      {/* Stream 1: fast small packets */}
+      <line
+        class="flow-packets flow-packets--1"
+        x1="10" y1="0" x2="10" y2="100"
+        stroke={colorStart}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-dasharray="3 18"
+        stroke-opacity="0.8"
+        vector-effect="non-scaling-stroke"
+      />
+      {/* Stream 2: medium offset packets */}
+      <line
+        class="flow-packets flow-packets--2"
+        x1="10" y1="0" x2="10" y2="100"
+        stroke={colorEnd}
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-dasharray="1.5 24"
+        stroke-opacity="0.6"
+        vector-effect="non-scaling-stroke"
+      />
+      {/* Stream 3: large slow packet */}
+      <line
+        class="flow-packets flow-packets--3"
+        x1="10" y1="0" x2="10" y2="100"
+        stroke={colorStart}
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-dasharray="6 60"
+        stroke-opacity="0.5"
+        vector-effect="non-scaling-stroke"
+      />
+    </svg>
+  ) : (
+    <svg
+      class="stack-flow__svg"
+      width="100%"
+      height="20"
+      viewBox="0 0 100 20"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <linearGradient id={`grad-h-${colorStart.replace(/[^a-z0-9]/gi, "")}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color={colorStart} stop-opacity="0.14" />
+          <stop offset="50%" stop-color={colorStart} stop-opacity="0.22" />
+          <stop offset="100%" stop-color={colorEnd} stop-opacity="0.14" />
+        </linearGradient>
+      </defs>
+      {/* Track line */}
+      <line
+        x1="0" y1="10" x2="100" y2="10"
+        stroke={`url(#grad-h-${colorStart.replace(/[^a-z0-9]/gi, "")})`}
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+      {/* Stream 1 */}
+      <line
+        class="flow-packets flow-packets--1"
+        x1="0" y1="10" x2="100" y2="10"
+        stroke={colorStart}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-dasharray="3 18"
+        stroke-opacity="0.8"
+        vector-effect="non-scaling-stroke"
+      />
+      {/* Stream 2 */}
+      <line
+        class="flow-packets flow-packets--2"
+        x1="0" y1="10" x2="100" y2="10"
+        stroke={colorEnd}
+        stroke-width="1"
+        stroke-linecap="round"
+        stroke-dasharray="1.5 24"
+        stroke-opacity="0.6"
+        vector-effect="non-scaling-stroke"
+      />
+      {/* Stream 3 */}
+      <line
+        class="flow-packets flow-packets--3"
+        x1="0" y1="10" x2="100" y2="10"
+        stroke={colorStart}
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-dasharray="6 60"
+        stroke-opacity="0.5"
+        vector-effect="non-scaling-stroke"
+      />
+    </svg>
+  )}
+</div>

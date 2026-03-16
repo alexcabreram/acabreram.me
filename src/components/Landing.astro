@@ -2,6 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import { translations, type Locale } from "../i18n/translations";
 import LangToggle from "./LangToggle.astro";
+import StackFlowConnector from "./StackFlowConnector.astro";
 import StackServiceChip from "./StackServiceChip.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 
@@ -245,7 +246,7 @@ const aboutPhotos = [
             </div>
           </article>
 
-          <div aria-hidden="true" class="reveal stack-flow stack-flow--vertical" style="--flow-start: var(--seiryu-hi); --flow-end: var(--gold)"><span class="flow-particle-2"></span></div>
+          <StackFlowConnector direction="vertical" colorStart="#00D4FF" colorEnd="#E8C96A" />
 
           <!-- Local infrastructure row -->
           <div class="grid w-full gap-5 lg:grid-cols-[minmax(0,1fr)_5.5rem_15rem_5.5rem_minmax(0,1fr)] lg:items-center">
@@ -264,7 +265,7 @@ const aboutPhotos = [
               </div>
             </article>
 
-            <div aria-hidden="true" class="reveal stack-flow" style="--flow-start: var(--jade); --flow-end: var(--gold)"><span class="flow-particle-2"></span></div>
+            <StackFlowConnector direction="horizontal" colorStart="#2ECC8A" colorEnd="#E8C96A" />
 
             <article class="reveal stack-node rounded-sm bg-surface-2 px-7 py-7 text-center transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--gold); --stack-shadow: var(--shadow-gold)">
               <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-sm border border-gold/20 bg-gold/10 text-gold">
@@ -280,7 +281,7 @@ const aboutPhotos = [
               </div>
             </article>
 
-            <div aria-hidden="true" class="reveal stack-flow" style="--flow-start: var(--gold); --flow-end: var(--seiryu)"><span class="flow-particle-2"></span></div>
+            <StackFlowConnector direction="horizontal" colorStart="#E8C96A" colorEnd="#00B4D8" />
 
             <article class="reveal stack-node rounded-sm bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--seiryu); --stack-shadow: var(--shadow-seiryu)">
               <div class="flex items-center justify-between gap-4">
