@@ -1,0 +1,34 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout lang="en" title="404 — Not Found | acabreram.me">
+  <main class="flex min-h-screen flex-col items-center justify-center px-6 text-center">
+    <img
+      src="/dragon-nav.png"
+      alt=""
+      class="mb-6 h-16 w-16 opacity-40"
+      aria-hidden="true"
+    />
+    <p
+      class="mb-4 font-mono text-[10px] uppercase tracking-[0.2em]"
+      style="color: var(--color-seiryu)"
+    >
+      Error 404
+    </p>
+    <h1 class="mb-3 text-3xl font-bold tracking-tight text-text sm:text-4xl">
+      Page not found
+    </h1>
+    <p class="mb-8 max-w-md text-sm text-muted">
+      The dragon couldn't find what you were looking for.
+      It might have been moved, deleted, or never existed.
+    </p>
+    <a
+      href="/"
+      class="inline-block border border-text/20 px-6 py-2.5 text-xs font-semibold uppercase tracking-wider text-text transition-colors hover:border-[var(--color-seiryu)] hover:text-[var(--color-seiryu)]"
+      style="border-radius: 2px"
+    >
+      Return Home
+    </a>
+  </main>
+</Layout>
