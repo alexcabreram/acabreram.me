@@ -224,6 +224,7 @@
   background: color-mix(in srgb, var(--surface) 78%, transparent);
   box-shadow: var(--shadow-soft);
   backdrop-filter: blur(14px);
+  border-radius: 2px;
 }
 
 .control-pill:hover {
@@ -442,8 +443,9 @@
 }
 
 .closing-dragon {
-  opacity: 0.52;
-  filter: drop-shadow(0 0 1.35rem color-mix(in srgb, var(--seiryu) 22%, transparent));
+  opacity: 0.62;
+  filter: drop-shadow(0 0 2rem color-mix(in srgb, var(--seiryu) 36%, transparent))
+    drop-shadow(0 0 4rem color-mix(in srgb, var(--seiryu-hi) 18%, transparent));
 }
 
 @keyframes pulse-flow {
