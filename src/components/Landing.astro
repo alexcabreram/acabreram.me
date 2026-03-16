@@ -39,16 +39,16 @@ const t = translations[lang];
 type CertEntry = {
   name: string;
   code: string;
-  issuer: "microsoft" | "scrum";
+  badge: string;
 };
 
 const certifications: CertEntry[] = [
-  { name: "Microsoft Certified Trainer", code: "MCT", issuer: "microsoft" },
-  { name: "Power Automate RPA Developer", code: "PL-500", issuer: "microsoft" },
-  { name: "Power Platform Fundamentals", code: "PL-900", issuer: "microsoft" },
-  { name: "Security, Compliance & Identity Fundamentals", code: "SC-900", issuer: "microsoft" },
-  { name: "Microsoft 365 Fundamentals", code: "MS-900", issuer: "microsoft" },
-  { name: "Professional Scrum Master I", code: "PSM I", issuer: "scrum" }
+  { name: "Microsoft Certified Trainer", code: "MCT", badge: "/badges/mct.png" },
+  { name: "Power Automate RPA Developer", code: "PL-500", badge: "/badges/pl-500.png" },
+  { name: "Power Platform Fundamentals", code: "PL-900", badge: "/badges/pl-900.png" },
+  { name: "Security, Compliance & Identity Fundamentals", code: "SC-900", badge: "/badges/sc-900.png" },
+  { name: "Microsoft 365 Fundamentals", code: "MS-900", badge: "/badges/ms-900.png" },
+  { name: "Professional Scrum Master I", code: "PSM I", badge: "/badges/psm-i.png" }
 ];
 
 const nasServices: ServiceEntry[] = [
@@ -98,7 +98,7 @@ const aboutPhotos = [
     src: "/photos/gaming-casual.jpg",
     alt: "Alex with Minecraft plushies — gaming culture is part of the identity.",
     className: "col-span-1 row-span-1",
-    imageClass: "object-top"
+    imageClass: "object-[center_25%]"
   },
   {
     src: "/photos/conference-working.jpg",
@@ -358,26 +358,16 @@ const aboutPhotos = [
             {
               certifications.map((cert) => (
                 <div class="cert-badge group flex items-center gap-4 rounded-sm p-4 transition duration-200 hover:-translate-y-0.5">
-                  <div class:list={[
-                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-sm",
-                    cert.issuer === "microsoft" ? "bg-seiryu/12 text-seiryu" : "bg-jade/12 text-jade"
-                  ]}>
-                    {cert.issuer === "microsoft" ? (
-                      <svg viewBox="0 0 16 16" class="h-5 w-5 fill-current" aria-hidden="true">
-                        <path d="M1 1h6.5v6.5H1V1Zm7.5 0H15v6.5H8.5V1ZM1 8.5h6.5V15H1V8.5Zm7.5 0H15V15H8.5V8.5Z" />
-                      </svg>
-                    ) : (
-                      <svg viewBox="0 0 16 16" class="h-5 w-5 fill-current" aria-hidden="true">
-                        <path d="M8 1.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 0 0 0-13ZM4.2 5.8h2.3v2.3H4.2V5.8Zm5.3 0h2.3v2.3H9.5V5.8ZM6.8 9.5h2.3v2.3H6.8V9.5Z" />
-                      </svg>
-                    )}
-                  </div>
+                  <img
+                    src={cert.badge}
+                    alt={cert.name}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-14 w-14 shrink-0 object-contain"
+                  />
                   <div class="min-w-0">
-                    <span class:list={[
-                      "block font-mono text-xs font-semibold tracking-wider",
-                      cert.issuer === "microsoft" ? "text-seiryu" : "text-jade"
-                    ]}>{cert.code}</span>
-                    <span class="block truncate font-ui text-sm text-text/76">{cert.name}</span>
+                    <span class="block font-mono text-xs font-semibold tracking-wider text-seiryu">{cert.code}</span>
+                    <span class="block font-ui text-sm leading-snug text-text/76">{cert.name}</span>
                   </div>
                 </div>
               ))
