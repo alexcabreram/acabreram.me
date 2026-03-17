@@ -44,7 +44,7 @@ const getReadingTime = (body: string | undefined) => Math.max(1, Math.ceil((body
               >
                 <img
                   src={post.data.heroImage ?? `/og/${post.id}.png`}
-                  alt=""
+                  alt={post.data.title}
                   loading="lazy"
                   decoding="async"
                   class="aspect-[2.5/1] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
