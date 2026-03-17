@@ -8,6 +8,8 @@ interface Props {
 const { lang = "en" } = Astro.props;
 const homeHref = lang === "es" ? "/es/" : "/";
 const blogHref = lang === "es" ? "/es/blog/" : "/blog/";
+const aboutHref = lang === "es" ? "/es/#about" : "/#about";
+const aboutLabel = lang === "es" ? "Sobre mí" : "About";
 const langToggleHref = lang === "es" ? "/blog/" : "/es/blog/";
 const langLabel = lang === "es" ? "EN" : "ES";
 ---
@@ -24,6 +26,12 @@ const langLabel = lang === "es" ? "EN" : "ES";
       class="font-mono text-[10px] uppercase tracking-wider text-muted transition-colors hover:text-seiryu"
     >
       Blog
+    </a>
+    <a
+      href={aboutHref}
+      class="font-mono text-[10px] uppercase tracking-wider text-muted transition-colors hover:text-seiryu"
+    >
+      {aboutLabel}
     </a>
     <a
       href={langToggleHref}

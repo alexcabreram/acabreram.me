@@ -55,6 +55,7 @@ type Translation = {
     builtWith: string;
     posts: string;
     closing: string;
+    ctaBlog: string;
   };
   redirect: {
     title: string;
@@ -71,12 +72,12 @@ export const translations = {
     meta: {
       title: "Alex Cabrera — acabreram.me",
       description:
-        "Alex Cabrera Martínez, also known as Alejandro Cabrera Martínez, is a Copilot Solution Engineer at Microsoft Spain, 2024 MVP, professor, speaker, and homelab builder exploring AI agents, cloud, and self-hosted infrastructure."
+        "Alex Cabrera Martínez, also known as Alejandro Cabrera Martínez, is a Copilot Solution Engineer at Microsoft Spain, Microsoft MVP Alumni, professor, speaker, and homelab builder exploring AI agents, cloud, and self-hosted infrastructure."
     },
     hero: {
-      role: "Copilot Solution Engineer @ Microsoft · 2024 MVP · Professor",
+      role: "Copilot Solution Engineer @ Microsoft · AI Agents · Governance · Microsoft MVP Alumni",
       name: "Alex Cabrera",
-      tagline: "Building AI adoption by day, training dragons by night.",
+      tagline: "Deploying AI at enterprise scale by day. Training dragons on a homelab by night.",
       cta: {
         blog: "Blog",
         github: "GitHub",
@@ -127,7 +128,7 @@ export const translations = {
         "By day, I help CIOs and CISOs adopt AI governance at scale. By night, I build my own AI agents on a NAS and a Mac Mini. It's not theory — it's practice.",
       storyPoints: [
         "Copilot Solution Engineer @ Microsoft Spain",
-        "2024 Microsoft MVP",
+        "Microsoft MVP Alumni",
         "Professor @ The Valley Business & Tech School",
         "Speaker & mentor in tech communities"
       ],
@@ -138,7 +139,8 @@ export const translations = {
     footer: {
       builtWith: "Built with Astro · Hosted on Cloudflare",
       posts: "Posts drafted with AI agents, shipped by a human.",
-      closing: "It's not theory — it's practice."
+      closing: "It's not theory — it's practice.",
+      ctaBlog: "Read the blog"
     },
     redirect: {
       title: "About — Alex Cabrera",
@@ -153,12 +155,12 @@ export const translations = {
     meta: {
       title: "Alex Cabrera — acabreram.me",
       description:
-        "Alex Cabrera Martínez, también conocido como Alejandro Cabrera Martínez, es Copilot Solution Engineer en Microsoft Spain, MVP 2024, profesor, speaker y constructor de homelab explorando agentes IA, cloud e infraestructura self-hosted."
+        "Alex Cabrera Martínez, también conocido como Alejandro Cabrera Martínez, es Copilot Solution Engineer en Microsoft Spain, Microsoft MVP Alumni, profesor, speaker y constructor de homelab explorando agentes IA, cloud e infraestructura self-hosted."
     },
     hero: {
-      role: "Copilot Solution Engineer @ Microsoft · 2024 MVP · Professor",
+      role: "Copilot Solution Engineer @ Microsoft · AI Agents · Governance · Microsoft MVP Alumni",
       name: "Alex Cabrera",
-      tagline: "Construyendo adopción de IA de día, entrenando dragones de noche.",
+      tagline: "Desplegando IA a escala empresarial de día. Entrenando dragones en un homelab de noche.",
       cta: {
         blog: "Blog",
         github: "GitHub",
@@ -209,7 +211,7 @@ export const translations = {
         "De día, ayudo a CIOs y CISOs a adoptar gobernanza de IA a escala. De noche, construyo mis propios agentes de IA en un NAS y un Mac Mini. No es teoría — es práctica.",
       storyPoints: [
         "Copilot Solution Engineer @ Microsoft Spain",
-        "Microsoft MVP 2024",
+        "Microsoft MVP Alumni",
         "Profesor @ The Valley Business & Tech School",
         "Speaker y mentor en comunidades tech"
       ],
@@ -220,7 +222,8 @@ export const translations = {
     footer: {
       builtWith: "Hecho con Astro · Alojado en Cloudflare",
       posts: "Posts escritos con agentes IA, publicados por un humano.",
-      closing: "No es teoría — es práctica."
+      closing: "No es teoría — es práctica.",
+      ctaBlog: "Lee el blog"
     },
     redirect: {
       title: "Sobre mí — Alex Cabrera",
