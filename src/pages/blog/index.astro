@@ -39,9 +39,17 @@ const getReadingTime = (body: string | undefined) => Math.max(1, Math.ceil((body
             {posts.map((post) => (
               <a
                 href={`/blog/${post.id}/`}
-                class="group block border border-[var(--border-subtle)] p-5 transition-colors hover:border-[var(--color-seiryu)] sm:p-6"
+                class="group block overflow-hidden border border-[var(--border-subtle)] transition-colors hover:border-[var(--color-seiryu)]"
                 style="border-radius: 2px"
               >
+                <img
+                  src={post.data.heroImage ?? `/og/${post.id}.png`}
+                  alt={post.data.title}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[2.5/1] w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                />
+                <div class="p-5 sm:p-6">
                 <div class="flex flex-wrap items-center gap-2 mb-2">
                   {post.data.tags.map((tag: string) => (
                     <span class="font-mono text-[10px] uppercase tracking-wider text-seiryu">
@@ -60,6 +68,7 @@ const getReadingTime = (body: string | undefined) => Math.max(1, Math.ceil((body
                     {formatDate(post.data.date)}
                   </time>
                   <span class="font-mono text-[11px] text-muted/40">· {getReadingTime(post.body)} min read</span>
+                </div>
                 </div>
               </a>
             ))}
