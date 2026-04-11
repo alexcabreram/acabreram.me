@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+---
+
+<Layout lang="es" title="Prototipos de Redesign" description="Comparativa de propuestas visuales para la landing personal.">
+  <main class="section-shell py-16 sm:py-20">
+    <p class="font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu">Design Lab</p>
+    <h1 class="mt-4 font-display text-4xl text-text sm:text-5xl">Prototipos de Redesign</h1>
+    <p class="mt-4 max-w-3xl font-body text-lg leading-relaxed text-text/82">
+      Estas propuestas aisladas te permiten validar direccion visual antes de cambiar produccion.
+      Incluyen dos versiones de landing y dos alternativas nuevas especificas para el diagrama de arquitectura.
+    </p>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-2">
+      <article class="surface-card rounded-sm bg-surface p-7">
+        <p class="font-mono text-xs tracking-[0.2em] text-seiryu">OPCION A</p>
+        <h2 class="mt-3 font-display text-3xl text-text">Neo Editorial Dragon</h2>
+        <p class="mt-4 font-body text-base leading-relaxed text-text/80">
+          Enfoque editorial, limpio y con contraste alto. Motion mas sutil y lectura prioritaria.
+        </p>
+        <a href="/prototypes/neo" class="control-pill mt-6 inline-flex px-4 py-2 font-ui text-sm font-semibold text-text hover:text-seiryu-hi">
+          Ver prototipo A
+        </a>
+      </article>
+
+      <article class="surface-card rounded-sm bg-surface p-7">
+        <p class="font-mono text-xs tracking-[0.2em] text-seiryu-hi">OPCION B</p>
+        <h2 class="mt-3 font-display text-3xl text-text">Hibrido Neo + Glass Ops</h2>
+        <p class="mt-4 font-body text-base leading-relaxed text-text/80">
+          Misma base narrativa con capa glass, carrusel continuo y microefectos mas visibles.
+        </p>
+        <a href="/prototypes/hibrido" class="control-pill mt-6 inline-flex px-4 py-2 font-ui text-sm font-semibold text-text hover:text-seiryu-hi">
+          Ver prototipo B
+        </a>
+      </article>
+
+      <article class="surface-card rounded-sm bg-surface p-7">
+        <p class="font-mono text-xs tracking-[0.2em] text-jade">STACK ALT 1</p>
+        <h2 class="mt-3 font-display text-3xl text-text">Radial Orbit</h2>
+        <p class="mt-4 font-body text-base leading-relaxed text-text/80">
+          Core central con orbitas animadas y nodos de dominio. Alto impacto visual para marca personal.
+        </p>
+        <a href="/prototypes/stack-radial" class="control-pill mt-6 inline-flex px-4 py-2 font-ui text-sm font-semibold text-text hover:text-seiryu-hi">
+          Ver radial orbit
+        </a>
+      </article>
+
+      <article class="surface-card rounded-sm bg-surface p-7">
+        <p class="font-mono text-xs tracking-[0.2em] text-gold">STACK ALT 2</p>
+        <h2 class="mt-3 font-display text-3xl text-text">Data Lanes</h2>
+        <p class="mt-4 font-body text-base leading-relaxed text-text/80">
+          Enfoque operations center por carriles. Muy claro para explicar flujos y dependencias.
+        </p>
+        <a href="/prototypes/stack-lanes" class="control-pill mt-6 inline-flex px-4 py-2 font-ui text-sm font-semibold text-text hover:text-seiryu-hi">
+          Ver data lanes
+        </a>
+      </article>
+    </div>
+  </main>
+</Layout>

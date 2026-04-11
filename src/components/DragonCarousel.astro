@@ -1,0 +1,23 @@
+---
+const dragonAssets = [
+  { src: "/dragon-hero.png", label: "dragon-hero" },
+  { src: "/dragon-nav.png", label: "dragon-nav" },
+  { src: "/dragon-favicon.png", label: "dragon-favicon" },
+  { src: "/dragon.png", label: "dragon" },
+  { src: "/photos/gaming-casual.jpg", label: "gaming" },
+  { src: "/photos/microsoft-campus.jpg", label: "campus" }
+];
+---
+
+<div class="dragon-carousel" aria-label="Dragon gallery carousel">
+  <div class="dragon-carousel__track">
+    {
+      [...dragonAssets, ...dragonAssets].map((asset, idx) => (
+        <figure class="dragon-carousel__card" aria-label={`${asset.label}-${idx}`}>
+          <img src={asset.src} alt={asset.label} loading="lazy" decoding="async" />
+          <figcaption>{asset.label}</figcaption>
+        </figure>
+      ))
+    }
+  </div>
+</div>

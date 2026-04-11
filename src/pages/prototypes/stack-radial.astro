@@ -1,0 +1,240 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const orbitNodes = [
+  { id: "cloud", label: "Azure + Cloud", sub: "Fallback + copilots", angle: 0, tone: "seiryu" },
+  { id: "nas", label: "UGREEN NAS", sub: "Media + Monitoring", angle: 120, tone: "jade" },
+  { id: "mac", label: "Mac Mini", sub: "Agents + local LLM", angle: 240, tone: "gold" }
+];
+---
+
+<Layout lang="es" title="Proto Stack · Radial Orbit" description="Prototipo de arquitectura radial con nodo central y orbitas.">
+  <main id="main-content" class="section-shell py-16 sm:py-20">
+    <a href="/prototypes/" class="font-mono text-xs uppercase tracking-[0.2em] text-seiryu hover:text-seiryu-hi">← Volver a prototipos</a>
+    <p class="mt-6 font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu">Stack Concept · Radial Orbit</p>
+    <h1 class="mt-3 font-display text-4xl text-text sm:text-5xl">Arquitectura como sistema orbital</h1>
+    <p class="mt-4 max-w-3xl font-body text-lg leading-relaxed text-text/82">
+      El bot central actua como core de routing y cada dominio tecnico orbita alrededor con flujos continuos.
+      El objetivo es que se lea como una historia visual en 3 segundos.
+    </p>
+
+    <section class="radial-stage mt-12" aria-label="Diagrama radial de arquitectura">
+      <div class="radial-core">
+        <span class="radial-core__pulse"></span>
+        <span class="radial-core__pulse"></span>
+        <div class="radial-core__node">
+          <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-gold">Core Router</p>
+          <h2 class="mt-2 font-mono text-lg text-text">@homelabguardbot</h2>
+          <p class="mt-1 text-xs text-text/70">Prompt routing + orchestration</p>
+        </div>
+      </div>
+
+      <div class="radial-orbit radial-orbit--outer" aria-hidden="true"></div>
+      <div class="radial-orbit radial-orbit--inner" aria-hidden="true"></div>
+
+      {
+        orbitNodes.map((node) => (
+          <article
+            class={`radial-node radial-node--${node.tone}`}
+            style={`--angle:${node.angle}deg;`}
+          >
+            <p class="font-mono text-[10px] uppercase tracking-[0.16em]">{node.id}</p>
+            <h3 class="mt-2 font-ui text-base font-semibold">{node.label}</h3>
+            <p class="mt-1 text-xs text-text/74">{node.sub}</p>
+            <span class="radial-link" aria-hidden="true"></span>
+          </article>
+        ))
+      }
+    </section>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+      <div class="surface-card rounded-sm bg-surface p-5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-seiryu">Lectura</p>
+        <p class="mt-2 text-sm text-text/78">Muy visual, narrativa fuerte de marca.</p>
+      </div>
+      <div class="surface-card rounded-sm bg-surface p-5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-jade">Motion</p>
+        <p class="mt-2 text-sm text-text/78">Orbitas suaves + pulsos del core, sin ruido extremo.</p>
+      </div>
+      <div class="surface-card rounded-sm bg-surface p-5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-gold">Uso</p>
+        <p class="mt-2 text-sm text-text/78">Ideal para portada e impacto visual inmediato.</p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .radial-stage {
+    position: relative;
+    min-height: 34rem;
+    border: 1px solid color-mix(in srgb, var(--seiryu) 20%, var(--border-subtle));
+    border-radius: 8px;
+    background: radial-gradient(circle at center, color-mix(in srgb, var(--seiryu) 12%, transparent) 0%, transparent 52%),
+      color-mix(in srgb, var(--surface) 88%, transparent);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .radial-core {
+    position: relative;
+    width: 11rem;
+    height: 11rem;
+    display: grid;
+    place-items: center;
+    z-index: 5;
+  }
+
+  .radial-core__node {
+    width: 100%;
+    height: 100%;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--gold) 34%, transparent);
+    background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+    box-shadow: 0 20px 44px color-mix(in srgb, var(--gold) 16%, transparent);
+    display: grid;
+    place-content: center;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .radial-core__pulse {
+    position: absolute;
+    inset: -0.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--gold) 36%, transparent);
+    animation: radial-pulse 2.8s ease-out infinite;
+    pointer-events: none;
+  }
+
+  .radial-core__pulse:last-child {
+    animation-delay: -1.3s;
+  }
+
+  .radial-orbit {
+    position: absolute;
+    border: 1px dashed color-mix(in srgb, var(--seiryu) 24%, transparent);
+    border-radius: 999px;
+    pointer-events: none;
+  }
+
+  .radial-orbit--outer {
+    width: min(82vw, 31rem);
+    height: min(82vw, 31rem);
+    animation: orbit-spin 48s linear infinite;
+  }
+
+  .radial-orbit--inner {
+    width: min(62vw, 23rem);
+    height: min(62vw, 23rem);
+    opacity: 0.7;
+    animation: orbit-spin 34s linear infinite reverse;
+  }
+
+  .radial-node {
+    --radius: min(39vw, 14.5rem);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: min(17rem, 42vw);
+    transform:
+      translate(-50%, -50%)
+      rotate(var(--angle))
+      translateX(var(--radius))
+      rotate(calc(var(--angle) * -1));
+    border-radius: 6px;
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    padding: 0.75rem 0.9rem;
+    box-shadow: 0 18px 36px color-mix(in srgb, var(--bg) 25%, transparent);
+    z-index: 4;
+  }
+
+  .radial-node--seiryu {
+    border-color: color-mix(in srgb, var(--seiryu) 36%, transparent);
+  }
+
+  .radial-node--jade {
+    border-color: color-mix(in srgb, var(--jade) 36%, transparent);
+  }
+
+  .radial-node--gold {
+    border-color: color-mix(in srgb, var(--gold) 36%, transparent);
+  }
+
+  .radial-link {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--seiryu-hi);
+    box-shadow: 0 0 0 8px color-mix(in srgb, var(--seiryu-hi) 12%, transparent);
+    transform: translate(-50%, -50%);
+    animation: link-glow 2.2s ease-in-out infinite;
+  }
+
+  @keyframes orbit-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes radial-pulse {
+    from { transform: scale(0.88); opacity: 0.42; }
+    to { transform: scale(1.25); opacity: 0; }
+  }
+
+  @keyframes link-glow {
+    0%, 100% { opacity: 0.65; }
+    50% { opacity: 1; }
+  }
+
+  @media (max-width: 900px) {
+    .radial-stage {
+      min-height: 40rem;
+    }
+
+    .radial-node {
+      --radius: min(40vw, 11.5rem);
+      width: min(15rem, 70vw);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .radial-stage {
+      min-height: 48rem;
+      padding-top: 2.5rem;
+    }
+
+    .radial-core {
+      width: 9rem;
+      height: 9rem;
+    }
+
+    .radial-node {
+      --radius: 0rem;
+      width: min(20rem, 86vw);
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
+
+    .radial-node:nth-of-type(1) { top: 4.5rem; }
+    .radial-node:nth-of-type(2) { top: 15rem; }
+    .radial-node:nth-of-type(3) { top: 25.5rem; }
+
+    .radial-orbit,
+    .radial-link {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radial-orbit,
+    .radial-core__pulse,
+    .radial-link {
+      animation: none;
+    }
+  }
+</style>
