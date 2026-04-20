@@ -73,7 +73,7 @@ const iconMap: Record<IconName, SvgNode[]> = {
 };
 ---
 
-<span class="stack-service-chip inline-flex items-center gap-2.5 rounded-sm px-3.5 py-2.5 font-ui text-sm leading-none" style={toneStyle}>
+<span class="stack-service-chip inline-flex items-start gap-2.5 rounded-sm px-3.5 py-2.5 font-ui text-sm" style={toneStyle}>
   <span class="stack-service-chip__icon flex h-8 w-8 shrink-0 items-center justify-center rounded-sm" aria-hidden="true">
     <svg viewBox="0 0 16 16" class="h-4 w-4 fill-current" focusable="false">
       {
@@ -87,5 +87,5 @@ const iconMap: Record<IconName, SvgNode[]> = {
       }
     </svg>
   </span>
-  <span>{label}</span>
+  <span class="stack-service-chip__label">{label}</span>
 </span>

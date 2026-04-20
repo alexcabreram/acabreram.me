@@ -1,0 +1,240 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const lanes = [
+  {
+    name: "Cloud Lane",
+    tone: "seiryu",
+    stages: ["Azure OpenAI", "Copilot", "Cloudflare", "GitHub Actions"]
+  },
+  {
+    name: "Infra Lane",
+    tone: "jade",
+    stages: ["UGREEN NAS", "Prometheus", "Grafana", "Media Stack"]
+  },
+  {
+    name: "Agent Lane",
+    tone: "gold",
+    stages: ["Mac Mini", "Ollama", "OpenClaw", "Telegram Bot"]
+  }
+];
+---
+
+<Layout lang="es" title="Proto Stack · Data Lanes" description="Prototipo tipo NOC con carriles de flujo para la arquitectura.">
+  <main id="main-content" class="section-shell py-16 sm:py-20">
+    <a href="/prototypes/" class="font-mono text-xs uppercase tracking-[0.2em] text-seiryu hover:text-seiryu-hi">← Volver a prototipos</a>
+    <p class="mt-6 font-ui text-xs font-medium uppercase tracking-[0.34em] text-seiryu">Stack Concept · Data Lanes</p>
+    <h1 class="mt-3 font-display text-4xl text-text sm:text-5xl">Arquitectura por carriles operativos</h1>
+    <p class="mt-4 max-w-3xl font-body text-lg leading-relaxed text-text/82">
+      Enfoque tipo operations center. Cada lane representa un dominio y el trafico se entiende de izquierda a derecha.
+    </p>
+
+    <section class="lane-board mt-12" aria-label="Diagrama por lanes">
+      {
+        lanes.map((lane, laneIndex) => (
+          <article class={`lane lane--${lane.tone}`}>
+            <header class="lane__header">
+              <p class="font-mono text-[11px] uppercase tracking-[0.16em]">{lane.name}</p>
+              <span class="lane__badge">{lane.stages.length} nodes</span>
+            </header>
+
+            <div class="lane__track" aria-hidden="true">
+              <span class="lane__packet lane__packet--a"></span>
+              <span class="lane__packet lane__packet--b"></span>
+            </div>
+
+            <ol class="lane__nodes">
+              {
+                lane.stages.map((stage, stageIndex) => (
+                  <li class="lane__node">
+                    <span class="lane__node-index">{laneIndex + 1}.{stageIndex + 1}</span>
+                    <span>{stage}</span>
+                  </li>
+                ))
+              }
+            </ol>
+          </article>
+        ))
+      }
+    </section>
+
+    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+      <div class="surface-card rounded-sm bg-surface p-5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-seiryu">Lectura</p>
+        <p class="mt-2 text-sm text-text/78">Muy clara para explicar pipeline y dependencias.</p>
+      </div>
+      <div class="surface-card rounded-sm bg-surface p-5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-jade">Motion</p>
+        <p class="mt-2 text-sm text-text/78">Animacion de paquetes consistente, estilo dashboard premium.</p>
+      </div>
+      <div class="surface-card rounded-sm bg-surface p-5">
+        <p class="font-mono text-[10px] uppercase tracking-[0.16em] text-gold">Uso</p>
+        <p class="mt-2 text-sm text-text/78">Ideal para demos tecnicas y lectura rapida con clientes.</p>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .lane-board {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .lane {
+    border: 1px solid color-mix(in srgb, var(--text) 12%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--surface) 92%, transparent);
+    padding: 0.85rem 0.95rem;
+    box-shadow: 0 14px 34px color-mix(in srgb, var(--bg) 22%, transparent);
+  }
+
+  .lane--seiryu {
+    border-color: color-mix(in srgb, var(--seiryu) 30%, transparent);
+  }
+
+  .lane--jade {
+    border-color: color-mix(in srgb, var(--jade) 30%, transparent);
+  }
+
+  .lane--gold {
+    border-color: color-mix(in srgb, var(--gold) 30%, transparent);
+  }
+
+  .lane__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .lane__badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid color-mix(in srgb, var(--text) 20%, transparent);
+    background: color-mix(in srgb, var(--bg) 35%, transparent);
+    color: color-mix(in srgb, var(--text) 72%, transparent);
+    padding: 0.16rem 0.34rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .lane__track {
+    position: relative;
+    margin-top: 0.7rem;
+    height: 0.8rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--bg) 35%, transparent);
+    overflow: hidden;
+  }
+
+  .lane__track::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+      color-mix(in srgb, var(--seiryu-hi) 0%, transparent) 0%,
+      color-mix(in srgb, var(--seiryu-hi) 22%, transparent) 50%,
+      color-mix(in srgb, var(--seiryu-hi) 0%, transparent) 100%);
+    opacity: 0.55;
+  }
+
+  .lane__packet {
+    position: absolute;
+    top: 50%;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 999px;
+    transform: translateY(-50%);
+    background: var(--seiryu-hi);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--seiryu-hi) 16%, transparent);
+  }
+
+  .lane--jade .lane__packet {
+    background: var(--jade);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--jade) 16%, transparent);
+  }
+
+  .lane--gold .lane__packet {
+    background: var(--gold);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--gold) 16%, transparent);
+  }
+
+  .lane__packet--a {
+    animation: lane-flow 2.8s linear infinite;
+  }
+
+  .lane__packet--b {
+    animation: lane-flow 3.8s linear infinite;
+    animation-delay: -1.5s;
+  }
+
+  .lane__nodes {
+    margin-top: 0.8rem;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lane__node {
+    border: 1px solid color-mix(in srgb, var(--text) 14%, transparent);
+    background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+    border-radius: 4px;
+    padding: 0.5rem;
+    display: grid;
+    gap: 0.28rem;
+    color: color-mix(in srgb, var(--text) 86%, transparent);
+    min-height: 3.1rem;
+  }
+
+  .lane__node-index {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--seiryu-hi) 90%, var(--text));
+  }
+
+  .lane--jade .lane__node-index {
+    color: color-mix(in srgb, var(--jade) 90%, var(--text));
+  }
+
+  .lane--gold .lane__node-index {
+    color: color-mix(in srgb, var(--gold) 90%, var(--text));
+  }
+
+  @keyframes lane-flow {
+    from { left: -5%; }
+    to { left: 102%; }
+  }
+
+  @media (max-width: 960px) {
+    .lane__nodes {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 560px) {
+    .lane {
+      padding: 0.75rem;
+    }
+
+    .lane__nodes {
+      grid-template-columns: 1fr;
+    }
+
+    .lane__badge {
+      font-size: 0.55rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lane__packet {
+      animation: none;
+    }
+  }
+</style>
