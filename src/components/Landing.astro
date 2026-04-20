@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { translations, type Locale } from "../i18n/translations";
 import LangToggle from "./LangToggle.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import AgentGraph from "./AgentGraph.astro";
 
 interface Props {
   lang: Locale;
@@ -193,7 +194,9 @@ const promptRouting = isSpanish
             {t.stack.description}
           </p>
         </div>
-        <!-- AgentGraph v2 will be integrated in a later task -->
+        <div class="mt-14">
+          <AgentGraph lang={lang} />
+        </div>
       </div>
     </section>
 
