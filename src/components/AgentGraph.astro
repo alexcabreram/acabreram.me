@@ -30,7 +30,7 @@ const agentNodes = [
 ];
 
 // User node
-const userNode = { id: "user", cx: 110, cy: 300, color: "#E8C96A", label: lang === "es" ? "Tú" : "You" };
+const userNode = { id: "user", cx: 110, cy: 300, color: "#E8C96A", label: "acm." };
 
 // i18n detail data
 const nodeDetails = {
@@ -220,17 +220,28 @@ const nodeDetails = {
     ))}
 
     <!-- Layer 6: User→Dragon edge (golden animated dash-flow line) -->
-    <line
-      x1={userNode.cx}
-      y1={userNode.cy}
-      x2={dragonCx}
-      y2={dragonCy}
-      stroke={userNode.color}
-      stroke-width="1.5"
-      stroke-dasharray="8 6"
-      opacity="0.5"
-      class="flow"
-    />
+    {(() => {
+      const dx = dragonCx - userNode.cx;
+      const dy = dragonCy - userNode.cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const startX = userNode.cx + (dx / dist) * 28;
+      const startY = userNode.cy + (dy / dist) * 28;
+      const endX = dragonCx - (dx / dist) * (dragonR + 14);
+      const endY = dragonCy - (dy / dist) * (dragonR + 14);
+      return (
+        <line
+          x1={startX}
+          y1={startY}
+          x2={endX}
+          y2={endY}
+          stroke={userNode.color}
+          stroke-width="1.5"
+          stroke-dasharray="8 6"
+          opacity="0.5"
+          class="flow"
+        />
+      );
+    })()}
 
     <!-- Layer 7: Dragon→Agent edges (6 animated paths, each agent's color) -->
     {agentNodes.map((agent) => {
@@ -256,6 +267,32 @@ const nodeDetails = {
         />
       );
     })}
+
+    <!-- Layer 8: Cross-agent connections (Bézier curves) -->
+    {(() => {
+      const connections = [
+        { from: { cy: 80 }, to: { cy: 160 }, color: "#2ECC8A" },   // Ideas→Lore (use Lore's green)
+        { from: { cy: 160 }, to: { cy: 480 }, color: "#e879f9" },  // Lore→Roar (use Roar's pink)
+        { from: { cy: 240 }, to: { cy: 400 }, color: "#f97316" },  // Monitor→DevOps (use DevOps's orange)
+      ];
+      const x = 570; // all agents share same x
+      return connections.map((conn) => {
+        const midY = (conn.from.cy + conn.to.cy) / 2;
+        const distance = Math.abs(conn.to.cy - conn.from.cy);
+        const bowAmount = Math.min(distance * 0.35, 80); // bow proportional to distance, capped
+        const cpX = x + bowAmount; // control point bows right
+        return (
+          <path
+            d={`M ${x} ${conn.from.cy} Q ${cpX} ${midY} ${x} ${conn.to.cy}`}
+            fill="none"
+            stroke={conn.color}
+            stroke-width="0.7"
+            stroke-dasharray="4 6"
+            opacity="0.12"
+          />
+        );
+      });
+    })()}
 
     <!-- Layer 9: Dragon center (seiryu-mark.svg with pulse glow) -->
     <g data-node-id="dragon" class="graph-node dragon-node">
@@ -288,7 +325,7 @@ const nodeDetails = {
     <!-- Layer 10: User node -->
     <g data-node-id={userNode.id} class="graph-node user-node">
       <circle cx={userNode.cx} cy={userNode.cy} r="28" fill={`${userNode.color}18`} stroke={userNode.color} stroke-width="1.5" />
-      <text x={userNode.cx} y={userNode.cy + 6} fill={userNode.color} font-size="14" font-weight="600" text-anchor="middle">
+      <text x={userNode.cx} y={userNode.cy + 5} fill={userNode.color} font-size="13" font-weight="600" text-anchor="middle" font-family="'JetBrains Mono', monospace">
         {userNode.label}
       </text>
     </g>
@@ -454,19 +491,21 @@ const nodeDetails = {
   @media (min-width: 768px) {
     .detail-panel {
       position: absolute;
-      top: 0;
-      right: -28rem;
+      top: 1rem;
+      right: 1rem;
       bottom: auto;
       left: auto;
-      width: 26rem;
-      max-height: none;
+      width: 22rem;
+      max-height: calc(100% - 2rem);
+      overflow-y: auto;
       border-top: none;
-      border-left: 1px solid var(--border-strong);
-      border-radius: 2px;
-      transform: translateX(0);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+      transform: none;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 350ms cubic-bezier(0.22, 1, 0.36, 1), visibility 350ms;
+      transition: opacity 250ms ease, visibility 250ms;
     }
 
     .detail-panel[aria-hidden="false"] {
