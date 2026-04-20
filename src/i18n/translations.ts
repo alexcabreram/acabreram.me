@@ -70,7 +70,7 @@ type Translation = {
 export const translations = {
   en: {
     meta: {
-      title: "Alex Cabrera — acabreram.me",
+      title: "Alex Cabrera — acabreram.com",
       description:
         "Alex Cabrera Martínez, also known as Alejandro Cabrera Martínez, is a Copilot Solution Engineer at Microsoft Spain, Microsoft MVP Alumni, professor, speaker, and homelab builder exploring AI agents, cloud, and self-hosted infrastructure."
     },
@@ -153,7 +153,7 @@ export const translations = {
   },
   es: {
     meta: {
-      title: "Alex Cabrera — acabreram.me",
+      title: "Alex Cabrera — acabreram.com",
       description:
         "Alex Cabrera Martínez, también conocido como Alejandro Cabrera Martínez, es Copilot Solution Engineer en Microsoft Spain, Microsoft MVP Alumni, profesor, speaker y constructor de homelab explorando agentes IA, cloud e infraestructura self-hosted."
     },

@@ -3,4 +3,4 @@ Allow: /
 Disallow: /_astro/
 Disallow: /brand/
 
-Sitemap: https://acabreram.me/sitemap-index.xml
+Sitemap: https://acabreram.com/sitemap-index.xml
