@@ -418,12 +418,21 @@
 }
 
 .hero-dragon {
-  opacity: 0.07;
+  opacity: 0.28;
+  transition: opacity 0.3s;
   filter: drop-shadow(0 0 2.6rem color-mix(in srgb, var(--seiryu) 18%, transparent));
 }
 
 :root[data-theme="light"] .hero-dragon {
-  opacity: 0.06;
+  opacity: 0.1;
+  filter: invert(1) brightness(0.3);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .hero-dragon {
+    opacity: 0.1;
+    filter: invert(1) brightness(0.3);
+  }
 }
 
 .closing-dragon {
@@ -658,16 +667,16 @@
 }
 
 .dragon-follower-toggle img {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .dragon-follower {
   position: fixed;
   left: 0;
   top: 0;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 3rem;
+  height: 3rem;
   transform: translate(-100px, -100px);
   pointer-events: none;
   z-index: 54;

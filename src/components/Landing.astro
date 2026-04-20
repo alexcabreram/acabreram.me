@@ -41,19 +41,19 @@ const aboutPhotos = [
   {
     src: "/photos/microsoft-campus.jpg",
     alt: "Alex at the Microsoft campus with a giant Microsoft logo.",
-    className: "col-span-1 row-span-1",
+    className: "col-span-1 row-span-2",
     imageClass: "object-center"
   },
   {
     src: "/photos/gaming-casual.jpg",
     alt: "Alex with Minecraft plushies — gaming culture is part of the identity.",
-    className: "col-span-1 row-span-1",
+    className: "col-span-1 row-span-2",
     imageClass: "object-center"
   },
   {
     src: "/photos/conference-working.jpg",
     alt: "Alex working on a laptop at the Bizz Summit conference.",
-    className: "col-span-1 row-span-1",
+    className: "col-span-1 row-span-2",
     imageClass: "object-center"
   }
 ];
@@ -212,7 +212,7 @@ const promptRouting = isSpanish
           </p>
         </div>
 
-        <div class="mt-12 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+        <div class="mt-12 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
           <div class="reveal grid auto-rows-[7rem] grid-cols-2 gap-3 sm:auto-rows-[9rem] sm:gap-4 lg:grid-cols-3 lg:auto-rows-[8rem] xl:auto-rows-[9.25rem]">
             {
               aboutPhotos.map((photo) => (
@@ -326,9 +326,9 @@ const promptRouting = isSpanish
   </footer>
 
 <button id="dragon-follower-toggle" class="dragon-follower-toggle" type="button" aria-label="Activate dragon follower" aria-pressed="false">
-  <img src="/dragon-favicon.png" alt="" aria-hidden="true" />
+  <img src="/seiryu-favicon.svg" alt="" aria-hidden="true" />
 </button>
-<img id="dragon-follower" class="dragon-follower" src="/dragon-favicon.png" alt="" aria-hidden="true" />
+<img id="dragon-follower" class="dragon-follower" src="/seiryu-favicon.svg" alt="" aria-hidden="true" />
 
 <script is:inline>
   (() => {
