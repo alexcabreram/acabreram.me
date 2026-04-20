@@ -674,3 +674,31 @@
   opacity: 0;
   filter: drop-shadow(0 0 10px color-mix(in srgb, var(--seiryu-hi) 48%, transparent));
 }
+
+.prompt-routing__rows {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.prompt-routing__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 0.5px solid var(--border-subtle);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.prompt-routing__row:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .prompt-routing__row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.22rem;
+  }
+}

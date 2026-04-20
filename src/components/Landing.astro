@@ -57,6 +57,22 @@ const aboutPhotos = [
     imageClass: "object-center"
   }
 ];
+
+const isSpanish = lang === "es";
+
+const promptRouting = isSpanish
+  ? [
+      ["Como despliego Copilot en una empresa?", "Enterprise mode"],
+      ["Que modelo local corre mejor en un Mac Mini?", "Homelab mode"],
+      ["Como enseño IA sin que suene a marketing?", "Profesor mode"],
+      ["Puedo automatizar esto con n8n?", "Builder mode"]
+    ]
+  : [
+      ["How do I deploy Copilot across an enterprise?", "Enterprise mode"],
+      ["Which local model runs best on a Mac Mini?", "Homelab mode"],
+      ["How do I teach AI without sounding like hype?", "Professor mode"],
+      ["Can I automate this with n8n?", "Builder mode"]
+    ];
 ---
 
 <Layout lang={lang}>
@@ -228,6 +244,22 @@ const aboutPhotos = [
             <p class="reveal rounded-sm border border-seiryu/18 bg-surface/80 p-7 font-body text-xl italic leading-relaxed text-text/82" style="box-shadow: var(--shadow-soft)">
               {t.about.careerPath}
             </p>
+
+            <div class="reveal prompt-routing rounded-sm border border-seiryu/24 bg-surface/75 p-6" aria-label="Prompt routing section">
+              <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-seiryu-hi">
+                {isSpanish ? "Prompt routing - como pienso" : "Prompt routing - how I think"}
+              </p>
+              <div class="prompt-routing__rows">
+                {
+                  promptRouting.map(([question, mode]) => (
+                    <div class="prompt-routing__row">
+                      <span>{question}</span>
+                      <span class="font-mono text-[11px] uppercase tracking-[0.08em] text-seiryu-hi">-&gt; {mode}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
           </div>
         </div>
 
