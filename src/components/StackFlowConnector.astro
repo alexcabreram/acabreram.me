@@ -37,8 +37,6 @@ const isVertical = direction === "vertical";
         stroke-width="1"
         vector-effect="non-scaling-stroke"
       />
-      <circle class="stack-flow__node stack-flow__node--start" cx="10" cy="3" r="2.2" fill={colorStart} />
-      <circle class="stack-flow__node stack-flow__node--end" cx="10" cy="97" r="2.2" fill={colorEnd} />
       {/* Stream 1: fast small packets */}
       <line
         class="flow-packets flow-packets--1"
@@ -72,16 +70,6 @@ const isVertical = direction === "vertical";
         stroke-opacity="0.5"
         vector-effect="non-scaling-stroke"
       />
-      <line
-        class="flow-packets flow-packets--4"
-        x1="10" y1="0" x2="10" y2="100"
-        stroke={colorEnd}
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-dasharray="8 28"
-        stroke-opacity="0.55"
-        vector-effect="non-scaling-stroke"
-      />
     </svg>
   ) : (
     <svg
@@ -106,8 +94,6 @@ const isVertical = direction === "vertical";
         stroke-width="1"
         vector-effect="non-scaling-stroke"
       />
-      <circle class="stack-flow__node stack-flow__node--start" cx="3" cy="10" r="2.2" fill={colorStart} />
-      <circle class="stack-flow__node stack-flow__node--end" cx="97" cy="10" r="2.2" fill={colorEnd} />
       {/* Stream 1 */}
       <line
         class="flow-packets flow-packets--1"
@@ -139,16 +125,6 @@ const isVertical = direction === "vertical";
         stroke-linecap="round"
         stroke-dasharray="6 60"
         stroke-opacity="0.5"
-        vector-effect="non-scaling-stroke"
-      />
-      <line
-        class="flow-packets flow-packets--4"
-        x1="0" y1="10" x2="100" y2="10"
-        stroke={colorEnd}
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-dasharray="8 28"
-        stroke-opacity="0.55"
         vector-effect="non-scaling-stroke"
       />
     </svg>
