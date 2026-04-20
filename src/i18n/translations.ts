@@ -77,7 +77,7 @@ export const translations = {
     hero: {
       role: "Copilot Solution Engineer @ Microsoft · AI Agents · Governance · Microsoft MVP Alumni",
       name: "Alex Cabrera",
-      tagline: "Deploying AI at enterprise scale by day. Training dragons on a homelab by night.",
+      tagline: "Enterprise AI by day. Rogue stack by night.",
       cta: {
         blog: "Blog",
         github: "GitHub",
@@ -90,16 +90,16 @@ export const translations = {
       description: "Enterprise AI, personal infrastructure, and the layer where automation becomes habit.",
       cards: [
         {
-          title: "AI & Cloud",
-          body: "Copilot Solution Engineer at Microsoft Spain. Helping enterprises adopt AI — and building my own agents on the side."
+          title: "Enterprise AI",
+          body: "Copilot Solution Engineer at Microsoft Spain. Helping enterprises adopt AI — from governance frameworks to production rollouts."
         },
         {
-          title: "Homelab",
-          body: "Self-hosted monitoring, media automation, and networking on a UGREEN NAS + Mac Mini. Docker Compose, Prometheus, Alertmanager, Uptime Kuma — everything as code."
+          title: "Homelab & Agents",
+          body: "NAS + Mac Mini + 6 AI agents managed from Telegram. Local LLMs, multi-agent orchestration, media automation — the Seiryū system."
         },
         {
-          title: "AI Agents",
-          body: "Local LLMs with Ollama, multi-agent orchestration with OpenClaw, and a Telegram bot that manages my infrastructure while I sleep."
+          title: "Teaching & Community",
+          body: "Professor at The Valley, speaker, mentor. What I build, I share — on stage, in class, and on this blog."
         }
       ]
     },
@@ -125,7 +125,7 @@ export const translations = {
       fullName: "Alejandro Cabrera Martínez",
       title: "From Law school to Cloud Engineering — the scenic route through tech.",
       description:
-        "By day, I help CIOs and CISOs adopt AI governance at scale. By night, I build my own AI agents on a NAS and a Mac Mini. It's not theory — it's practice.",
+        "Deploying AI at enterprise scale by day. Training dragons on a homelab by night. That's not a metaphor — it's Tuesday.",
       storyPoints: [
         "Copilot Solution Engineer @ Microsoft Spain",
         "Microsoft MVP Alumni",
@@ -160,7 +160,7 @@ export const translations = {
     hero: {
       role: "Copilot Solution Engineer @ Microsoft · AI Agents · Governance · Microsoft MVP Alumni",
       name: "Alex Cabrera",
-      tagline: "Desplegando IA a escala empresarial de día. Entrenando dragones en un homelab de noche.",
+      tagline: "IA empresarial de día. Stack rebelde de noche.",
       cta: {
         blog: "Blog",
         github: "GitHub",
@@ -173,16 +173,16 @@ export const translations = {
       description: "IA empresarial, infraestructura personal y la capa donde la automatización se convierte en hábito.",
       cards: [
         {
-          title: "IA & Cloud",
-          body: "Copilot Solution Engineer en Microsoft Spain. Ayudo a empresas a adoptar IA — y mientras tanto construyo mis propios agentes."
+          title: "IA Empresarial",
+          body: "Copilot Solution Engineer en Microsoft Spain. Ayudo a empresas a adoptar IA — desde frameworks de gobernanza hasta rollouts en producción."
         },
         {
-          title: "Homelab",
-          body: "Monitorización self-hosted, automatización multimedia y redes sobre un UGREEN NAS + Mac Mini. Docker Compose, Prometheus, Alertmanager, Uptime Kuma — todo como código."
+          title: "Homelab & Agentes",
+          body: "NAS + Mac Mini + 6 agentes IA gestionados desde Telegram. LLMs locales, orquestación multiagente, automatización multimedia — el sistema Seiryū."
         },
         {
-          title: "Agentes IA",
-          body: "LLMs locales con Ollama, orquestación multiagente con OpenClaw y un bot de Telegram que gestiona mi infraestructura mientras duermo."
+          title: "Docencia & Comunidad",
+          body: "Profesor en The Valley, speaker, mentor. Lo que construyo, lo comparto — en el escenario, en clase y en este blog."
         }
       ]
     },
@@ -208,7 +208,7 @@ export const translations = {
       fullName: "Alejandro Cabrera Martínez",
       title: "De Derecho a Cloud Engineering — la ruta panorámica por la tecnología.",
       description:
-        "De día, ayudo a CIOs y CISOs a adoptar gobernanza de IA a escala. De noche, construyo mis propios agentes de IA en un NAS y un Mac Mini. No es teoría — es práctica.",
+        "Desplegando IA a escala empresarial de día. Entrenando dragones en un homelab de noche. No es metáfora — es un martes cualquiera.",
       storyPoints: [
         "Copilot Solution Engineer @ Microsoft Spain",
         "Microsoft MVP Alumni",
