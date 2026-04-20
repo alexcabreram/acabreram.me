@@ -102,7 +102,7 @@ const aboutPhotos = [
               <p class="mb-6 font-ui text-xs font-medium uppercase tracking-[0.34em] text-muted sm:text-sm">
                 {t.hero.role}
               </p>
-              <h1 class="max-w-4xl font-display text-5xl leading-tight text-text sm:text-6xl lg:text-7xl">
+              <h1 class="scramble max-w-4xl font-display text-5xl leading-tight text-text sm:text-6xl lg:text-7xl" data-scramble data-target={t.hero.name}>
                 {t.hero.name}
               </h1>
               <p class="mt-6 max-w-3xl font-body text-xl italic leading-relaxed text-text/88 sm:text-2xl">
@@ -292,4 +292,76 @@ const aboutPhotos = [
       </div>
     </div>
   </footer>
+
+<button id="dragon-follower-toggle" class="dragon-follower-toggle" type="button" aria-label="Activate dragon follower" aria-pressed="false">
+  <img src="/dragon-favicon.png" alt="" aria-hidden="true" />
+</button>
+<img id="dragon-follower" class="dragon-follower" src="/dragon-favicon.png" alt="" aria-hidden="true" />
+
+<script is:inline>
+  (() => {
+    const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    document.querySelectorAll("[data-scramble]").forEach((element) => {
+      const target = element.dataset.target || element.textContent || "";
+      let frame = 0;
+      const interval = window.setInterval(() => {
+        element.textContent = target
+          .split("")
+          .map((char, idx) => (idx < frame ? char : CHARS[Math.floor(Math.random() * CHARS.length)]))
+          .join("");
+        if (frame >= target.length) {
+          window.clearInterval(interval);
+        }
+        frame += 0.5;
+      }, 34);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.16 }
+    );
+    document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+
+    const toggle = document.getElementById("dragon-follower-toggle");
+    const follower = document.getElementById("dragon-follower");
+    if (!toggle || !follower || "ontouchstart" in window) {
+      if (toggle) toggle.style.display = "none";
+      if (follower) follower.style.display = "none";
+      return;
+    }
+
+    let active = false;
+    let mx = window.innerWidth * 0.5;
+    let my = window.innerHeight * 0.5;
+    let fx = mx;
+    let fy = my;
+
+    document.addEventListener("mousemove", (event) => {
+      mx = event.clientX;
+      my = event.clientY;
+    });
+
+    toggle.addEventListener("click", () => {
+      active = !active;
+      toggle.setAttribute("aria-pressed", String(active));
+      follower.style.opacity = active ? "0.94" : "0";
+    });
+
+    const tick = () => {
+      if (active) {
+        fx += (mx - fx) * 0.07;
+        fy += (my - fy) * 0.07;
+        follower.style.transform = `translate(${fx}px, ${fy}px)`;
+      }
+      requestAnimationFrame(tick);
+    };
+    tick();
+  })();
+</script>
 </Layout>

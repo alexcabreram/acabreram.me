@@ -640,3 +640,37 @@
   margin: 1.5rem 0;
 }
 
+
+.dragon-follower-toggle {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 55;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--seiryu) 34%, var(--border-subtle));
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: var(--shadow-seiryu);
+  backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+}
+
+.dragon-follower-toggle img {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.dragon-follower {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 1.35rem;
+  height: 1.35rem;
+  transform: translate(-100px, -100px);
+  pointer-events: none;
+  z-index: 54;
+  opacity: 0;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--seiryu-hi) 48%, transparent));
+}
