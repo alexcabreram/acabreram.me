@@ -1,0 +1,92 @@
+<h2>Voice Profile — Impacto en el diseño</h2>
+<p class="subtitle">Qué cambia (y qué no) con el VOICE_PROFILE.md completo</p>
+
+<div class="section">
+  <div class="label" style="color:#2ECC8A;">✓ Lo que ya encaja — no cambiar</div>
+  <div style="display:grid;gap:6px;margin-top:8px;font-size:12px;">
+    <div style="padding:8px 12px;background:rgba(46,204,138,0.05);border:1px solid rgba(46,204,138,0.12);border-radius:6px;">
+      ✓ Build cards — los 3 títulos mapean a los 5 pilares: Card 1 = Pilar 1+4, Card 2 = Pilar 2+5, Card 3 = Pilar 3
+    </div>
+    <div style="padding:8px 12px;background:rgba(46,204,138,0.05);border:1px solid rgba(46,204,138,0.12);border-radius:6px;">
+      ✓ Hero tagline ("Deploying AI at enterprise scale…Training dragons…") = hero statement del voice profile
+    </div>
+    <div style="padding:8px 12px;background:rgba(46,204,138,0.05);border:1px solid rgba(46,204,138,0.12);border-radius:6px;">
+      ✓ Footer tagline ("Posts drafted with AI agents, shipped by a human") = match exacto
+    </div>
+    <div style="padding:8px 12px;background:rgba(46,204,138,0.05);border:1px solid rgba(46,204,138,0.12);border-radius:6px;">
+      ✓ Paleta, tipografía, Seiryū — idénticos en ambos docs
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label" style="color:#F5C050;">⚡ Descubrimientos interesantes</div>
+  
+  <div style="background:rgba(255,180,50,0.05);border:1px solid rgba(255,180,50,0.15);border-radius:8px;padding:14px;margin-top:8px;margin-bottom:10px;">
+    <h3 style="color:#F5C050;font-size:13px;">1. Hay un segundo tagline más punchy</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+      <div style="padding:10px;background:rgba(0,0,0,0.2);border-radius:6px;">
+        <span style="font-size:10px;opacity:0.5;display:block;margin-bottom:4px;">ACTUAL (hero statement)</span>
+        <p style="font-size:13px;font-style:italic;line-height:1.5;">"Deploying AI at enterprise scale by day. Training dragons on a homelab by night."</p>
+      </div>
+      <div style="padding:10px;background:rgba(255,180,50,0.08);border:1px solid rgba(255,180,50,0.2);border-radius:6px;">
+        <span style="font-size:10px;color:#F5C050;display:block;margin-bottom:4px;">VOICE PROFILE (tagline de cabecera — "no cambiar")</span>
+        <p style="font-size:13px;font-style:italic;line-height:1.5;">"Enterprise AI by day. Rogue stack by night."</p>
+      </div>
+    </div>
+    <p style="font-size:11px;opacity:0.6;margin-top:8px;">El segundo es más corto y dice "Rogue stack" — más rebelde, más memorable. ¿Usarlo como subtitle en el hero o en otro sitio?</p>
+  </div>
+
+  <div style="background:rgba(255,180,50,0.05);border:1px solid rgba(255,180,50,0.15);border-radius:8px;padding:14px;margin-bottom:10px;">
+    <h3 style="color:#F5C050;font-size:13px;">2. Frase de identidad perfecta para un subtitle</h3>
+    <p style="font-size:13px;font-style:italic;margin-top:6px;opacity:0.9;">"Técnico que habla humano. Builder que vende. Comunidad que enseña sin darse importancia."</p>
+    <p style="font-size:11px;opacity:0.6;margin-top:6px;">Esto podría ser el description de la sección #build en vez del actual "Enterprise AI, personal infrastructure, and the layer where automation becomes habit."</p>
+  </div>
+
+  <div style="background:rgba(255,180,50,0.05);border:1px solid rgba(255,180,50,0.15);border-radius:8px;padding:14px;">
+    <h3 style="color:#F5C050;font-size:13px;">3. Bio corta — alternativa al role actual</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+      <div style="padding:10px;background:rgba(0,0,0,0.2);border-radius:6px;">
+        <span style="font-size:10px;opacity:0.5;display:block;margin-bottom:4px;">ACTUAL (hero.role)</span>
+        <p style="font-size:11px;line-height:1.5;">Copilot Solution Engineer @ Microsoft · AI Agents · Governance · Microsoft MVP Alumni</p>
+      </div>
+      <div style="padding:10px;background:rgba(255,180,50,0.08);border:1px solid rgba(255,180,50,0.2);border-radius:6px;">
+        <span style="font-size:10px;color:#F5C050;display:block;margin-bottom:4px;">VOICE PROFILE (bio corta)</span>
+        <p style="font-size:11px;line-height:1.5;">"Ayudo a empresas a transformarse con IA. Luego vuelvo a casa y construyo mis propios agentes en un NAS."</p>
+      </div>
+    </div>
+    <p style="font-size:11px;opacity:0.6;margin-top:8px;">La bio corta tiene más personalidad pero es más larga. El role actual funciona como "etiqueta" sobre el nombre. Son para contextos distintos.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="label" style="color:#00B4D7;">Decisiones para tomar</div>
+  
+  <div class="options">
+    <div class="option" data-choice="keep-tagline" onclick="toggleSelect(this)">
+      <div class="letter">A</div>
+      <div class="content">
+        <h3>Mantener hero tagline actual</h3>
+        <p>"Deploying AI at enterprise scale…Training dragons…" — más descriptivo, ya validado</p>
+      </div>
+    </div>
+    <div class="option" data-choice="rogue-stack" onclick="toggleSelect(this)">
+      <div class="letter">B</div>
+      <div class="content">
+        <h3>Usar "Rogue stack" como segundo tagline</h3>
+        <p>Mantener el hero tagline actual + añadir "Enterprise AI by day. Rogue stack by night." en algún sitio visible (meta description, about, o closing section)</p>
+      </div>
+    </div>
+    <div class="option" data-choice="swap" onclick="toggleSelect(this)">
+      <div class="letter">C</div>
+      <div class="content">
+        <h3>Swap — "Rogue stack" como hero, "Training dragons" al about</h3>
+        <p>Más punchy en la primera impresión. El hero largo va al about donde hay más espacio para narrativa.</p>
+      </div>
+    </div>
+  </div>
+  
+  <div style="margin-top:12px;padding:12px;background:rgba(240,240,235,0.04);border:1px solid rgba(240,240,235,0.08);border-radius:6px;">
+    <p style="font-size:11px;opacity:0.6;">Nota: también necesito saber si quieres mergear este VOICE_PROFILE.md con memory/identity.md o mantenerlos separados. Es más completo que el identity.md actual.</p>
+  </div>
+</div>
