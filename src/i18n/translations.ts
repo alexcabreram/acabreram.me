@@ -160,7 +160,7 @@ export const translations = {
     hero: {
       role: "Copilot Solution Engineer @ Microsoft · AI Agents · Governance · Microsoft MVP Alumni",
       name: "Alex Cabrera",
-      tagline: "IA empresarial de día. Stack rebelde de noche.",
+      tagline: "IA empresarial de día. Domando dragones de noche.",
       cta: {
         blog: "Blog",
         github: "GitHub",
@@ -181,7 +181,7 @@ export const translations = {
           body: "NAS + Mac Mini + 6 agentes IA gestionados desde Telegram. LLMs locales, orquestación multiagente, automatización multimedia — el sistema Seiryū."
         },
         {
-          title: "Docencia & Comunidad",
+          title: "Compartir & Comunidad",
           body: "Profesor en The Valley, speaker, mentor. Lo que construyo, lo comparto — en el escenario, en clase y en este blog."
         }
       ]
