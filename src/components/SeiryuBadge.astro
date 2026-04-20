@@ -23,7 +23,7 @@ const isDark = variant === "dark";
 const bgFill = isDark ? "#04080F" : "#F4F1EB";
 const dragonFill = isDark ? "#00B4D7" : "#007A94";
 const ringStroke = isDark ? "#00B4D7" : "#007A94";
-const clipId = `seiryu-badge-clip-${size}-${variant}`;
+const clipId = `seiryu-badge-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
 <svg

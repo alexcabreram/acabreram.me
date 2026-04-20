@@ -411,9 +411,18 @@ const aboutPhotos = [
   </footer>
 
   <button id="dragon-follower-toggle" class="dragon-follower-toggle" type="button" aria-label="Activate dragon follower" aria-pressed="false">
-    <img src="/seiryu-mark.svg" alt="" aria-hidden="true" />
+    <span
+      aria-hidden="true"
+      class="inline-block h-[1em] w-[1em]"
+      style="background-color: currentColor; -webkit-mask-image: url('/seiryu-mark.svg'); mask-image: url('/seiryu-mark.svg'); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain;"
+    ></span>
   </button>
-  <img id="dragon-follower" class="dragon-follower" src="/seiryu-mark.svg" alt="" aria-hidden="true" />
+  <span
+    id="dragon-follower"
+    class="dragon-follower"
+    aria-hidden="true"
+    style="background-color: var(--color-seiryu); -webkit-mask-image: url('/seiryu-mark.svg'); mask-image: url('/seiryu-mark.svg'); -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; -webkit-mask-size: contain; mask-size: contain;"
+  ></span>
 </Layout>
 
 <script is:inline>
