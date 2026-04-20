@@ -21,23 +21,16 @@ const infraNodes = [
 
 // Agent nodes (outside aura, right side vertical fan)
 const agentNodes = [
-  { id: "ideas", cx: 570, cy: 100, color: "#00B4D7", label: "Ideas", sublabel: "#ideas" },
-  { id: "lore", cx: 570, cy: 180, color: "#2ECC8A", label: "Lore", sublabel: "wiki · n8n" },
-  { id: "monitor", cx: 570, cy: 260, color: "#E8C96A", label: "Monitor", sublabel: "#monitoring" },
-  { id: "media", cx: 570, cy: 340, color: "#a78bfa", label: "Media", sublabel: "#media" },
-  { id: "devops", cx: 570, cy: 420, color: "#f97316", label: "DevOps", sublabel: "#devops" },
-  { id: "roar", cx: 570, cy: 500, color: "#e879f9", label: "Roar", sublabel: "Brand OS" }
+  { id: "ideas", cx: 570, cy: 80, color: "#00B4D7", label: "Ideas", sublabel: "#ideas" },
+  { id: "lore", cx: 570, cy: 160, color: "#2ECC8A", label: "Lore", sublabel: "wiki · n8n" },
+  { id: "monitor", cx: 570, cy: 240, color: "#E8C96A", label: "Monitor", sublabel: "#monitoring" },
+  { id: "media", cx: 570, cy: 320, color: "#a78bfa", label: "Media", sublabel: "#media" },
+  { id: "devops", cx: 570, cy: 400, color: "#f97316", label: "DevOps", sublabel: "#devops" },
+  { id: "roar", cx: 570, cy: 480, color: "#e879f9", label: "Roar", sublabel: "Brand OS" }
 ];
 
 // User node
 const userNode = { id: "user", cx: 110, cy: 300, color: "#E8C96A", label: lang === "es" ? "Tú" : "You" };
-
-// Cross-connections (subtle, opacity 0.15)
-const crossEdges = [
-  { from: agentNodes[0], to: agentNodes[1] }, // Ideas ↔ Lore
-  { from: agentNodes[1], to: agentNodes[5] }, // Lore → Roar
-  { from: agentNodes[2], to: agentNodes[4] }  // Monitor ↔ DevOps
-];
 
 // i18n detail data
 const nodeDetails = {
@@ -177,7 +170,7 @@ const nodeDetails = {
 ---
 
 <div class="agent-graph-wrapper">
-  <svg viewBox="0 0 680 520" width="100%" class="agent-graph" role="img" aria-label="Agent System Architecture">
+  <svg viewBox="0 0 680 560" width="100%" class="agent-graph" role="img" aria-label="Agent System Architecture">
     <title>Agent System Architecture</title>
     <desc>Interactive visualization of the Seiryū multi-agent system with infrastructure nodes and specialized agents</desc>
 
@@ -264,19 +257,6 @@ const nodeDetails = {
       );
     })}
 
-    <!-- Layer 8: Cross-agent edges (subtle) -->
-    {crossEdges.map((edge) => (
-      <line
-        x1={edge.from.cx}
-        y1={edge.from.cy}
-        x2={edge.to.cx}
-        y2={edge.to.cy}
-        stroke="currentColor"
-        stroke-width="0.6"
-        opacity="0.15"
-      />
-    ))}
-
     <!-- Layer 9: Dragon center (seiryu-mark.svg with pulse glow) -->
     <g data-node-id="dragon" class="graph-node dragon-node">
       <circle cx={dragonCx} cy={dragonCy} r="60" fill="url(#dragonGlow)" opacity="0.6" class="pulse-hub" />
@@ -294,7 +274,7 @@ const nodeDetails = {
     <!-- Layer 4: Infrastructure satellite nodes -->
     {infraNodes.map((node) => (
       <g data-node-id={node.id} class="graph-node infra-node">
-        <circle cx={node.cx} cy={node.cy} r="22" fill="none" stroke={node.color} stroke-width="1" opacity="0.3" class="pulse-hub" />
+        <circle cx={node.cx} cy={node.cy} r="22" fill="none" stroke={node.color} stroke-width="1" opacity="0.3" class="pulse-subtle" />
         <circle cx={node.cx} cy={node.cy} r="18" fill={`${node.color}15`} stroke={node.color} stroke-width="1.2" />
         <text x={node.cx} y={node.cy + 32} fill="currentColor" font-size="11" font-weight="500" text-anchor="middle" opacity="0.85" class="node-label">
           {node.label}
@@ -346,6 +326,21 @@ const nodeDetails = {
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
+    padding: 2rem 1rem;
+    border-radius: 12px;
+  }
+
+  /* Light mode: subtle background for contrast */
+  :root:not([data-theme="dark"]) .agent-graph-wrapper,
+  :root[data-theme="light"] .agent-graph-wrapper {
+    background: rgba(4, 8, 15, 0.03);
+    border: 0.5px solid rgba(4, 8, 15, 0.08);
+  }
+
+  /* Dark mode: very subtle surface */
+  :root[data-theme="dark"] .agent-graph-wrapper {
+    background: rgba(240, 240, 235, 0.02);
+    border: 0.5px solid rgba(240, 240, 235, 0.06);
   }
 
   .agent-graph {
@@ -362,11 +357,6 @@ const nodeDetails = {
 
   .graph-node:hover {
     opacity: 0.85;
-  }
-
-  .graph-node circle,
-  .graph-node text {
-    pointer-events: none;
   }
 
   .node-label {
@@ -535,6 +525,11 @@ const nodeDetails = {
       }
     }
 
+    @keyframes pulseSubtle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+    }
+
     .orbit-cw {
       animation: orbit 44s linear infinite;
       transform-origin: 340px 260px;
@@ -547,6 +542,10 @@ const nodeDetails = {
 
     .pulse-hub {
       animation: pulseHub 3.2s ease-in-out infinite;
+    }
+
+    .pulse-subtle {
+      animation: pulseSubtle 4s ease-in-out infinite;
     }
 
     .pulse-ring-1 {
