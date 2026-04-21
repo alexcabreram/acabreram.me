@@ -63,10 +63,10 @@ const isSpanish = lang === "es";
 
 const promptRouting = isSpanish
   ? [
-      ["Como despliego Copilot en una empresa?", "Enterprise mode"],
-      ["Que modelo local corre mejor en un Mac Mini?", "Homelab mode"],
-      ["Como enseño IA sin que suene a marketing?", "Profesor mode"],
-      ["Puedo automatizar esto con n8n?", "Builder mode"]
+      ["¿Cómo despliego Copilot en una empresa?", "Enterprise mode"],
+      ["¿Qué modelo local corre mejor en un Mac Mini?", "Homelab mode"],
+      ["¿Cómo enseño IA sin que suene a marketing?", "Profesor mode"],
+      ["¿Puedo automatizar esto con n8n?", "Builder mode"]
     ]
   : [
       ["How do I deploy Copilot across an enterprise?", "Enterprise mode"],
@@ -248,8 +248,8 @@ const promptRouting = isSpanish
               {t.about.careerPath}
             </p>
 
-            <div class="reveal prompt-routing rounded-sm border border-seiryu/24 bg-surface/75 p-6" aria-label="Prompt routing section">
-              <p class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-seiryu-hi">
+            <div class="reveal prompt-routing rounded-sm border border-seiryu/24 bg-surface/75 p-6" aria-labelledby="prompt-routing-heading">
+              <p id="prompt-routing-heading" class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-seiryu-hi">
                 {isSpanish ? "Prompt routing - como pienso" : "Prompt routing - how I think"}
               </p>
               <div class="prompt-routing__rows">
@@ -335,6 +335,13 @@ const promptRouting = isSpanish
     const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     document.querySelectorAll("[data-scramble]").forEach((element) => {
       const target = element.dataset.target || element.textContent || "";
+      
+      // Skip animation for reduced-motion preference
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = target;
+        return;
+      }
+      
       let frame = 0;
       const interval = window.setInterval(() => {
         element.textContent = target
@@ -365,6 +372,14 @@ const promptRouting = isSpanish
     if (!toggle || !follower || "ontouchstart" in window) {
       if (toggle) toggle.style.display = "none";
       if (follower) follower.style.display = "none";
+      return;
+    }
+
+    // Before starting the animation loop, check reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Disable follower entirely for reduced-motion users
+      toggle.style.display = "none";
+      follower.style.display = "none";
       return;
     }
 

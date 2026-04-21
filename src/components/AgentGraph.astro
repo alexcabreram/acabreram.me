@@ -185,7 +185,7 @@ const nodeDetails = {
       <g id="particleGroup1">
         {Array.from({ length: 6 }).map((_, i) => {
           const angle = (i / 6) * Math.PI * 2;
-          const r = 160 + Math.random() * 20;
+          const r = 120 + (i * 7); // deterministic spread instead of Math.random() * 20
           const cx = dragonCx + Math.cos(angle) * r;
           const cy = dragonCy + Math.sin(angle) * r;
           return <circle cx={cx} cy={cy} r="1.5" fill="currentColor" opacity="0.2" />;
@@ -195,7 +195,7 @@ const nodeDetails = {
       <g id="particleGroup2">
         {Array.from({ length: 8 }).map((_, i) => {
           const angle = (i / 8) * Math.PI * 2;
-          const r = 140 + Math.random() * 25;
+          const r = 140 + (i * 5); // deterministic spread instead of Math.random() * 25
           const cx = dragonCx + Math.cos(angle) * r;
           const cy = dragonCy + Math.sin(angle) * r;
           return <circle cx={cx} cy={cy} r="1.2" fill="currentColor" opacity="0.18" />;
@@ -295,7 +295,7 @@ const nodeDetails = {
     })()}
 
     <!-- Layer 9: Dragon center (seiryu-mark.svg with pulse glow) -->
-    <g data-node-id="dragon" class="graph-node dragon-node">
+    <g data-node-id="dragon" class="graph-node dragon-node" tabindex="0" role="button" aria-label="Dragon">
       <circle cx={dragonCx} cy={dragonCy} r="60" fill="url(#dragonGlow)" opacity="0.6" class="pulse-hub" />
       <circle cx={dragonCx} cy={dragonCy} r={dragonR} fill={`${infraNodes[1].color}15`} stroke={infraNodes[1].color} stroke-width="1.5" opacity="0.8" />
       <image
@@ -310,7 +310,7 @@ const nodeDetails = {
 
     <!-- Layer 4: Infrastructure satellite nodes -->
     {infraNodes.map((node) => (
-      <g data-node-id={node.id} class="graph-node infra-node">
+      <g data-node-id={node.id} class="graph-node infra-node" tabindex="0" role="button" aria-label={node.label}>
         <circle cx={node.cx} cy={node.cy} r="22" fill="none" stroke={node.color} stroke-width="1" opacity="0.3" class="pulse-subtle" />
         <circle cx={node.cx} cy={node.cy} r="18" fill={`${node.color}15`} stroke={node.color} stroke-width="1.2" />
         <text x={node.cx} y={node.cy + 32} fill="currentColor" font-size="11" font-weight="500" text-anchor="middle" opacity="0.85" class="node-label">
@@ -323,7 +323,7 @@ const nodeDetails = {
     ))}
 
     <!-- Layer 10: User node (acm. brand mark) -->
-    <g data-node-id={userNode.id} class="graph-node user-node">
+    <g data-node-id={userNode.id} class="graph-node user-node" tabindex="0" role="button" aria-label={userNode.label}>
       <circle cx={userNode.cx} cy={userNode.cy} r="28" fill={`${userNode.color}18`} stroke={userNode.color} stroke-width="1.5" />
       <text x={userNode.cx - 4} y={userNode.cy + 5} fill="currentColor" font-size="14" font-weight="600" text-anchor="middle" font-family="'JetBrains Mono', monospace">acm</text>
       <text x={userNode.cx + 13} y={userNode.cy + 5} fill="#00B4D7" font-size="14" font-weight="600" text-anchor="middle" font-family="'JetBrains Mono', monospace">.</text>
@@ -331,7 +331,7 @@ const nodeDetails = {
 
     <!-- Layer 11: Agent nodes -->
     {agentNodes.map((agent) => (
-      <g data-node-id={agent.id} class="graph-node agent-node">
+      <g data-node-id={agent.id} class="graph-node agent-node" tabindex="0" role="button" aria-label={agent.label}>
         <circle cx={agent.cx} cy={agent.cy} r="30" fill={`${agent.color}18`} stroke={agent.color} stroke-width="1.5" />
         <text x={agent.cx} y={agent.cy + 5} fill={agent.color} font-size="13" font-weight="600" text-anchor="middle" class="node-label">
           {agent.label}
@@ -656,6 +656,13 @@ const nodeDetails = {
     node.addEventListener("click", () => {
       const nodeId = node.dataset.nodeId;
       if (nodeId) showDetail(nodeId);
+    });
+    node.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const nodeId = node.dataset.nodeId;
+        if (nodeId) showDetail(nodeId);
+      }
     });
   });
 
