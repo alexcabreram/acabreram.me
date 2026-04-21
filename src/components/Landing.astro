@@ -2,37 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import { translations, type Locale } from "../i18n/translations";
 import LangToggle from "./LangToggle.astro";
-import StackFlowConnector from "./StackFlowConnector.astro";
-import StackServiceChip from "./StackServiceChip.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import AgentGraph from "./AgentGraph.astro";
 
 interface Props {
   lang: Locale;
 }
-
-type ServiceIcon =
-  | "prometheus"
-  | "grafana"
-  | "alertmanager"
-  | "sonarr"
-  | "radarr"
-  | "jellyfin"
-  | "adguard"
-  | "npm"
-  | "n8n"
-  | "ollama"
-  | "openWebui"
-  | "openclaw"
-  | "githubActions"
-  | "azureOpenAI"
-  | "githubCopilot"
-  | "cloudflare"
-  | "claudeCode";
-
-type ServiceEntry = {
-  label: string;
-  icon: ServiceIcon;
-};
 
 const { lang } = Astro.props;
 const t = translations[lang];
@@ -51,31 +26,6 @@ const certifications: CertEntry[] = [
   { name: "Microsoft 365 Fundamentals", code: "MS-900", badge: "/badges/ms-900.png" },
   { name: "Professional Scrum Master I", code: "PSM I", badge: "/badges/psm-i.png" }
 ];
-
-const nasServices: ServiceEntry[] = [
-  { label: "Prometheus", icon: "prometheus" },
-  { label: "Grafana", icon: "grafana" },
-  { label: "Alertmanager", icon: "alertmanager" },
-  { label: "Sonarr", icon: "sonarr" },
-  { label: "Radarr", icon: "radarr" },
-  { label: "Jellyfin", icon: "jellyfin" },
-  { label: "AdGuard", icon: "adguard" },
-  { label: "NPM", icon: "npm" },
-  { label: "n8n", icon: "n8n" }
-];
-const macMiniServices: ServiceEntry[] = [
-  { label: "Ollama", icon: "ollama" },
-  { label: "Open WebUI", icon: "openWebui" },
-  { label: "OpenClaw", icon: "openclaw" },
-  { label: "GitHub Actions Runner", icon: "githubActions" }
-];
-const cloudServices: ServiceEntry[] = [
-  { label: "Azure OpenAI", icon: "azureOpenAI" },
-  { label: "GitHub Copilot", icon: "githubCopilot" },
-  { label: "GitHub Actions", icon: "githubActions" },
-  { label: "Cloudflare", icon: "cloudflare" },
-  { label: "Claude Code", icon: "claudeCode" }
-];
 const aboutPhotos = [
   {
     src: "/photos/speaking-microsoft.jpg",
@@ -92,22 +42,38 @@ const aboutPhotos = [
   {
     src: "/photos/microsoft-campus.jpg",
     alt: "Alex at the Microsoft campus with a giant Microsoft logo.",
-    className: "col-span-1 row-span-1",
+    className: "col-span-1 row-span-2",
     imageClass: "object-center"
   },
   {
     src: "/photos/gaming-casual.jpg",
     alt: "Alex with Minecraft plushies — gaming culture is part of the identity.",
-    className: "col-span-1 row-span-1",
+    className: "col-span-1 row-span-2",
     imageClass: "object-center"
   },
   {
     src: "/photos/conference-working.jpg",
     alt: "Alex working on a laptop at the Bizz Summit conference.",
-    className: "col-span-1 row-span-1",
+    className: "col-span-1 row-span-2",
     imageClass: "object-center"
   }
 ];
+
+const isSpanish = lang === "es";
+
+const promptRouting = isSpanish
+  ? [
+      ["¿Cómo despliego Copilot en una empresa?", "Enterprise mode"],
+      ["¿Qué modelo local corre mejor en un Mac Mini?", "Homelab mode"],
+      ["¿Cómo enseño IA sin que suene a marketing?", "Profesor mode"],
+      ["¿Puedo automatizar esto con n8n?", "Builder mode"]
+    ]
+  : [
+      ["How do I deploy Copilot across an enterprise?", "Enterprise mode"],
+      ["Which local model runs best on a Mac Mini?", "Homelab mode"],
+      ["How do I teach AI without sounding like hype?", "Professor mode"],
+      ["Can I automate this with n8n?", "Builder mode"]
+    ];
 ---
 
 <Layout lang={lang}>
@@ -153,7 +119,7 @@ const aboutPhotos = [
               <p class="mb-6 font-ui text-xs font-medium uppercase tracking-[0.34em] text-muted sm:text-sm">
                 {t.hero.role}
               </p>
-              <h1 class="max-w-4xl font-display text-5xl leading-tight text-text sm:text-6xl lg:text-7xl">
+              <h1 class="scramble max-w-4xl font-display text-5xl leading-tight text-text sm:text-6xl lg:text-7xl" data-scramble data-target={t.hero.name}>
                 {t.hero.name}
               </h1>
               <p class="mt-6 max-w-3xl font-body text-xl italic leading-relaxed text-text/88 sm:text-2xl">
@@ -228,76 +194,8 @@ const aboutPhotos = [
             {t.stack.description}
           </p>
         </div>
-
-        <div class="mt-14 flex flex-col items-center gap-5">
-          <!-- Cloud node -->
-          <article class="reveal stack-node w-full max-w-2xl rounded-sm bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--seiryu-hi); --stack-shadow: var(--shadow-seiryu)">
-            <div class="flex items-center justify-between gap-4">
-              <div>
-                <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-seiryu-hi">{t.stack.cloudLabel}</p>
-                <h3 class="mt-3 font-display text-3xl text-text">Azure & Cloud</h3>
-              </div>
-              <span class="stack-meta-chip rounded-sm px-3 py-1 font-mono text-xs" style="--stack-accent: var(--seiryu-hi)">{t.stack.tags.cloud}</span>
-            </div>
-            <div class="mt-8 stack-service-grid text-seiryu-hi">
-              {
-                cloudServices.map((service) => <StackServiceChip label={service.label} icon={service.icon} tone="seiryu-hi" />)
-              }
-            </div>
-          </article>
-
-          <StackFlowConnector direction="vertical" colorStart="#00D4FF" colorEnd="#E8C96A" />
-
-          <!-- Local infrastructure row -->
-          <div class="grid w-full gap-5 lg:grid-cols-[minmax(0,1fr)_5.5rem_15rem_5.5rem_minmax(0,1fr)] lg:items-center">
-            <article class="reveal stack-node rounded-sm bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--jade); --stack-shadow: var(--shadow-jade)">
-              <div class="flex items-center justify-between gap-4">
-                <div>
-                  <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-jade">{t.stack.infraLabel}</p>
-                  <h3 class="mt-3 font-display text-3xl text-text">UGREEN DXP2800 NAS</h3>
-                </div>
-                <span class="stack-meta-chip rounded-sm px-3 py-1 font-mono text-xs" style="--stack-accent: var(--jade)">{t.stack.tags.infra}</span>
-              </div>
-              <div class="mt-8 stack-service-grid text-jade">
-                {
-                  nasServices.map((service) => <StackServiceChip label={service.label} icon={service.icon} tone="jade" />)
-                }
-              </div>
-            </article>
-
-            <StackFlowConnector direction="horizontal" colorStart="#2ECC8A" colorEnd="#E8C96A" />
-
-            <article class="reveal stack-node rounded-sm bg-surface-2 px-7 py-7 text-center transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--gold); --stack-shadow: var(--shadow-gold)">
-              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-sm border border-gold/20 bg-gold/10 text-gold">
-                <svg viewBox="0 0 16 16" class="h-6 w-6 fill-current" aria-hidden="true">
-                  <path d="M2 5.5C2 4.7 2.7 4 3.5 4h9c.8 0 1.5.7 1.5 1.5v5c0 .8-.7 1.5-1.5 1.5h-3L8 14l-1.5-2H3.5C2.7 12 2 11.3 2 10.5v-5ZM4.5 6.5h7v1h-7v-1Zm0 2h4.5v1H4.5v-1Z"></path>
-                </svg>
-              </div>
-              <p class="mt-5 font-ui text-xs font-medium uppercase tracking-[0.34em] text-gold">{t.stack.botLabel}</p>
-              <h3 class="mt-3 font-mono text-lg font-semibold text-text">@homelabguardbot</h3>
-              <div class="mt-5 flex flex-wrap justify-center gap-2.5">
-                <span class="stack-meta-chip rounded-sm px-3 py-1.5 font-ui text-xs" style="--stack-accent: var(--gold)">{t.stack.tags.multiAgent}</span>
-                <span class="stack-meta-chip rounded-sm px-3 py-1.5 font-ui text-xs" style="--stack-accent: var(--gold)">{t.stack.tags.topics}</span>
-              </div>
-            </article>
-
-            <StackFlowConnector direction="horizontal" colorStart="#E8C96A" colorEnd="#00B4D8" />
-
-            <article class="reveal stack-node rounded-sm bg-surface p-8 transition duration-300 hover:-translate-y-1.5" style="--stack-accent: var(--seiryu); --stack-shadow: var(--shadow-seiryu)">
-              <div class="flex items-center justify-between gap-4">
-                <div>
-                  <p class="font-ui text-xs font-medium uppercase tracking-[0.3em] text-seiryu">{t.stack.aiLabel}</p>
-                  <h3 class="mt-3 font-display text-3xl text-text">Mac Mini</h3>
-                </div>
-                <span class="stack-meta-chip rounded-sm px-3 py-1 font-mono text-xs" style="--stack-accent: var(--seiryu)">{t.stack.tags.ai}</span>
-              </div>
-              <div class="mt-8 stack-service-grid text-seiryu">
-                {
-                  macMiniServices.map((service) => <StackServiceChip label={service.label} icon={service.icon} tone="seiryu" />)
-                }
-              </div>
-            </article>
-          </div>
+        <div class="mt-14">
+          <AgentGraph lang={lang} />
         </div>
       </div>
     </section>
@@ -317,7 +215,7 @@ const aboutPhotos = [
           </p>
         </div>
 
-        <div class="mt-12 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+        <div class="mt-12 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
           <div class="reveal grid auto-rows-[7rem] grid-cols-2 gap-3 sm:auto-rows-[9rem] sm:gap-4 lg:grid-cols-3 lg:auto-rows-[8rem] xl:auto-rows-[9.25rem]">
             {
               aboutPhotos.map((photo) => (
@@ -349,6 +247,22 @@ const aboutPhotos = [
             <p class="reveal rounded-sm border border-seiryu/18 bg-surface/80 p-7 font-body text-xl italic leading-relaxed text-text/82" style="box-shadow: var(--shadow-soft)">
               {t.about.careerPath}
             </p>
+
+            <div class="reveal prompt-routing rounded-sm border border-seiryu/24 bg-surface/75 p-6" aria-labelledby="prompt-routing-heading">
+              <p id="prompt-routing-heading" class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-seiryu-hi">
+                {isSpanish ? "Prompt routing - cómo pienso" : "Prompt routing - how I think"}
+              </p>
+              <div class="prompt-routing__rows">
+                {
+                  promptRouting.map(([question, mode]) => (
+                    <div class="prompt-routing__row">
+                      <span>{question}</span>
+                      <span class="font-mono text-[11px] uppercase tracking-[0.08em] text-seiryu-hi">-&gt; {mode}</span>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
           </div>
         </div>
 
@@ -381,7 +295,7 @@ const aboutPhotos = [
     <section class="py-6 sm:py-8">
       <div class="section-shell">
         <div class="reveal text-center">
-          <img src="/dragon-hero.png" alt="" aria-hidden="true" class="closing-dragon mx-auto h-20 w-20 sm:h-24 sm:w-24" />
+          <img src="/seiryu-favicon.svg" alt="" aria-hidden="true" class="closing-dragon mx-auto h-20 w-20 sm:h-24 sm:w-24" />
           <p class="mt-5 font-display text-3xl leading-tight text-seiryu sm:text-4xl">{t.footer.closing}</p>
           <a
             href={lang === "es" ? "/es/blog/" : "/blog/"}
@@ -400,10 +314,7 @@ const aboutPhotos = [
         <img src="/seiryu-favicon.svg" alt="" aria-hidden="true" class="h-4 w-4" />
         <span class="font-mono text-[19px] font-medium text-text">acm<span class="text-seiryu">.</span></span>
       </div>
-      <p class="mt-4 font-body text-base text-muted">
-        {t.footer.builtWith}
-      </p>
-      <p class="mt-2 font-body text-base italic text-muted">
+      <p class="mt-4 font-body text-base italic text-muted">
         {t.footer.posts}
       </p>
       <div class="mt-6 flex flex-wrap items-center justify-center gap-5 font-ui text-sm font-medium text-text/80">
@@ -413,4 +324,98 @@ const aboutPhotos = [
       </div>
     </div>
   </footer>
+
+<button id="dragon-follower-toggle" class="dragon-follower-toggle" type="button" aria-label="Activate dragon follower" aria-pressed="false">
+  <img src="/seiryu-favicon.svg" alt="" aria-hidden="true" />
+</button>
+<img id="dragon-follower" class="dragon-follower" src="/seiryu-favicon.svg" alt="" aria-hidden="true" />
+
+<script is:inline>
+  (() => {
+    const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    document.querySelectorAll("[data-scramble]").forEach((element) => {
+      const target = element.dataset.target || element.textContent || "";
+      
+      // Skip animation for reduced-motion preference
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        element.textContent = target;
+        return;
+      }
+      
+      let frame = 0;
+      const interval = window.setInterval(() => {
+        element.textContent = target
+          .split("")
+          .map((char, idx) => (idx < frame ? char : CHARS[Math.floor(Math.random() * CHARS.length)]))
+          .join("");
+        if (frame >= target.length) {
+          window.clearInterval(interval);
+        }
+        frame += 0.5;
+      }, 34);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.16 }
+    );
+    document.querySelectorAll(".reveal").forEach((item) => observer.observe(item));
+
+    const toggle = document.getElementById("dragon-follower-toggle");
+    const follower = document.getElementById("dragon-follower");
+    if (!toggle || !follower || "ontouchstart" in window) {
+      if (toggle) toggle.style.display = "none";
+      if (follower) follower.style.display = "none";
+      return;
+    }
+
+    // Before starting the animation loop, check reduced-motion
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // Disable follower entirely for reduced-motion users
+      toggle.style.display = "none";
+      follower.style.display = "none";
+      return;
+    }
+
+    let active = false;
+    let mx = window.innerWidth * 0.5;
+    let my = window.innerHeight * 0.5;
+    let fx = mx;
+    let fy = my;
+    let animId = null;
+
+    document.addEventListener("mousemove", (event) => {
+      mx = event.clientX;
+      my = event.clientY;
+    });
+
+    const tick = () => {
+      fx += (mx - fx) * 0.07;
+      fy += (my - fy) * 0.07;
+      follower.style.transform = `translate(${fx}px, ${fy}px)`;
+      animId = requestAnimationFrame(tick);
+    };
+
+    toggle.addEventListener("click", () => {
+      active = !active;
+      toggle.setAttribute("aria-pressed", String(active));
+      if (active) {
+        follower.style.opacity = "0.94";
+        if (!animId) tick(); // start loop
+      } else {
+        follower.style.opacity = "0";
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
+      }
+    });
+  })();
+</script>
 </Layout>

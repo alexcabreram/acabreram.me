@@ -1,0 +1,692 @@
+---
+import type { Locale } from "../i18n/translations";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+
+// Dragon center
+const dragonCx = 340;
+const dragonCy = 260;
+const dragonR = 46;
+
+// Infrastructure nodes (inside aura, ~90px from center)
+const infraNodes = [
+  { id: "nas", cx: 280, cy: 190, color: "#2ECC8A", label: "NAS", sublabel: "UGREEN DXP2800" },
+  { id: "macmini", cx: 400, cy: 190, color: "#00B4D7", label: "Mac Mini", sublabel: "M4 · AI node" },
+  { id: "cloud", cx: 340, cy: 330, color: "#E8C96A", label: "Cloud", sublabel: "Azure · CF · GH" }
+];
+
+// Agent nodes (outside aura, right side vertical fan)
+const agentNodes = [
+  { id: "ideas", cx: 570, cy: 80, color: "#00B4D7", label: "Ideas", sublabel: "#ideas" },
+  { id: "lore", cx: 570, cy: 160, color: "#2ECC8A", label: "Lore", sublabel: "wiki · n8n" },
+  { id: "monitor", cx: 570, cy: 240, color: "#E8C96A", label: "Monitor", sublabel: "#monitoring" },
+  { id: "media", cx: 570, cy: 320, color: "#a78bfa", label: "Media", sublabel: "#media" },
+  { id: "devops", cx: 570, cy: 400, color: "#f97316", label: "DevOps", sublabel: "#devops" },
+  { id: "roar", cx: 570, cy: 480, color: "#e879f9", label: "Roar", sublabel: "Brand OS" }
+];
+
+// User node
+const userNode = { id: "user", cx: 110, cy: 300, color: "#E8C96A", label: "acm." };
+
+// i18n detail data
+const nodeDetails = {
+  nas: {
+    en: {
+      title: "NAS",
+      description: "UGREEN DXP2800 running 5 Docker Compose stacks: monitoring, media automation, networking, n8n workflows, and housing intelligence.",
+      chips: ["Prometheus", "Grafana", "Sonarr", "Radarr", "AdGuard", "n8n"]
+    },
+    es: {
+      title: "NAS",
+      description: "UGREEN DXP2800 ejecutando 5 stacks Docker Compose: monitorización, automatización multimedia, redes, workflows n8n e inteligencia inmobiliaria.",
+      chips: ["Prometheus", "Grafana", "Sonarr", "Radarr", "AdGuard", "n8n"]
+    }
+  },
+  macmini: {
+    en: {
+      title: "Mac Mini",
+      description: "Mac Mini M4 16GB — local inference with Ollama, multi-agent orchestration with OpenClaw, and 6 Docker stacks for AI services.",
+      chips: ["Ollama", "OpenClaw", "Open WebUI", "Claude Runner", "IdeaScout"]
+    },
+    es: {
+      title: "Mac Mini",
+      description: "Mac Mini M4 16GB — inferencia local con Ollama, orquestación multiagente con OpenClaw y 6 stacks Docker para servicios IA.",
+      chips: ["Ollama", "OpenClaw", "Open WebUI", "Claude Runner", "IdeaScout"]
+    }
+  },
+  cloud: {
+    en: {
+      title: "Cloud",
+      description: "Azure AI Foundry for GPT-5-mini fallback, Cloudflare for DNS/tunnels/Pages, GitHub for CI/CD and Copilot Coding Agent.",
+      chips: ["Azure OpenAI", "Cloudflare", "GitHub Actions", "Copilot"]
+    },
+    es: {
+      title: "Cloud",
+      description: "Azure AI Foundry para fallback GPT-5-mini, Cloudflare para DNS/túneles/Pages, GitHub para CI/CD y Copilot Coding Agent.",
+      chips: ["Azure OpenAI", "Cloudflare", "GitHub Actions", "Copilot"]
+    }
+  },
+  ideas: {
+    en: {
+      title: "Ideas",
+      description: "Captures content from URLs, YouTube, articles via IdeaScout. Analyzes and extracts insights for the second brain.",
+      chips: ["IdeaScout", "yt-dlp", "Cobalt", "#ideas"]
+    },
+    es: {
+      title: "Ideas",
+      description: "Captura contenido de URLs, YouTube, artículos vía IdeaScout. Analiza y extrae insights para el segundo cerebro.",
+      chips: ["IdeaScout", "yt-dlp", "Cobalt", "#ideas"]
+    }
+  },
+  lore: {
+    en: {
+      title: "Lore",
+      description: "Second brain and knowledge management. Connects ideas, maintains context, orchestrates n8n workflows for content pipelines.",
+      chips: ["n8n", "Knowledge base", "Pipelines"]
+    },
+    es: {
+      title: "Lore",
+      description: "Segundo cerebro y gestión del conocimiento. Conecta ideas, mantiene contexto, orquesta workflows n8n para pipelines de contenido.",
+      chips: ["n8n", "Knowledge base", "Pipelines"]
+    }
+  },
+  monitor: {
+    en: {
+      title: "Monitor",
+      description: "Processes Prometheus/Alertmanager alerts. Posts to #monitoring topic. No auto-reply — send-only for human triage.",
+      chips: ["Prometheus", "Alertmanager", "Uptime Kuma"]
+    },
+    es: {
+      title: "Monitor",
+      description: "Procesa alertas de Prometheus/Alertmanager. Publica en el topic #monitoring. Sin auto-respuesta — solo envío para triaje humano.",
+      chips: ["Prometheus", "Alertmanager", "Uptime Kuma"]
+    }
+  },
+  media: {
+    en: {
+      title: "Media",
+      description: "Manages media requests through Jellyseerr. Handles Sonarr/Radarr for TV and movies. Telegram interface via #media topic.",
+      chips: ["Jellyseerr", "Sonarr", "Radarr", "Bazarr"]
+    },
+    es: {
+      title: "Media",
+      description: "Gestiona solicitudes multimedia vía Jellyseerr. Maneja Sonarr/Radarr para series y películas. Interfaz Telegram vía topic #media.",
+      chips: ["Jellyseerr", "Sonarr", "Radarr", "Bazarr"]
+    }
+  },
+  devops: {
+    en: {
+      title: "DevOps",
+      description: "Docker management, infrastructure tasks, and /dev command routing to Claude Runner or Copilot Coding Agent.",
+      chips: ["Docker", "Claude Runner", "Copilot Agent", "/dev"]
+    },
+    es: {
+      title: "DevOps",
+      description: "Gestión Docker, tareas de infraestructura y enrutamiento del comando /dev a Claude Runner o Copilot Coding Agent.",
+      chips: ["Docker", "Claude Runner", "Copilot Agent", "/dev"]
+    }
+  },
+  roar: {
+    en: {
+      title: "Roar",
+      description: "Content generation for blog and LinkedIn. Follows voice profile, SCQA framework, and brand guidelines. Drafts — human ships.",
+      chips: ["Blog", "LinkedIn", "Voice Profile", "SCQA"]
+    },
+    es: {
+      title: "Roar",
+      description: "Generación de contenido para blog y LinkedIn. Sigue el voice profile, framework SCQA y guías de marca. Borradores — el humano publica.",
+      chips: ["Blog", "LinkedIn", "Voice Profile", "SCQA"]
+    }
+  },
+  user: {
+    en: {
+      title: "You",
+      description: "The human in the loop. Invokes agents via Telegram, monitors infrastructure, deploys services, and orchestrates the homelab.",
+      chips: ["Telegram", "@homelabguardbot", "@homelabcopilotbot"]
+    },
+    es: {
+      title: "Tú",
+      description: "El humano en el bucle. Invoca agentes vía Telegram, monitoriza infraestructura, despliega servicios y orquesta el homelab.",
+      chips: ["Telegram", "@homelabguardbot", "@homelabcopilotbot"]
+    }
+  },
+  dragon: {
+    en: {
+      title: "Seiryū",
+      description: "The Azure Dragon. Central orchestrator of the multi-agent system. Routes requests, maintains context, and coordinates infrastructure nodes with specialized agents.",
+      chips: ["OpenClaw", "Multi-agent", "Orchestration", "Context"]
+    },
+    es: {
+      title: "Seiryū",
+      description: "El Dragón Azure. Orquestador central del sistema multiagente. Enruta peticiones, mantiene contexto y coordina nodos de infraestructura con agentes especializados.",
+      chips: ["OpenClaw", "Multi-agent", "Orchestration", "Context"]
+    }
+  }
+};
+
+// Pre-select current language details to reduce client payload
+const nodeDetailsForLang = Object.fromEntries(
+  Object.entries(nodeDetails).map(([id, detail]) => [id, detail[lang]])
+);
+---
+
+<div class="agent-graph-wrapper">
+  <svg viewBox="0 0 680 560" width="100%" class="agent-graph" role="img" aria-label={lang === "es" ? "Grafo del sistema de agentes Seiryū" : "Seiryū agent system graph"}>
+    <title>Agent System Architecture</title>
+    <desc>Interactive visualization of the Seiryū multi-agent system with infrastructure nodes and specialized agents</desc>
+
+    <defs>
+      <!-- Gradients -->
+      <radialGradient id="dragonGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" style="stop-color:#00B4D7;stop-opacity:0.5" />
+        <stop offset="100%" style="stop-color:#00B4D7;stop-opacity:0" />
+      </radialGradient>
+
+      <!-- Ambient particles -->
+      <g id="particleGroup1">
+        {Array.from({ length: 6 }).map((_, i) => {
+          const angle = (i / 6) * Math.PI * 2;
+          const r = 120 + (i * 7); // deterministic spread instead of Math.random() * 20
+          const cx = dragonCx + Math.cos(angle) * r;
+          const cy = dragonCy + Math.sin(angle) * r;
+          return <circle cx={cx} cy={cy} r="1.5" fill="currentColor" opacity="0.2" />;
+        })}
+      </g>
+
+      <g id="particleGroup2">
+        {Array.from({ length: 8 }).map((_, i) => {
+          const angle = (i / 8) * Math.PI * 2;
+          const r = 140 + (i * 5); // deterministic spread instead of Math.random() * 25
+          const cx = dragonCx + Math.cos(angle) * r;
+          const cy = dragonCy + Math.sin(angle) * r;
+          return <circle cx={cx} cy={cy} r="1.2" fill="currentColor" opacity="0.18" />;
+        })}
+      </g>
+    </defs>
+
+    <!-- Layer 1: Ambient particles (2 groups rotating CW/CCW) -->
+    <use href="#particleGroup1" class="orbit-cw" />
+    <use href="#particleGroup2" class="orbit-ccw" />
+
+    <!-- Layer 2: Outer aura rings (2 dashed circles pulsing) -->
+    <circle cx={dragonCx} cy={dragonCy} r="175" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="6 8" opacity="0.12" class="pulse-ring-1" />
+    <circle cx={dragonCx} cy={dragonCy} r="130" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="5 7" opacity="0.15" class="pulse-ring-2" />
+
+    <!-- Layer 3: Inner orbit track (subtle circle at r=90) -->
+    <circle cx={dragonCx} cy={dragonCy} r="90" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.08" />
+
+    <!-- Layer 5: Satellite→Dragon lines (3 thin 0.5px lines, no animation) -->
+    {infraNodes.map((node) => (
+      <line x1={node.cx} y1={node.cy} x2={dragonCx} y2={dragonCy} stroke="currentColor" stroke-width="0.5" opacity="0.1" />
+    ))}
+
+    <!-- Layer 6: User→Dragon edge (golden animated dash-flow line) -->
+    {(() => {
+      const dx = dragonCx - userNode.cx;
+      const dy = dragonCy - userNode.cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const startX = userNode.cx + (dx / dist) * 28;
+      const startY = userNode.cy + (dy / dist) * 28;
+      const endX = dragonCx - (dx / dist) * (dragonR + 14);
+      const endY = dragonCy - (dy / dist) * (dragonR + 14);
+      return (
+        <line
+          x1={startX}
+          y1={startY}
+          x2={endX}
+          y2={endY}
+          stroke={userNode.color}
+          stroke-width="1.5"
+          stroke-dasharray="8 6"
+          opacity="0.5"
+          class="flow"
+        />
+      );
+    })()}
+
+    <!-- Layer 7: Dragon→Agent edges (6 animated paths, each agent's color) -->
+    {agentNodes.map((agent) => {
+      const dx = agent.cx - dragonCx;
+      const dy = agent.cy - dragonCy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const startX = dragonCx + (dx / dist) * (dragonR + 10);
+      const startY = dragonCy + (dy / dist) * (dragonR + 10);
+      const endX = agent.cx - (dx / dist) * 32;
+      const endY = agent.cy - (dy / dist) * 32;
+      
+      return (
+        <line
+          x1={startX}
+          y1={startY}
+          x2={endX}
+          y2={endY}
+          stroke={agent.color}
+          stroke-width="1.2"
+          stroke-dasharray="6 4"
+          opacity="0.4"
+          class="flow"
+        />
+      );
+    })}
+
+    <!-- Layer 8: Cross-agent connections (Bézier curves) -->
+    {(() => {
+      const connections = [
+        { from: { cy: 80 }, to: { cy: 160 }, color: "#2ECC8A" },   // Ideas→Lore (use Lore's green)
+        { from: { cy: 160 }, to: { cy: 480 }, color: "#e879f9" },  // Lore→Roar (use Roar's pink)
+        { from: { cy: 240 }, to: { cy: 400 }, color: "#f97316" },  // Monitor→DevOps (use DevOps's orange)
+      ];
+      const x = 570; // all agents share same x
+      return connections.map((conn) => {
+        const midY = (conn.from.cy + conn.to.cy) / 2;
+        const distance = Math.abs(conn.to.cy - conn.from.cy);
+        const bowAmount = Math.min(distance * 0.35, 80); // bow proportional to distance, capped
+        const cpX = x + bowAmount; // control point bows right
+        return (
+          <path
+            d={`M ${x} ${conn.from.cy} Q ${cpX} ${midY} ${x} ${conn.to.cy}`}
+            fill="none"
+            stroke={conn.color}
+            stroke-width="1.2"
+            stroke-dasharray="5 5"
+            opacity="0.3"
+          />
+        );
+      });
+    })()}
+
+    <!-- Layer 9: Dragon center (seiryu-mark-cerulean.svg with pulse glow) -->
+    <g data-node-id="dragon" class="graph-node dragon-node" tabindex="0" role="button" aria-label="Seiryū">
+      <circle cx={dragonCx} cy={dragonCy} r="60" fill="url(#dragonGlow)" opacity="0.6" class="pulse-hub" />
+      <circle cx={dragonCx} cy={dragonCy} r={dragonR} fill={`${infraNodes[1].color}15`} stroke={infraNodes[1].color} stroke-width="1.5" opacity="0.8" />
+      <image
+        href="/seiryu-mark-cerulean.svg"
+        x={dragonCx - 28}
+        y={dragonCy - 30}
+        width="56"
+        height="60"
+        opacity="0.92"
+      />
+    </g>
+
+    <!-- Layer 4: Infrastructure satellite nodes -->
+    {infraNodes.map((node) => (
+      <g data-node-id={node.id} class="graph-node infra-node" tabindex="0" role="button" aria-label={node.label}>
+        <circle cx={node.cx} cy={node.cy} r="22" fill="none" stroke={node.color} stroke-width="1" opacity="0.3" class="pulse-subtle" />
+        <circle cx={node.cx} cy={node.cy} r="18" fill={`${node.color}15`} stroke={node.color} stroke-width="1.2" />
+        <text x={node.cx} y={node.cy + 32} fill="currentColor" font-size="11" font-weight="500" text-anchor="middle" opacity="0.85" class="node-label">
+          {node.label}
+        </text>
+        <text x={node.cx} y={node.cy + 44} fill="currentColor" font-size="8" text-anchor="middle" opacity="0.5" class="node-sublabel">
+          {node.sublabel}
+        </text>
+      </g>
+    ))}
+
+    <!-- Layer 10: User node (acm. brand mark) -->
+    <g data-node-id={userNode.id} class="graph-node user-node" tabindex="0" role="button" aria-label={userNode.label}>
+      <circle cx={userNode.cx} cy={userNode.cy} r="28" fill={`${userNode.color}18`} stroke={userNode.color} stroke-width="1.5" />
+      <text x={userNode.cx - 4} y={userNode.cy + 5} fill="currentColor" font-size="14" font-weight="600" text-anchor="middle" font-family="'JetBrains Mono', monospace">acm</text>
+      <text x={userNode.cx + 13} y={userNode.cy + 5} fill="#00B4D7" font-size="14" font-weight="600" text-anchor="middle" font-family="'JetBrains Mono', monospace">.</text>
+    </g>
+
+    <!-- Layer 11: Agent nodes -->
+    {agentNodes.map((agent) => (
+      <g data-node-id={agent.id} class="graph-node agent-node" tabindex="0" role="button" aria-label={agent.label}>
+        <circle cx={agent.cx} cy={agent.cy} r="30" fill={`${agent.color}18`} stroke={agent.color} stroke-width="1.5" />
+        <text x={agent.cx} y={agent.cy + 5} fill={agent.color} font-size="13" font-weight="600" text-anchor="middle" class="node-label">
+          {agent.label}
+        </text>
+        <text x={agent.cx} y={agent.cy + 46} fill="currentColor" font-size="9" text-anchor="middle" opacity="0.55" class="node-sublabel">
+          {agent.sublabel}
+        </text>
+      </g>
+    ))}
+  </svg>
+
+  <!-- Detail Panel -->
+  <aside id="detail-panel" class="detail-panel" aria-live="polite" aria-atomic="true" hidden>
+    <div class="detail-panel-content">
+      <div class="detail-panel-header">
+        <h3 id="detail-title" class="detail-title"></h3>
+        <button id="detail-close" class="detail-close" aria-label="Close detail panel">✕</button>
+      </div>
+      <p id="detail-description" class="detail-description"></p>
+      <div id="detail-chips" class="detail-chips"></div>
+    </div>
+  </aside>
+</div>
+
+<style>
+  .agent-graph-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    border-radius: 12px;
+  }
+
+  /* Light mode: subtle background for contrast */
+  :root:not([data-theme="dark"]) .agent-graph-wrapper,
+  :root[data-theme="light"] .agent-graph-wrapper {
+    background: rgba(4, 8, 15, 0.03);
+    border: 0.5px solid rgba(4, 8, 15, 0.08);
+  }
+
+  /* Dark mode: very subtle surface */
+  :root[data-theme="dark"] .agent-graph-wrapper {
+    background: rgba(240, 240, 235, 0.02);
+    border: 0.5px solid rgba(240, 240, 235, 0.06);
+  }
+
+  .agent-graph {
+    display: block;
+    width: 100%;
+    height: auto;
+    color: var(--text);
+  }
+
+  .graph-node {
+    cursor: pointer;
+    transition: opacity 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .graph-node:hover {
+    opacity: 0.85;
+  }
+
+  .node-label {
+    font-family: var(--font-ui);
+  }
+
+  .node-sublabel {
+    font-family: var(--font-mono);
+  }
+
+  /* Detail Panel */
+  .detail-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 50vh;
+    background: var(--surface);
+    border-top: 1px solid var(--border-strong);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 350ms cubic-bezier(0.22, 1, 0.36, 1);
+    overflow-y: auto;
+  }
+
+  .detail-panel[aria-hidden="false"] {
+    transform: translateY(0);
+  }
+
+  .detail-panel-content {
+    padding: 1.5rem;
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .detail-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .detail-title {
+    font-family: var(--font-ui);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .detail-close {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .detail-close:hover {
+    color: var(--seiryu-hi);
+  }
+
+  .detail-description {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--text);
+    opacity: 0.85;
+    margin-bottom: 1.25rem;
+  }
+
+  .detail-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .detail-chip {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 2px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-2);
+    color: var(--text);
+    opacity: 0.85;
+  }
+
+  @media (min-width: 768px) {
+    .detail-panel {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      bottom: auto;
+      left: auto;
+      width: 22rem;
+      max-height: calc(100% - 2rem);
+      overflow-y: auto;
+      border-top: none;
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+      transform: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 250ms ease, visibility 250ms;
+    }
+
+    .detail-panel[aria-hidden="false"] {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .detail-panel-content {
+      padding: 2rem;
+    }
+  }
+
+  /* Animations (respect prefers-reduced-motion) */
+  @media (prefers-reduced-motion: no-preference) {
+    @keyframes orbit {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes orbitR {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(-360deg);
+      }
+    }
+
+    @keyframes pulseHub {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.8;
+        transform: scale(1.08);
+      }
+    }
+
+    @keyframes pulseRing {
+      0%, 100% {
+        opacity: 0.12;
+      }
+      50% {
+        opacity: 0.22;
+      }
+    }
+
+    @keyframes flowDash {
+      to {
+        stroke-dashoffset: -14;
+      }
+    }
+
+    @keyframes pulseSubtle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+    }
+
+    .orbit-cw {
+      animation: orbit 44s linear infinite;
+      transform-origin: 340px 260px;
+    }
+
+    .orbit-ccw {
+      animation: orbitR 60s linear infinite;
+      transform-origin: 340px 260px;
+    }
+
+    .pulse-hub {
+      animation: pulseHub 3.2s ease-in-out infinite;
+    }
+
+    .pulse-subtle {
+      animation: pulseSubtle 4s ease-in-out infinite;
+    }
+
+    .pulse-ring-1 {
+      animation: pulseRing 4s ease-in-out infinite;
+    }
+
+    .pulse-ring-2 {
+      animation: pulseRing 5s ease-in-out infinite 1.5s;
+    }
+
+    .flow {
+      animation: flowDash 2s linear infinite;
+    }
+  }
+</style>
+
+<script define:vars={{ nodeDetailsForLang }}>
+  const panel = document.getElementById("detail-panel");
+  const title = document.getElementById("detail-title");
+  const description = document.getElementById("detail-description");
+  const chipsContainer = document.getElementById("detail-chips");
+  const closeBtn = document.getElementById("detail-close");
+
+  let hideTimeout = null;
+
+  function showDetail(nodeId) {
+    // Clear any pending hide
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      hideTimeout = null;
+    }
+
+    const detail = nodeDetailsForLang[nodeId];
+    if (!detail) return;
+
+    title.textContent = detail.title;
+    title.style.color = getNodeColor(nodeId);
+    description.textContent = detail.description;
+
+    chipsContainer.innerHTML = "";
+    detail.chips.forEach((chip) => {
+      const span = document.createElement("span");
+      span.className = "detail-chip";
+      span.textContent = chip;
+      chipsContainer.appendChild(span);
+    });
+
+    panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
+  }
+
+  function hideDetail() {
+    panel.setAttribute("aria-hidden", "true");
+    hideTimeout = setTimeout(() => {
+      if (panel.getAttribute("aria-hidden") === "true") {
+        panel.hidden = true;
+      }
+      hideTimeout = null;
+    }, 350);
+  }
+
+  function getNodeColor(nodeId) {
+    const colorMap = {
+      nas: "#2ECC8A",
+      macmini: "#00B4D7",
+      cloud: "#E8C96A",
+      ideas: "#00B4D7",
+      lore: "#2ECC8A",
+      monitor: "#E8C96A",
+      media: "#a78bfa",
+      devops: "#f97316",
+      roar: "#e879f9",
+      user: "#E8C96A",
+      dragon: "#00B4D7"
+    };
+    return colorMap[nodeId] || "#00B4D7";
+  }
+
+  // Event listeners
+  document.querySelectorAll(".graph-node").forEach((node) => {
+    node.addEventListener("click", () => {
+      const nodeId = node.dataset.nodeId;
+      if (nodeId) showDetail(nodeId);
+    });
+    node.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        const nodeId = node.dataset.nodeId;
+        if (nodeId) showDetail(nodeId);
+      }
+    });
+  });
+
+  closeBtn?.addEventListener("click", hideDetail);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && panel?.getAttribute("aria-hidden") === "false") {
+      hideDetail();
+    }
+  });
+</script>
