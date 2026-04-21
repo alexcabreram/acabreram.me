@@ -250,7 +250,7 @@ const promptRouting = isSpanish
 
             <div class="reveal prompt-routing rounded-sm border border-seiryu/24 bg-surface/75 p-6" aria-labelledby="prompt-routing-heading">
               <p id="prompt-routing-heading" class="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-seiryu-hi">
-                {isSpanish ? "Prompt routing - como pienso" : "Prompt routing - how I think"}
+                {isSpanish ? "Prompt routing - cómo pienso" : "Prompt routing - how I think"}
               </p>
               <div class="prompt-routing__rows">
                 {
@@ -388,27 +388,34 @@ const promptRouting = isSpanish
     let my = window.innerHeight * 0.5;
     let fx = mx;
     let fy = my;
+    let animId = null;
 
     document.addEventListener("mousemove", (event) => {
       mx = event.clientX;
       my = event.clientY;
     });
 
+    const tick = () => {
+      fx += (mx - fx) * 0.07;
+      fy += (my - fy) * 0.07;
+      follower.style.transform = `translate(${fx}px, ${fy}px)`;
+      animId = requestAnimationFrame(tick);
+    };
+
     toggle.addEventListener("click", () => {
       active = !active;
       toggle.setAttribute("aria-pressed", String(active));
-      follower.style.opacity = active ? "0.94" : "0";
-    });
-
-    const tick = () => {
       if (active) {
-        fx += (mx - fx) * 0.07;
-        fy += (my - fy) * 0.07;
-        follower.style.transform = `translate(${fx}px, ${fy}px)`;
+        follower.style.opacity = "0.94";
+        if (!animId) tick(); // start loop
+      } else {
+        follower.style.opacity = "0";
+        if (animId) {
+          cancelAnimationFrame(animId);
+          animId = null;
+        }
       }
-      requestAnimationFrame(tick);
-    };
-    tick();
+    });
   })();
 </script>
 </Layout>

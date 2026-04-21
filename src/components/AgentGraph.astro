@@ -167,10 +167,15 @@ const nodeDetails = {
     }
   }
 };
+
+// Pre-select current language details to reduce client payload
+const nodeDetailsForLang = Object.fromEntries(
+  Object.entries(nodeDetails).map(([id, detail]) => [id, detail[lang]])
+);
 ---
 
 <div class="agent-graph-wrapper">
-  <svg viewBox="0 0 680 560" width="100%" class="agent-graph" role="img" aria-label="Agent System Architecture">
+  <svg viewBox="0 0 680 560" width="100%" class="agent-graph" role="img" aria-label={lang === "es" ? "Grafo del sistema de agentes Seiryū" : "Seiryū agent system graph"}>
     <title>Agent System Architecture</title>
     <desc>Interactive visualization of the Seiryū multi-agent system with infrastructure nodes and specialized agents</desc>
 
@@ -295,7 +300,7 @@ const nodeDetails = {
     })()}
 
     <!-- Layer 9: Dragon center (seiryu-mark-cerulean.svg with pulse glow) -->
-    <g data-node-id="dragon" class="graph-node dragon-node" tabindex="0" role="button" aria-label="Dragon">
+    <g data-node-id="dragon" class="graph-node dragon-node" tabindex="0" role="button" aria-label="Seiryū">
       <circle cx={dragonCx} cy={dragonCy} r="60" fill="url(#dragonGlow)" opacity="0.6" class="pulse-hub" />
       <circle cx={dragonCx} cy={dragonCy} r={dragonR} fill={`${infraNodes[1].color}15`} stroke={infraNodes[1].color} stroke-width="1.5" opacity="0.8" />
       <image
@@ -600,15 +605,23 @@ const nodeDetails = {
   }
 </style>
 
-<script define:vars={{ nodeDetails, lang }}>
+<script define:vars={{ nodeDetailsForLang }}>
   const panel = document.getElementById("detail-panel");
   const title = document.getElementById("detail-title");
   const description = document.getElementById("detail-description");
   const chipsContainer = document.getElementById("detail-chips");
   const closeBtn = document.getElementById("detail-close");
 
+  let hideTimeout = null;
+
   function showDetail(nodeId) {
-    const detail = nodeDetails[nodeId]?.[lang];
+    // Clear any pending hide
+    if (hideTimeout) {
+      clearTimeout(hideTimeout);
+      hideTimeout = null;
+    }
+
+    const detail = nodeDetailsForLang[nodeId];
     if (!detail) return;
 
     title.textContent = detail.title;
@@ -629,8 +642,11 @@ const nodeDetails = {
 
   function hideDetail() {
     panel.setAttribute("aria-hidden", "true");
-    setTimeout(() => {
-      panel.hidden = true;
+    hideTimeout = setTimeout(() => {
+      if (panel.getAttribute("aria-hidden") === "true") {
+        panel.hidden = true;
+      }
+      hideTimeout = null;
     }, 350);
   }
 
