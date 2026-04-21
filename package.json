@@ -19,5 +19,9 @@
     "astro": "^6.0.4",
     "astro-og-canvas": "^0.10.1",
     "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "satori": "^0.26.0"
   }
 }
