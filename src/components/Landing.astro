@@ -1,9 +1,15 @@
 ---
+import { Image } from 'astro:assets';
 import Layout from "../layouts/Layout.astro";
 import { translations, type Locale } from "../i18n/translations";
 import LangToggle from "./LangToggle.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import AgentGraph from "./AgentGraph.astro";
+import speakingPhoto from '../assets/photos/speaking-microsoft.jpg';
+import profilePhoto from '../assets/photos/profile.jpg';
+import campusPhoto from '../assets/photos/microsoft-campus.jpg';
+import gamingPhoto from '../assets/photos/gaming-casual.jpg';
+import conferencePhoto from '../assets/photos/conference-working.jpg';
 
 interface Props {
   lang: Locale;
@@ -28,34 +34,44 @@ const certifications: CertEntry[] = [
 ];
 const aboutPhotos = [
   {
-    src: "/photos/speaking-microsoft.jpg",
+    src: speakingPhoto,
     alt: 'Alex presenting "Copilot Control System" at a Microsoft event.',
     className: "col-span-2 row-span-2",
-    imageClass: "object-center"
+    imageClass: "object-center",
+    width: 370,
+    height: 247
   },
   {
-    src: "/photos/profile.jpg",
+    src: profilePhoto,
     alt: "Professional headshot of Alex Cabrera Martínez in a blazer.",
     className: "row-span-2",
-    imageClass: "object-center"
+    imageClass: "object-center",
+    width: 234,
+    height: 234
   },
   {
-    src: "/photos/microsoft-campus.jpg",
+    src: campusPhoto,
     alt: "Alex at the Microsoft campus with a giant Microsoft logo.",
     className: "col-span-1 row-span-2",
-    imageClass: "object-center"
+    imageClass: "object-center",
+    width: 416,
+    height: 234
   },
   {
-    src: "/photos/gaming-casual.jpg",
+    src: gamingPhoto,
     alt: "Alex with Minecraft plushies — gaming culture is part of the identity.",
     className: "col-span-1 row-span-2",
-    imageClass: "object-center"
+    imageClass: "object-center",
+    width: 234,
+    height: 234
   },
   {
-    src: "/photos/conference-working.jpg",
+    src: conferencePhoto,
     alt: "Alex working on a laptop at the Bizz Summit conference.",
     className: "col-span-1 row-span-2",
-    imageClass: "object-center"
+    imageClass: "object-center",
+    width: 351,
+    height: 234
   }
 ];
 
@@ -85,6 +101,8 @@ const promptRouting = isSpanish
           src="/dragon-hero.png"
           alt=""
           aria-hidden="true"
+          loading="lazy"
+          decoding="async"
           class="hero-dragon absolute -right-16 top-1/2 hidden w-[26rem] -translate-y-1/2 select-none lg:block xl:w-[34rem]"
         />
 
@@ -107,11 +125,16 @@ const promptRouting = isSpanish
 
         <div class="reveal relative max-w-5xl text-left">
           <div class="flex flex-col gap-6 sm:gap-8 lg:flex-row lg:items-center lg:gap-10">
-            <img
-              src="/photos/profile.jpg"
+            <Image
+              src={profilePhoto}
               alt="Portrait of Alex Cabrera Martínez."
+              width={128}
+              height={128}
+              format="webp"
+              quality={85}
               loading="eager"
               fetchpriority="high"
+              decoding="async"
               class="h-24 w-24 shrink-0 rounded-full border object-cover object-center sm:h-28 sm:w-28 lg:h-32 lg:w-32"
               style="border-color: var(--border-strong); box-shadow: var(--shadow-photo)"
             />
@@ -220,9 +243,13 @@ const promptRouting = isSpanish
             {
               aboutPhotos.map((photo) => (
                 <figure class:list={["photo-tile group rounded-sm hover:scale-[1.015]", photo.className]}>
-                  <img
+                  <Image
                     src={photo.src}
                     alt={photo.alt}
+                    width={photo.width}
+                    height={photo.height}
+                    format="webp"
+                    quality={82}
                     loading="lazy"
                     decoding="async"
                     class:list={["h-full w-full object-cover transition duration-500", photo.imageClass]}
