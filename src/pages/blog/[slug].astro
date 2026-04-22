@@ -90,10 +90,12 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 230));
   (() => {
     const bar = document.querySelector('.blog-progress');
     if (!bar) return;
-    window.addEventListener('scroll', () => {
+    const update = () => {
       const h = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = h > 0 ? (window.scrollY / h) : 0;
+      const pct = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
       bar.style.transform = `scaleX(${pct})`;
-    }, { passive: true });
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    update();
   })();
 </script>
