@@ -97,14 +97,17 @@ const promptRouting = isSpanish
     <!-- Fix 6: reduce hero dead space — use min-h-[85vh] and push content up -->
     <section id="top" aria-label="Hero" class="relative flex min-h-[85vh] items-center overflow-hidden">
       <div class="section-shell relative flex w-full items-center justify-center py-20 sm:py-24">
-        <img
-          src="/dragon-hero.png"
-          alt=""
-          aria-hidden="true"
-          loading="lazy"
-          decoding="async"
-          class="hero-dragon absolute -right-16 top-1/2 hidden w-[26rem] -translate-y-1/2 select-none lg:block xl:w-[34rem]"
-        />
+        <picture>
+          <source srcset="/dragon-hero.webp" type="image/webp" media="(min-width: 1024px)" />
+          <img
+            src="/dragon-hero.png"
+            alt=""
+            aria-hidden="true"
+            fetchpriority="high"
+            decoding="async"
+            class="hero-dragon absolute -right-16 top-1/2 hidden w-[26rem] -translate-y-1/2 select-none lg:block xl:w-[34rem]"
+          />
+        </picture>
 
         <div class="absolute left-0 top-8 sm:top-10">
           <div
@@ -249,7 +252,7 @@ const promptRouting = isSpanish
                     width={photo.width}
                     height={photo.height}
                     format="webp"
-                    quality={82}
+                    quality={72}
                     loading="lazy"
                     decoding="async"
                     class:list={["h-full w-full object-cover transition duration-500", photo.imageClass]}
