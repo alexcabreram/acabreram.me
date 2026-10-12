@@ -1,0 +1,21 @@
+---
+interface Props {
+  lang?: "en" | "es";
+  class?: string;
+}
+
+const { lang = "en", class: className = "" } = Astro.props;
+const prefix = lang === "es" ? "/es" : "";
+const labels =
+  lang === "es"
+    ? { legal: "Aviso legal", privacy: "Privacidad", disclaimer: "Opiniones propias; no representan a Microsoft." }
+    : { legal: "Legal notice", privacy: "Privacy", disclaimer: "Personal views; they don't represent Microsoft." };
+---
+
+<div class={`flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-mono text-xs text-muted ${className}`}>
+  <a href={`${prefix}/legal/`} class="hover:text-seiryu-hi">{labels.legal}</a>
+  <span aria-hidden="true">·</span>
+  <a href={`${prefix}/privacy/`} class="hover:text-seiryu-hi">{labels.privacy}</a>
+  <span aria-hidden="true">·</span>
+  <span>{labels.disclaimer}</span>
+</div>

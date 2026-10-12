@@ -1,4 +1,5 @@
 ---
+import LegalLinks from "../../components/LegalLinks.astro";
 import Layout from "../../layouts/Layout.astro";
 import BlogNav from "../../components/BlogNav.astro";
 import { getCollection, render } from "astro:content";
@@ -17,11 +18,13 @@ const { Content, remarkPluginFrontmatter } = await render(post);
 const formatDate = (date: Date) =>
   date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
 
+const twin = await getCollection("blog", ({ id, data }) => !data.draft && data.lang === "es" && id === `es/${post.id}`);
 const wordCount = post.body?.split(/\s+/).length ?? 0;
 const readingTime = Math.max(1, Math.ceil(wordCount / 230));
 ---
 
 <Layout
+  alternates={twin.length > 0 ? undefined : false}
   lang={post.data.lang ?? "en"}
   title={`${post.data.title} — acabreram.com`}
   description={post.data.description}
@@ -59,15 +62,15 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 230));
             {post.data.title}
           </h1>
           <div class="mt-3 flex items-center gap-3">
-            <time class="font-mono text-[11px] text-muted/60">
+            <time class="font-mono text-[11px] text-muted">
               {formatDate(post.data.date)}
             </time>
             {post.data.updatedDate && (
-              <span class="font-mono text-[11px] text-muted/40">
+              <span class="font-mono text-[11px] text-muted">
                 · Updated {formatDate(post.data.updatedDate)}
               </span>
             )}
-            <span class="font-mono text-[11px] text-muted/40">· {readingTime} min read</span>
+            <span class="font-mono text-[11px] text-muted">· {readingTime} min read</span>
           </div>
           <hr class="mt-6 border-0 border-t" style="border-color: var(--border-subtle)" />
         </header>
@@ -84,6 +87,10 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 230));
       </div>
     </article>
   </main>
+
+  <footer class="border-t py-8" style="border-color: var(--border-subtle)">
+    <LegalLinks lang="en" />
+  </footer>
 </Layout>
 
 <script is:inline>

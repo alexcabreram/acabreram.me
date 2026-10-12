@@ -23,7 +23,9 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 dragon3variants.png
-public/brand/
+public/brand/*
+!public/brand/m365/
+!public/brand/email/
 gaming-casual-original.jpg
 .superpowers/
 
