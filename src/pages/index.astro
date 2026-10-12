@@ -1,15 +1,21 @@
 ---
-import Landing from "../components/Landing.astro";
+import Layout from "../layouts/Layout.astro";
+import Home from "../components/home/Home.astro";
+import { homeCopy } from "../i18n/home";
 ---
 
-<script is:inline>
-  // Auto-redirect to /es/ if browser language is Spanish and user hasn't chosen manually
-  if (!document.cookie.includes('lang=')) {
-    const lang = navigator.language || navigator.userLanguage || 'en';
-    if (lang.startsWith('es')) {
-      window.location.replace('/es/');
-    }
-  }
-</script>
-
-<Landing lang="en" />
+<Layout lang="en" title={homeCopy.en.meta.title} description={homeCopy.en.meta.description} turn="night">
+  <Fragment slot="head">
+    <script is:inline>
+      // Send Spanish browsers to /es/ unless the visitor already picked a language.
+      try {
+        if (!localStorage.getItem("acm-lang") && (navigator.language || "en").toLowerCase().startsWith("es")) {
+          location.replace("/es/");
+        }
+      } catch {
+        // Storage blocked: stay on the English page.
+      }
+    </script>
+  </Fragment>
+  <Home lang="en" />
+</Layout>

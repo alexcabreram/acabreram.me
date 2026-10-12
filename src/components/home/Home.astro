@@ -1,0 +1,226 @@
+---
+// Home v2 (DESIGN.md v2.1 §8): R2 day/night hero, R3 swarm, L2 orbit map,
+// L3 "Ahora" console, Escritos and the S1 "Sobre mí" gallery with the ASCII portrait.
+import "../../styles/home.css";
+import { Image, getImage } from "astro:assets";
+import { getCollection } from "astro:content";
+import markSvg from "../../assets/brand/seiryu-mark.svg?raw";
+import BrandLockup from "../BrandLockup.astro";
+import speaking from "../../assets/photos/speaking-microsoft.jpg";
+import campus from "../../assets/photos/microsoft-campus.jpg";
+import gaming from "../../assets/photos/gaming-casual.jpg";
+import conference from "../../assets/photos/conference-working.jpg";
+import profile from "../../assets/photos/profile.jpg";
+import { homeCopy, CERTS } from "../../i18n/home";
+import { NODES, LOG_LINES } from "../../data/seiryu";
+import { formatDate, postHref, readingTime } from "../../lib/blog";
+import type { Locale } from "../../i18n/translations";
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = homeCopy[lang];
+const es = lang === "es";
+const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
+const blogHref = es ? "/es/blog/" : "/blog/";
+const legalPrefix = es ? "/es" : "";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft && data.lang === lang)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const featured = posts[0];
+
+const portrait = await getImage({ src: profile, width: 600, format: "jpeg" });
+const topCerts = CERTS.filter((c) => c.top);
+const moreCerts = CERTS.filter((c) => !c.top);
+
+const data = {
+  lang,
+  states: t.states,
+  clock: t.clock,
+  tagline: [t.hero.day, t.hero.night],
+  swarm: { split: t.swarm.split, join: t.swarm.join },
+  menu: { open: t.nav.menu, close: t.nav.close },
+  nodes: NODES.map((n) => ({ id: n.id, name: n.name, kanji: n.kanji, ring: n.ring, dir: n.dir, st: n.st, kind: n.kind[lang], d: n.d[lang] })),
+  log: LOG_LINES.map((l) => [l.who, l[lang]]),
+  example: t.now.example,
+  running: t.now.running,
+  portrait: portrait.src,
+};
+---
+
+<div class="home">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="emblem" viewBox="37 225 319 307"><g fill="currentColor">{paths.map((d) => <path d={d} />)}</g></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4v11H3v-11Zm6.5 0h3.8v1.5h.06c.53-1 1.83-2.06 3.77-2.06 4.03 0 4.77 2.65 4.77 6.1v5.71h-4v-5.06c0-1.2-.02-2.76-1.68-2.76-1.69 0-1.95 1.32-1.95 2.68v5.14h-4v-11Z"/></symbol>
+    <symbol id="i-gh" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.56 9.56 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></symbol>
+  </svg>
+  <template id="emblem-paths">{paths.map((d) => <path d={d} />)}</template>
+  <script type="application/json" id="home-data" set:html={JSON.stringify(data)} />
+
+  <nav class="site-nav" aria-label={t.nav.main}>
+    <div class="wrap">
+      <a class="lk" href="#hero" aria-label="acm."><BrandLockup size={24} textSize={17} /></a>
+      <div class="links">
+        <a href="#enjambre">{t.nav.seiryu}</a><a href="#mapa">{t.nav.map}</a><a href="#ahora">{t.nav.now}</a><a href="#escritos">{t.nav.writing}</a><a href="#sobre">{t.nav.about}</a>
+      </div>
+      <div class="navr">
+        <span class="clock-nav"><i></i><span class="clk">Madrid</span></span>
+        <div class="seg" role="group" aria-label={t.nav.lang}>
+          <a href="/es/" hreflang="es" aria-current={es ? "true" : undefined} class:list={[{ on: es }]}>ES</a>
+          <a href="/" hreflang="en" aria-current={!es ? "true" : undefined} class:list={[{ on: !es }]}>EN</a>
+        </div>
+        <a class="quick blog" href={blogHref}><span class="txt">{t.nav.blog}</span></a>
+        <a class="quick" href="https://www.linkedin.com/in/alexcabreram/" target="_blank" rel="noreferrer" aria-label="LinkedIn"><svg class="ico" aria-hidden="true"><use href="#i-in" /></svg><span class="txt">LinkedIn</span></a>
+        <button type="button" class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="sheet">{t.nav.menu}</button>
+      </div>
+    </div>
+  </nav>
+  <div class="sheet" id="sheet" aria-label={t.nav.menu}>
+    <a href="#enjambre">{t.sheet.seiryu}</a><a href="#mapa">{t.sheet.map}</a><a href="#ahora">{t.sheet.now}</a><a href="#escritos">{t.sheet.writing}</a><a href="#sobre">{t.sheet.about}</a>
+    <div class="row">
+      <div class="seg" role="group" aria-label={t.nav.lang}>
+        <a href="/es/" hreflang="es" class:list={[{ on: es }]}>ES</a><a href="/" hreflang="en" class:list={[{ on: !es }]}>EN</a>
+      </div>
+      <span class="label" style="color:var(--muted)"><span class="clk">Madrid</span></span>
+    </div>
+  </div>
+
+  <main id="main-content">
+    <section class="split" id="hero" aria-label={t.hero.aria}>
+      <div class="layer night">
+        <div class="stack">
+          <svg class="em" aria-hidden="true"><use href="#emblem" /></svg>
+          <h1 class="big tag"><span class="d">{t.hero.day}</span><span class="n">{t.hero.night}</span></h1>
+          <p class="who" set:html={t.hero.whoNight} />
+          <div class="ctas"><a class="btn p" href="#enjambre">{t.hero.build}</a><a class="btn" href={blogHref}>{t.hero.read}</a></div>
+        </div>
+        <span class="corner">{t.hero.cornerNight}</span>
+      </div>
+      <div class="layer day" aria-hidden="true">
+        <div class="stack">
+          <svg class="em"><use href="#emblem" /></svg>
+          <div class="big tag"><span class="d">{t.hero.day}</span><span class="n">{t.hero.night}</span></div>
+          <p class="who" set:html={t.hero.whoDay} />
+          <div class="ctas"><a class="btn p" href="#enjambre" tabindex="-1">{t.hero.build}</a><a class="btn" href={blogHref} tabindex="-1">{t.hero.read}</a></div>
+        </div>
+        <span class="corner">{t.hero.cornerDay}</span>
+      </div>
+      <div class="handle"><button type="button" role="slider" id="hb" aria-label={t.hero.handle} aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">⇆</button></div>
+    </section>
+
+    <section class="swarm" id="enjambre" aria-label={t.swarm.aria}>
+      <canvas id="c-swarm" aria-hidden="true"></canvas>
+      <div class="wrap"><div class="side bf">
+        <span class="eyebrow"><span class="label">Seiryū</span><em>青龍</em></span>
+        <h2 class="h" set:html={t.swarm.title} />
+        <p class="lede">{t.swarm.lede}</p>
+        <div class="legend"><span class="st on"><i></i>{t.states.on}</span><span class="st mid"><i></i>{t.states.mid}</span><span class="st off"><i></i>{t.states.off}</span></div>
+        <div><button class="btn p" type="button" id="b-swarm">{t.swarm.split}</button></div>
+      </div></div>
+    </section>
+
+    <section class="orbit" id="mapa" aria-label={t.map.aria}>
+      <div class="orbit-stage">
+        <div class="stage3d"><div class="scene" id="scene"><div class="floor"></div><div class="ring3 r0" id="r0"></div><div class="ring3 r1" id="r1"></div><div class="ring3 r2" id="r2"></div></div></div>
+        <span class="glow3d" aria-hidden="true"></span><span class="beam" aria-hidden="true"></span>
+        <div class="emblem3d" aria-hidden="true"><svg><use href="#emblem" /></svg></div>
+      </div>
+      <div class="wrap" style="position:relative;z-index:5"><div class="side">
+        <span class="eyebrow"><span class="label">{t.map.label}</span><em>玄 · 青 · 白</em></span>
+        <h2 class="h" set:html={t.map.title} />
+        <p class="lede">{t.map.lede}</p>
+        <div class="detail magic" id="detail" aria-live="polite">
+          <span class="k" id="d-k">{NODES[0].kind[lang]}</span>
+          <h3 id="d-n">Salem</h3>
+          <span class="st core" id="d-s"><i></i>{t.states.core}</span>
+          <p id="d-t">{NODES[0].d[lang]}</p>
+        </div>
+      </div></div>
+    </section>
+
+    <section class="console-sec" id="ahora" aria-label={t.now.aria}>
+      <div class="wrap console">
+        <div class="bf" style="display:grid;gap:1.2rem;min-width:0">
+          <span class="label">{t.now.label}</span>
+          <h2 class="h" set:html={t.now.title} />
+          <p class="lede">{t.now.lede}</p>
+        </div>
+        <div class="panel beam-host" aria-label={t.now.panel}><span class="border-beam" aria-hidden="true"></span>
+          <div class="p-head"><span class="lk"><svg aria-hidden="true"><use href="#emblem" /></svg>seiryū</span><span class="st on"><i></i>{t.now.running}</span></div>
+          <div class="p-body">
+            <div class="radar" aria-hidden="true"><svg viewBox="0 0 200 200">
+              <defs><linearGradient id="swg" x1="0" x2="1"><stop offset="0" stop-color="#00B4D7" stop-opacity="0" /><stop offset="1" stop-color="#00B4D7" stop-opacity=".45" /></linearGradient></defs>
+              <circle class="rr" cx="100" cy="100" r="92" /><circle class="rr" cx="100" cy="100" r="62" /><circle class="rr" cx="100" cy="100" r="32" />
+              <g class="sweep"><path d="M100 100 L192 100 A92 92 0 0 0 165 35 Z" fill="url(#swg)" /></g>
+              <g id="rdots"></g><circle cx="100" cy="100" r="9" fill="#A97A0C" stroke="#E6EDF2" stroke-width="2" /><circle cx="100" cy="100" r="16" fill="none" stroke="rgba(79,209,236,.5)" />
+            </svg></div>
+            <div class="counts" id="counts"></div>
+          </div>
+          <div class="log" id="log"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap writing" id="escritos" aria-label={t.writing.aria}>
+      <div class="w-head bf"><div style="display:grid;gap:.9rem"><span class="label">{t.writing.label}</span><h2 class="h" set:html={t.writing.title} /></div><a class="btn" href={blogHref}>{t.writing.all}</a></div>
+      <div class="posts bf">
+        {featured && (
+          <a class="post magic" href={postHref(featured)}>
+            <span class="meta">{formatDate(featured.data.date, lang, "short")} · {readingTime(featured)} min · {featured.data.tags.slice(0, 2).join(" · ")}</span>
+            <h3>{featured.data.title}</h3>
+            <p>{featured.data.description}</p>
+          </a>
+        )}
+        <div class="series">{t.writing.series.map((s) => <div><b>{s.b}</b><span>{s.s}</span></div>)}</div>
+      </div>
+    </section>
+
+    <section class="wrap about" id="sobre" aria-label={t.about.aria}>
+      <div class="a-head bf">
+        <span class="label">{t.about.label}</span>
+        <span class="fn">Alejandro Cabrera Martínez</span>
+        <h2 class="h" set:html={t.about.title} />
+        <p class="lede">{t.about.lede}</p>
+      </div>
+      <div class="s1 bf">
+        <div class="gal">
+          <figure class="ga"><Image src={speaking} alt={t.about.gallery.speak.alt} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /><figcaption>{t.about.gallery.speak.cap}</figcaption></figure>
+          <figure class="gb ascii" id="portrait"><canvas id="pc" role="img" aria-label={t.about.gallery.portrait.aria}></canvas><figcaption class="hint">{t.about.gallery.portrait.hint}</figcaption></figure>
+          <figure><Image src={campus} alt={t.about.gallery.campus.alt} widths={[320, 640]} sizes="(max-width: 900px) 50vw, 20vw" loading="lazy" /><figcaption>{t.about.gallery.campus.cap}</figcaption></figure>
+          <figure><Image src={gaming} alt={t.about.gallery.gaming.alt} widths={[320, 640]} sizes="(max-width: 900px) 50vw, 20vw" loading="lazy" /><figcaption>{t.about.gallery.gaming.cap}</figcaption></figure>
+          <figure><Image src={conference} alt={t.about.gallery.conf.alt} widths={[320, 640]} sizes="(max-width: 900px) 100vw, 20vw" loading="lazy" /><figcaption>{t.about.gallery.conf.cap}</figcaption></figure>
+        </div>
+        <div class="s1-side">
+          <ol class="timeline">{t.about.timeline.map((x) => <li>{x}</li>)}</ol>
+          <p class="quote">{t.about.quote}</p>
+          <div class="certs" id="certs">
+            {topCerts.map((c) => <span class="cert"><img src={c.badge} alt="" width="28" height="28" loading="lazy" /><b>{c.code}</b><span>{c.name}</span></span>)}
+            <button type="button" class="more" id="more-certs">{t.about.moreCerts(moreCerts.length)}</button>
+            {moreCerts.map((c) => <span class="cert" hidden data-more-cert><img src={c.badge} alt="" width="28" height="28" loading="lazy" /><b>{c.code}</b><span>{c.name}</span></span>)}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="wrap foot">
+      <div class="row1">
+        <a class="lk" href="#hero" aria-label="acm."><BrandLockup size={24} textSize={17} /></a>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <a class="quick" href="https://www.linkedin.com/in/alexcabreram/" target="_blank" rel="noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-in" /></svg>LinkedIn</a>
+          <a class="quick" href="https://github.com/alexcabreram" target="_blank" rel="noreferrer"><svg class="ico" aria-hidden="true"><use href="#i-gh" /></svg>GitHub</a>
+          <a class="quick" href="/rss.xml">RSS</a>
+        </div>
+      </div>
+      <div class="row2">
+        <span>{t.foot.views}</span>
+        <span>{t.foot.sign}</span>
+        <span><a href={`${legalPrefix}/legal/`}>{t.foot.legal}</a> · <a href={`${legalPrefix}/privacy/`}>{t.foot.privacy}</a> · {t.foot.noCookies}</span>
+      </div>
+    </footer>
+  </main>
+</div>
+
+<script src="../../scripts/home.ts"></script>
