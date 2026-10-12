@@ -8,9 +8,11 @@ interface Props {
   altHref?: string;
   /** Marks "Escritos" as the current section. */
   current?: "writing" | null;
+  /** true cuando la página actual es un artículo: el enlace apunta a la sección, no al documento actual. */
+  section?: boolean;
 }
 
-const { lang = "en", altHref, current = "writing" } = Astro.props;
+const { lang = "en", altHref, current = "writing", section = false } = Astro.props;
 const es = lang === "es";
 const homeHref = es ? "/es/" : "/";
 const blogHref = es ? "/es/blog/" : "/blog/";
@@ -27,7 +29,7 @@ const langToggleHref = altHref ?? (es ? "/blog/" : "/es/blog/");
     <a
       href={blogHref}
       class:list={["transition-colors hover:text-seiryu", current === "writing" ? "text-text underline decoration-seiryu decoration-1 underline-offset-[6px]" : "text-muted"]}
-      aria-current={current === "writing" ? "page" : undefined}
+      aria-current={current === "writing" ? (section ? "true" : "page") : undefined}
     >
       {es ? "Escritos" : "Writing"}
     </a>

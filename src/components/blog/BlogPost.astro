@@ -46,7 +46,7 @@ const copy = es
 >
   <div class="blog-progress" aria-hidden="true"></div>
 
-  <BlogNav lang={lang} altHref={twin ? postHref(twin) : undefined} />
+  <BlogNav lang={lang} section altHref={twin ? postHref(twin) : undefined} />
 
   <main id="main-content" class="section-shell grid gap-8 pb-16 pt-6 sm:pt-10">
     <header class="grid max-w-[46rem] gap-4">
@@ -127,7 +127,10 @@ const copy = es
     for (const el of targets) {
       if (el.getBoundingClientRect().top < window.innerHeight * 0.3) current = el.id;
     }
-    links.forEach((link) => link.toggleAttribute("aria-current", link.dataset.tocLink === current));
+    links.forEach((link) => {
+      if (link.dataset.tocLink === current) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
   };
   window.addEventListener(
     "scroll",
