@@ -55,3 +55,16 @@ const langToggleHref = altHref ?? (es ? "/blog/" : "/es/blog/");
     <ThemeToggle />
   </div>
 </nav>
+
+<script>
+  // Remember an explicit language choice so the root page stops redirecting.
+  document.querySelectorAll<HTMLAnchorElement>("nav a[hreflang]").forEach((a) =>
+    a.addEventListener("click", () => {
+      try {
+        localStorage.setItem("acm-lang", a.hreflang);
+      } catch {
+        /* storage blocked */
+      }
+    }),
+  );
+</script>

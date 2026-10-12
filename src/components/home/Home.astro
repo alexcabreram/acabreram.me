@@ -179,6 +179,7 @@ const data = {
     </section>
 
     <section class="wrap about" id="sobre" aria-label={t.about.aria}>
+      <span id="about" aria-hidden="true"></span>
       <div class="a-head bf">
         <span class="label">{t.about.label}</span>
         <span class="fn">Alejandro Cabrera Martínez</span>
@@ -198,8 +199,8 @@ const data = {
           <p class="quote">{t.about.quote}</p>
           <div class="certs" id="certs">
             {topCerts.map((c) => <span class="cert"><img src={c.badge} alt="" width="28" height="28" loading="lazy" /><b>{c.code}</b><span>{c.name}</span></span>)}
-            <button type="button" class="more" id="more-certs">{t.about.moreCerts(moreCerts.length)}</button>
-            {moreCerts.map((c) => <span class="cert" hidden data-more-cert><img src={c.badge} alt="" width="28" height="28" loading="lazy" /><b>{c.code}</b><span>{c.name}</span></span>)}
+            <button type="button" class="more" id="more-certs" hidden>{t.about.moreCerts(moreCerts.length)}</button>
+            {moreCerts.map((c) => <span class="cert" data-more-cert><img src={c.badge} alt="" width="28" height="28" loading="lazy" /><b>{c.code}</b><span>{c.name}</span></span>)}
           </div>
         </div>
       </div>

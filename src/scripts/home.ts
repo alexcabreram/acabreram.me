@@ -94,13 +94,14 @@ function init(D: HomeData) {
     let x = base, gx = x, v = 0, raf: number | null = null, touched = false, drag = false;
     const apply = () => {
       f.classList.toggle("vert", narrow());
+      btn.setAttribute("aria-orientation", narrow() ? "vertical" : "horizontal");
       f.style.setProperty("--x", x.toFixed(2) + "%");
       btn.setAttribute("aria-valuenow", String(Math.round(x)));
       btn.textContent = x > 50 ? "☀" : "☾";
     };
     const step = () => {
       v = (v + (gx - x) * 0.08) * 0.78;
-      x += v;
+      x = Math.max(0, Math.min(100, x + v));
       apply();
       raf = Math.abs(gx - x) + Math.abs(v) > 0.02 ? requestAnimationFrame(step) : null;
     };
@@ -347,6 +348,11 @@ function init(D: HomeData) {
   // ---------- 6 · about: certifications + ASCII portrait ----------
   (() => {
     const more = $("more-certs");
+    // Without JS every certification stays visible; collapse them only once the reveal button works.
+    if (more) {
+      document.querySelectorAll<HTMLElement>("[data-more-cert]").forEach((el) => (el.hidden = true));
+      more.hidden = false;
+    }
     more?.addEventListener("click", () => {
       document.querySelectorAll<HTMLElement>("[data-more-cert]").forEach((el) => (el.hidden = false));
       more.remove();
@@ -437,7 +443,7 @@ function init(D: HomeData) {
     let x = 0, v = 0;
     const step = () => {
       v = (v + (to - x) * 0.08) * 0.78; x += v;
-      el.textContent = String(Math.max(0, Math.round(x)));
+      el.textContent = String(Math.min(to, Math.max(0, Math.round(x))));
       if (Math.abs(to - x) + Math.abs(v) > 0.01) requestAnimationFrame(step); else el.textContent = String(to);
     };
     // The real value stays visible until the counter scrolls into view.
