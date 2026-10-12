@@ -1,107 +1,14 @@
 ---
-import LegalLinks from "../../../components/LegalLinks.astro";
-import Layout from "../../../layouts/Layout.astro";
-import BlogNav from "../../../components/BlogNav.astro";
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
+import BlogPost from "../../../components/blog/BlogPost.astro";
+import { postSlug } from "../../../lib/blog";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog", ({ data }) => !data.draft && data.lang === "es");
-  return posts.map((post) => ({
-    params: { slug: post.id.replace('es/', '') },
-    props: { post },
-  }));
+  return posts.map((post) => ({ params: { slug: postSlug(post) }, props: { post } }));
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
-
-const formatDate = (date: Date) =>
-  date.toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" });
-
-const twin = await getCollection("blog", ({ id, data }) => !data.draft && data.lang === "en" && id === post.id.replace("es/", ""));
-const wordCount = post.body?.split(/\s+/).length ?? 0;
-const readingTime = Math.max(1, Math.ceil(wordCount / 230));
 ---
 
-<Layout
-  alternates={twin.length > 0 ? undefined : false}
-  lang="es"
-  title={`${post.data.title} — acabreram.com`}
-  description={post.data.description}
-  ogImage={`/og/${post.id}.png`}
->
-  <div class="blog-progress" aria-hidden="true"></div>
-
-  <BlogNav lang="es" />
-
-  <main id="main-content">
-    <article class="py-10 sm:py-16">
-      <!-- Hero image -->
-      <div class="section-shell mb-6" style="max-width: 720px">
-        <img
-          src={`/og/${post.id}.png`}
-          alt={post.data.title}
-          class="w-full rounded-sm"
-          style="border: 1px solid var(--border-subtle)"
-          loading="eager"
-        />
-      </div>
-
-      <div class="section-shell" style="max-width: 720px">
-
-        <header class="mb-8">
-          <div class="flex flex-wrap items-center gap-2 mb-3">
-            {post.data.tags.map((tag: string) => (
-              <span class="font-mono text-[10px] uppercase tracking-wider text-seiryu">
-                {tag}
-              </span>
-            ))}
-          </div>
-          <h1 class="text-2xl font-bold tracking-tight text-text sm:text-3xl lg:text-4xl">
-            {post.data.title}
-          </h1>
-          <div class="mt-3 flex items-center gap-3">
-            <time class="font-mono text-[11px] text-muted">
-              {formatDate(post.data.date)}
-            </time>
-            {post.data.updatedDate && (
-              <span class="font-mono text-[11px] text-muted">
-                · Actualizado {formatDate(post.data.updatedDate)}
-              </span>
-            )}
-            <span class="font-mono text-[11px] text-muted">· {readingTime} min</span>
-          </div>
-          <hr class="mt-6 border-0 border-t" style="border-color: var(--border-subtle)" />
-        </header>
-
-        <div class="prose">
-          <Content />
-        </div>
-
-        <footer class="mt-14 border-t pt-6" style="border-color: var(--border-subtle)">
-          <a href="/es/blog/" class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-muted transition-colors hover:text-seiryu">
-            <span>←</span> Todos los posts
-          </a>
-        </footer>
-      </div>
-    </article>
-  </main>
-
-  <footer class="border-t py-8" style="border-color: var(--border-subtle)">
-    <LegalLinks lang="es" />
-  </footer>
-</Layout>
-
-<script is:inline>
-  (() => {
-    const bar = document.querySelector('.blog-progress');
-    if (!bar) return;
-    const update = () => {
-      const h = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = h > 0 ? Math.min(1, Math.max(0, window.scrollY / h)) : 0;
-      bar.style.transform = `scaleX(${pct})`;
-    };
-    window.addEventListener('scroll', update, { passive: true });
-    update();
-  })();
-</script>
+<BlogPost post={post} />

@@ -1,0 +1,16 @@
+---
+import { turnLabel, type Lang, type Turn } from "../../lib/blog";
+
+interface Props {
+  turn: Turn;
+  lang: Lang;
+  class?: string;
+}
+
+const { turn, lang, class: className = "" } = Astro.props;
+---
+
+<span class={`turn-label turn-label--${turn} ${className}`}>
+  <span class="turn-label__dot" aria-hidden="true"></span>
+  {turnLabel(turn, lang)}
+</span>

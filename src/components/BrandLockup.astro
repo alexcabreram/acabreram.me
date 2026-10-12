@@ -1,0 +1,42 @@
+---
+// Standard acm. lockup (DESIGN.md v2.1 §4): Seiryū emblem + "acm" + the pearl
+// (a gold disc inside a ring in the text colour). The gold pearl inside the
+// emblem only appears at 48px and above; smaller emblems are one colour.
+import markSvg from "../assets/brand/seiryu-mark.svg?raw";
+
+interface Props {
+  /** Emblem size in px. */
+  size?: number;
+  /** Font size of "acm" in px. */
+  textSize?: number;
+  /** Show only the emblem (avatar, favicon-like uses). */
+  emblemOnly?: boolean;
+  class?: string;
+}
+
+const { size = 24, textSize = 18, emblemOnly = false, class: className = "" } = Astro.props;
+const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
+const withPearl = size >= 48;
+const pearl = Math.max(5, Math.round(textSize * 0.34));
+---
+
+<span class={`brand-lockup inline-flex items-center ${className}`} style={`gap:${Math.round(size * 0.32)}px`}>
+  <svg
+    class="brand-lockup__emblem text-seiryu"
+    width={size}
+    height={Math.round((size * 307) / 319)}
+    viewBox="37 225 319 307"
+    aria-hidden="true"
+  >
+    {withPearl && <circle cx="95.5" cy="428" r="23.5" fill="var(--brand-gold)" />}
+    <g fill="currentColor">{paths.map((d) => <path d={d} />)}</g>
+  </svg>
+  {!emblemOnly && (
+    <span class="brand-lockup__word inline-flex items-end font-mono font-medium text-text" style={`font-size:${textSize}px;letter-spacing:-0.02em;line-height:1`}>
+      acm
+      <svg width={pearl} height={pearl} viewBox="0 0 12 12" aria-hidden="true" style={`margin:0 0 ${Math.round(textSize * 0.1)}px 2px`}>
+        <circle cx="6" cy="6" r="4.6" fill="var(--brand-gold)" stroke="currentColor" stroke-width="1.6" />
+      </svg>
+    </span>
+  )}
+</span>

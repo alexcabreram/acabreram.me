@@ -1,0 +1,28 @@
+---
+// Typographic post cover. Same composition as the OG image: turn label, title
+// and the emblem as a faint watermark, always on the night background.
+import markSvg from "../../assets/brand/seiryu-mark.svg?raw";
+import TurnLabel from "./TurnLabel.astro";
+import type { Lang, Turn } from "../../lib/blog";
+
+interface Props {
+  title: string;
+  turn: Turn;
+  lang: Lang;
+  tag?: string;
+}
+
+const { title, turn, lang, tag } = Astro.props;
+const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
+---
+
+<div class="post-cover">
+  <svg class="post-cover__ghost" viewBox="37 225 319 307" aria-hidden="true">
+    <g fill="currentColor">{paths.map((d) => <path d={d} />)}</g>
+  </svg>
+  <div class="post-cover__meta">
+    <TurnLabel turn={turn} lang={lang} class="turn-label--on-night" />
+    {tag && <span class="post-cover__tag">{tag}</span>}
+  </div>
+  <p class="post-cover__title">{title}</p>
+</div>

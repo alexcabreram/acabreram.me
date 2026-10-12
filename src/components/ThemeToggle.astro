@@ -33,6 +33,11 @@
         return stored;
       }
 
+      const turn = root.dataset.turn;
+      if (turn === "day" || turn === "night") {
+        return turn === "day" ? "light" : "dark";
+      }
+
       return typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: light)").matches
         ? "light"
         : "dark";
@@ -55,7 +60,7 @@
     const applyTheme = (theme) => {
       root.setAttribute("data-theme", theme);
       root.style.colorScheme = theme;
-      themeColorMeta?.setAttribute("content", theme === "light" ? "#F4F1EB" : "#080C10");
+      themeColorMeta?.setAttribute("content", theme === "light" ? "#F2F3EF" : "#04080F");
       updateButtons(theme);
     };
 
@@ -77,7 +82,7 @@
     if (typeof window.matchMedia === "function") {
       const mediaQuery = window.matchMedia("(prefers-color-scheme: light)");
       const handleChange = (event) => {
-        if (readStoredTheme()) {
+        if (readStoredTheme() || root.dataset.turn) {
           return;
         }
 

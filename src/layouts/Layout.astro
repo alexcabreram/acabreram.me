@@ -9,9 +9,11 @@ interface Props {
   ogImage?: string;
   /** Language alternates for hreflang. Defaults to the /es/ mirror of the current path; pass false when the page has no counterpart. */
   alternates?: false | { en: string; es: string };
+  /** Blog turn: the page opens in day (light) or night (dark) mode unless the reader chose a theme. */
+  turn?: "day" | "night";
 }
 
-const { lang = "en", title, description, ogImage, alternates } = Astro.props;
+const { lang = "en", title, description, ogImage, alternates, turn } = Astro.props;
 const meta = translations[lang].meta;
 const resolvedTitle = title ?? meta.title;
 const resolvedDescription = description ?? meta.description;
@@ -31,25 +33,24 @@ const resolvedOgImage = ogImage
 ---
 
 <!doctype html>
-<html lang={lang} data-theme="dark" class="bg-background text-text">
+<html lang={lang} data-theme={turn === "day" ? "light" : "dark"} data-turn={turn} class="bg-background text-text">
   <head>
     <script is:inline>
       (() => {
         const storageKey = "acm-theme";
         const root = document.documentElement;
-        let theme = "dark";
+        const turn = root.dataset.turn;
+        const prefersLight = () =>
+          typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: light)").matches;
+        let theme = turn === "day" ? "light" : turn === "night" ? "dark" : prefersLight() ? "light" : "dark";
 
         try {
           const stored = localStorage.getItem(storageKey);
           if (stored === "light" || stored === "dark") {
             theme = stored;
-          } else if (typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: light)").matches) {
-            theme = "light";
           }
         } catch {
-          if (typeof window.matchMedia === "function" && window.matchMedia("(prefers-color-scheme: light)").matches) {
-            theme = "light";
-          }
+          // Storage can be blocked; keep the turn or system theme.
         }
 
         root.setAttribute("data-theme", theme);
@@ -60,12 +61,11 @@ const resolvedOgImage = ogImage
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={resolvedDescription} />
-    <meta name="theme-color" content="#080C10" />
+    <meta name="theme-color" content="#04080F" />
     <meta name="color-scheme" content="dark light" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/seiryu-favicon.svg" />
     <link rel="preload" href="/fonts/dm-serif-display-400.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/dm-sans.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jetbrains-mono.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="sitemap" href="/sitemap-index.xml" />
     {resolvedAlternates && (
