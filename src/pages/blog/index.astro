@@ -1,4 +1,5 @@
 ---
+import LegalLinks from "../../components/LegalLinks.astro";
 import Layout from "../../layouts/Layout.astro";
 import BlogNav from "../../components/BlogNav.astro";
 import { getCollection } from "astro:content";
@@ -64,10 +65,10 @@ const getReadingTime = (body: string | undefined) => Math.max(1, Math.ceil((body
                   {post.data.description}
                 </p>
                 <div class="mt-3 flex items-center gap-3">
-                  <time class="font-mono text-[11px] text-muted/60">
+                  <time class="font-mono text-[11px] text-muted">
                     {formatDate(post.data.date)}
                   </time>
-                  <span class="font-mono text-[11px] text-muted/40">· {getReadingTime(post.body)} min read</span>
+                  <span class="font-mono text-[11px] text-muted">· {getReadingTime(post.body)} min read</span>
                 </div>
                 </div>
               </a>
@@ -77,4 +78,8 @@ const getReadingTime = (body: string | undefined) => Math.max(1, Math.ceil((body
       </div>
     </section>
   </main>
+
+  <footer class="border-t py-8" style="border-color: var(--border-subtle)">
+    <LegalLinks lang="en" />
+  </footer>
 </Layout>

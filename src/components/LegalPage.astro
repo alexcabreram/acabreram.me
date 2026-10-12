@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import BlogNav from "./BlogNav.astro";
+import LegalLinks from "./LegalLinks.astro";
+
+interface Props {
+  lang: "en" | "es";
+  title: string;
+  description: string;
+  updated: string;
+}
+
+const { lang, title, description, updated } = Astro.props;
+---
+
+<Layout lang={lang} title={`${title} — acabreram.com`} description={description}>
+  <BlogNav lang={lang} />
+
+  <main id="main-content">
+    <article class="py-10 sm:py-16">
+      <div class="section-shell" style="max-width: 720px">
+        <header class="mb-8">
+          <h1 class="font-display text-4xl text-text sm:text-5xl">{title}</h1>
+          <p class="mt-3 font-mono text-[11px] text-muted">{updated}</p>
+          <hr class="mt-6 border-0 border-t" style="border-color: var(--border-subtle)" />
+        </header>
+        <div class="prose">
+          <slot />
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="border-t py-8" style="border-color: var(--border-subtle)">
+    <LegalLinks lang={lang} />
+  </footer>
+</Layout>

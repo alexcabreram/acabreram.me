@@ -1,4 +1,5 @@
 ---
+import LegalLinks from "./LegalLinks.astro";
 import { Image } from 'astro:assets';
 import Layout from "../layouts/Layout.astro";
 import { translations, type Locale } from "../i18n/translations";
@@ -353,6 +354,7 @@ const promptRouting = isSpanish
         <a href="https://www.linkedin.com/in/alexcabreram/" target="_blank" rel="noreferrer" class="hover:text-seiryu-hi">LinkedIn</a>
         <a href="/rss.xml" class="hover:text-seiryu-hi">RSS</a>
       </div>
+      <LegalLinks lang={lang} class="mt-6" />
     </div>
   </footer>
 
