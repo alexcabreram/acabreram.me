@@ -11,10 +11,12 @@ interface Props {
 }
 
 const { lang, title, description, updated } = Astro.props;
+const path = Astro.url.pathname;
+const altHref = lang === "es" ? path.replace(/^\/es/, "") || "/" : `/es${path}`;
 ---
 
 <Layout lang={lang} title={`${title} — acabreram.com`} description={description}>
-  <BlogNav lang={lang} />
+  <BlogNav lang={lang} altHref={altHref} current={null} />
 
   <main id="main-content">
     <article class="py-10 sm:py-16">

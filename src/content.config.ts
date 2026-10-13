@@ -12,6 +12,9 @@ const blog = defineCollection({
     draft: z.boolean().default(false),
     heroImage: z.string().optional(),
     lang: z.enum(['en', 'es']).default('en'),
+    /** De día (enterprise AI, Microsoft, teaching) or de noche (Seiryū, agents, homelab). Sets the post's default mode. */
+    turn: z.enum(['day', 'night']).default('night'),
+    series: z.string().optional(),
   }),
 });
 

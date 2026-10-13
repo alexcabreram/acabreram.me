@@ -1,0 +1,146 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import BlogNav from "../BlogNav.astro";
+import BrandLockup from "../BrandLockup.astro";
+import LegalLinks from "../LegalLinks.astro";
+import TurnLabel from "./TurnLabel.astro";
+import profilePhoto from "../../assets/photos/profile.jpg";
+import { formatDate, postHref, postSlug, readingTime, type Post } from "../../lib/blog";
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const lang = post.data.lang;
+const es = lang === "es";
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2);
+
+const otherLang = es ? "en" : "es";
+const twin = (await getCollection("blog", ({ data }) => !data.draft && data.lang === otherLang)).find(
+  (p) => postSlug(p) === postSlug(post),
+);
+const siblings = (await getCollection("blog", ({ data }) => !data.draft && data.lang === lang))
+  .filter((p) => p.id !== post.id)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const next = siblings[0];
+const blogHref = es ? "/es/blog/" : "/blog/";
+const url = new URL(postHref(post), Astro.site ?? "https://acabreram.com").toString();
+const shareHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+
+const copy = es
+  ? { back: "Escritos", updated: "Actualizado", read: "min de lectura", toc: "En este post", sign: "Escrito con agentes, publicado por un humano.", share: "Compartir", shareOn: "En LinkedIn", next: "Siguiente", all: "Todos los escritos" }
+  : { back: "Writing", updated: "Updated", read: "min read", toc: "In this post", sign: "Drafted with agents, shipped by a human.", share: "Share", shareOn: "On LinkedIn", next: "Next", all: "All writing" };
+---
+
+<Layout
+  lang={lang}
+  title={`${post.data.title} — acabreram.com`}
+  description={post.data.description}
+  ogImage={`/og/${post.id}.png`}
+  turn={post.data.turn}
+  alternates={twin ? { en: postHref(es ? twin : post), es: postHref(es ? post : twin) } : false}
+>
+  <div class="blog-progress" aria-hidden="true"></div>
+
+  <BlogNav lang={lang} section altHref={twin ? postHref(twin) : undefined} />
+
+  <main id="main-content" class="section-shell grid gap-8 pb-16 pt-6 sm:pt-10">
+    <header class="grid max-w-[46rem] gap-4">
+      <p class="eyebrow flex flex-wrap items-center gap-3">
+        <a href={blogHref} class="text-seiryu hover:text-seiryu-hi">← {copy.back}</a>
+        <TurnLabel turn={post.data.turn} lang={lang} />
+        {post.data.series && <span>{post.data.series}</span>}
+      </p>
+      <h1 class="font-display text-[clamp(2.125rem,6vw,3.75rem)] leading-[1.03] text-text" style="text-wrap: balance">{post.data.title}</h1>
+      <p class="font-body text-[clamp(1.125rem,2.2vw,1.3125rem)] leading-normal text-muted">{post.data.description}</p>
+      <div class="flex items-center gap-3 font-mono text-xs">
+        <Image src={profilePhoto} alt="" width={40} height={40} class="h-10 w-10 rounded-full object-cover" style="border: 1px solid var(--border-subtle)" />
+        <div class="grid gap-0.5">
+          <span class="font-medium text-text">Alex Cabrera</span>
+          <span class="text-[11px] text-muted">
+            <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+            {post.data.updatedDate && <> · {copy.updated} {formatDate(post.data.updatedDate, lang)}</>}
+            {" "}· {readingTime(post)} {copy.read}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="post-grid">
+      {toc.length > 1 && (
+        <aside class="post-toc">
+          <details open>
+            <summary>{copy.toc}</summary>
+            <ol>
+              {toc.map((h) => (
+                <li><a href={`#${h.slug}`} data-toc-link={h.slug}>{h.text}</a></li>
+              ))}
+            </ol>
+          </details>
+        </aside>
+      )}
+      <div class="prose min-w-0">
+        <Content />
+      </div>
+    </div>
+
+    <footer class="post-footer">
+      <div class="flex items-center gap-3 font-mono text-xs">
+        <BrandLockup size={32} emblemOnly />
+        <div class="grid gap-0.5">
+          <span class="font-medium text-text">{copy.sign}</span>
+        </div>
+      </div>
+      <div class="post-footer__links">
+        <a href={shareHref} target="_blank" rel="noreferrer"><span class="eyebrow">{copy.share}</span><span>{copy.shareOn}</span></a>
+        {next ? (
+          <a href={postHref(next)}><span class="eyebrow">{copy.next}</span><span>{next.data.title}</span></a>
+        ) : (
+          <a href={blogHref}><span class="eyebrow">{copy.next}</span><span>{copy.all} →</span></a>
+        )}
+      </div>
+    </footer>
+  </main>
+
+  <footer class="border-t py-8" style="border-color: var(--border-subtle)">
+    <LegalLinks lang={lang} />
+  </footer>
+</Layout>
+
+<script>
+  const bar = document.querySelector<HTMLElement>(".blog-progress");
+  const links = document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]");
+  const targets = [...links]
+    .map((link) => document.getElementById(link.dataset.tocLink ?? ""))
+    .filter((el): el is HTMLElement => Boolean(el));
+
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    if (bar) bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+    let current = targets[0]?.id;
+    for (const el of targets) {
+      if (el.getBoundingClientRect().top < window.innerHeight * 0.3) current = el.id;
+    }
+    links.forEach((link) => {
+      if (link.dataset.tocLink === current) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    });
+  };
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    },
+    { passive: true },
+  );
+  update();
+</script>

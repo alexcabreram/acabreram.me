@@ -1,0 +1,127 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BlogNav from "../BlogNav.astro";
+import LegalLinks from "../LegalLinks.astro";
+import PostCover from "./PostCover.astro";
+import TurnLabel from "./TurnLabel.astro";
+import { getCollection } from "astro:content";
+import { formatDate, postHref, readingTime, type Lang } from "../../lib/blog";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const es = lang === "es";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft && data.lang === lang)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const [featured, ...rest] = posts;
+
+const copy = es
+  ? {
+      title: "Escritos",
+      eyebrow: `Escritos · ${posts.length} ${posts.length === 1 ? "publicado" : "publicados"}`,
+      heading: "Lo que aprendo de día y lo que construimos de noche.",
+      lede: "IA empresarial, agentes y el homelab donde los pruebo. Escrito con agentes, publicado por un humano.",
+      description: "IA empresarial, agentes de IA y el homelab Seiryū. Escrito con agentes, publicado por un humano.",
+      all: "Todo",
+      read: "Leer",
+      empty: "Todavía no hay escritos en este turno.",
+      filters: "Filtrar por turno",
+    }
+  : {
+      title: "Writing",
+      eyebrow: `Writing · ${posts.length} published`,
+      heading: "What I learn by day and what we build by night.",
+      lede: "Enterprise AI, agents and the homelab where I try them. Drafted with agents, shipped by a human.",
+      description: "Enterprise AI, AI agents and the Seiryū homelab. Drafted with agents, shipped by a human.",
+      all: "All",
+      read: "Read",
+      empty: "Nothing in this turn yet.",
+      filters: "Filter by turn",
+    };
+---
+
+<Layout lang={lang} title={`${copy.title} — acabreram.com`} description={copy.description}>
+  <BlogNav lang={lang} />
+
+  <main id="main-content" class="section-shell grid gap-8 pb-16 pt-6 sm:gap-10 sm:pt-10">
+    <header class="grid gap-4">
+      <p class="eyebrow">{copy.eyebrow}</p>
+      <h1 class="max-w-[18ch] font-display text-[clamp(2.25rem,6vw,3.75rem)] leading-[1.04] text-text" style="text-wrap: balance">
+        {copy.heading}
+      </h1>
+      <p class="max-w-[52ch] font-body text-lg leading-relaxed text-muted">{copy.lede}</p>
+      <div class="flex flex-wrap gap-2" role="group" aria-label={copy.filters} data-turn-filters>
+        <button type="button" class="turn-filter" aria-pressed="true" data-filter="all">{copy.all}</button>
+        <button type="button" class="turn-filter" aria-pressed="false" data-filter="day"><TurnLabel turn="day" lang={lang} /></button>
+        <button type="button" class="turn-filter" aria-pressed="false" data-filter="night"><TurnLabel turn="night" lang={lang} /></button>
+        <a class="turn-filter" href="/rss.xml">RSS</a>
+      </div>
+    </header>
+
+    {featured && (
+      <a href={postHref(featured)} class="featured-post" data-turn={featured.data.turn}>
+        <PostCover title={featured.data.title} turn={featured.data.turn} lang={lang} tag={featured.data.series ?? featured.data.tags[0]} />
+        <div class="featured-post__body">
+          <p class="post-meta">
+            <time datetime={featured.data.date.toISOString()}>{formatDate(featured.data.date, lang, "short")}</time>
+            <span aria-hidden="true">·</span>
+            <span>{readingTime(featured)} min</span>
+            {featured.data.tags[0] && (<><span aria-hidden="true">·</span><span>{featured.data.tags[0]}</span></>)}
+          </p>
+          <h2 class="font-display text-2xl leading-tight text-text">{featured.data.title}</h2>
+          <p class="font-body text-[1.0625rem] leading-relaxed text-muted">{featured.data.description}</p>
+          <span class="font-mono text-xs uppercase tracking-[0.12em] text-seiryu">{copy.read} →</span>
+        </div>
+      </a>
+    )}
+
+    {rest.length > 0 && (
+      <ol class="post-rows">
+        {rest.map((post) => (
+          <li data-turn={post.data.turn}>
+            <a href={postHref(post)} class="post-row">
+              <time class="post-row__date" datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang, "short")}</time>
+              <span class="post-row__main">
+                <TurnLabel turn={post.data.turn} lang={lang} />
+                <span class="post-row__title">{post.data.title}</span>
+              </span>
+              <span class="post-row__time">{readingTime(post)} min</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+
+    <p class="post-empty font-body text-muted" data-turn-empty hidden>{copy.empty}</p>
+  </main>
+
+  <footer class="border-t py-8" style="border-color: var(--border-subtle)">
+    <LegalLinks lang={lang} />
+  </footer>
+</Layout>
+
+<script>
+  const group = document.querySelector<HTMLElement>("[data-turn-filters]");
+  if (group) {
+    const buttons = group.querySelectorAll<HTMLButtonElement>("button[data-filter]");
+    const items = document.querySelectorAll<HTMLElement>("main [data-turn]");
+    const empty = document.querySelector<HTMLElement>("[data-turn-empty]");
+    buttons.forEach((button) =>
+      button.addEventListener("click", () => {
+        const filter = button.dataset.filter;
+        buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
+        let visible = 0;
+        items.forEach((item) => {
+          const show = filter === "all" || item.dataset.turn === filter;
+          item.hidden = !show;
+          if (show) visible += 1;
+        });
+        if (empty) empty.hidden = visible > 0;
+      }),
+    );
+  }
+</script>
