@@ -61,6 +61,7 @@ function init(D: HomeData) {
       mb.textContent = v ? D.menu.close : D.menu.open;
     };
     mb.addEventListener("click", () => toggleMenu(!sheet.classList.contains("open")));
+    addEventListener("resize", () => { if (!narrow() && sheet.classList.contains("open")) toggleMenu(false); });
     sheet.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => toggleMenu(false)));
     addEventListener("keydown", (e) => { if (e.key === "Escape" && sheet.classList.contains("open")) { toggleMenu(false); mb.focus(); } });
   }
@@ -173,7 +174,14 @@ function init(D: HomeData) {
         }
       }
       const max = n ? 900 : 1800;
-      while (pts.length > max) pts.splice((Math.random() * pts.length) | 0, 1);
+      // Partial Fisher–Yates: keep a random sample of `max` points in linear time.
+      if (pts.length > max) {
+        for (let k = 0; k < max; k++) {
+          const r = k + ((Math.random() * (pts.length - k)) | 0);
+          [pts[k], pts[r]] = [pts[r], pts[k]];
+        }
+        pts.length = max;
+      }
       const R1 = eh * (n ? 0.36 : 0.3), R2 = eh * (n ? 0.64 : 0.52), sy = n ? 0.82 : 0.9;
       Cs = groups.map((g) => {
         if (g.ring === 0) return { ...g, x: cx, y: cy };

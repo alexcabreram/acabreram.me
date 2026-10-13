@@ -9,6 +9,11 @@ import { homeCopy } from "../i18n/home";
     <script is:inline>
       // Send Spanish browsers to /es/ unless the visitor already picked a language.
       try {
+        // Migrate the old "lang" cookie (manual choice) to the new preference, then clear it.
+        if (document.cookie.includes("lang=")) {
+          localStorage.setItem("acm-lang", "en");
+          document.cookie = "lang=; Max-Age=0; path=/";
+        }
         if (!localStorage.getItem("acm-lang") && (navigator.language || "en").toLowerCase().startsWith("es")) {
           location.replace("/es/");
         }

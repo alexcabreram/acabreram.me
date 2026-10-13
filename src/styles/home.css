@@ -287,3 +287,6 @@
 .js .home .ascii .portrait-fallback { display: none; }
 .home .ascii .hint { display: none; }
 .js .home .ascii .hint { display: block; }
+
+/* vertical slider on touch: the handle owns the drag */
+.home .handle button { touch-action: none; }
