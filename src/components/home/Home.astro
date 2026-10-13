@@ -231,7 +231,7 @@ const data = {
       <div class="s1 bf">
         <div class="gal">
           <figure class="ga"><Image src={speaking} alt={t.about.gallery.speak.alt} widths={[480, 960]} sizes="(max-width: 900px) 100vw, 40vw" loading="lazy" /><figcaption>{t.about.gallery.speak.cap}</figcaption></figure>
-          <figure class="gb ascii" id="portrait"><canvas id="pc" role="img" aria-label={t.about.gallery.portrait.aria}></canvas><figcaption class="hint">{t.about.gallery.portrait.hint}</figcaption></figure>
+          <figure class="gb ascii" id="portrait"><Image class="portrait-fallback" src={profile} alt="Alex Cabrera" widths={[320, 640]} sizes="(max-width: 900px) 50vw, 20vw" loading="lazy" /><canvas id="pc" role="img" aria-label={t.about.gallery.portrait.aria}></canvas><figcaption class="hint">{t.about.gallery.portrait.hint}</figcaption></figure>
           <figure><Image src={campus} alt={t.about.gallery.campus.alt} widths={[320, 640]} sizes="(max-width: 900px) 50vw, 20vw" loading="lazy" /><figcaption>{t.about.gallery.campus.cap}</figcaption></figure>
           <figure><Image src={gaming} alt={t.about.gallery.gaming.alt} widths={[320, 640]} sizes="(max-width: 900px) 50vw, 20vw" loading="lazy" /><figcaption>{t.about.gallery.gaming.cap}</figcaption></figure>
           <figure><Image src={conference} alt={t.about.gallery.conf.alt} widths={[320, 640]} sizes="(max-width: 900px) 100vw, 20vw" loading="lazy" /><figcaption>{t.about.gallery.conf.cap}</figcaption></figure>

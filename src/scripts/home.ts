@@ -69,14 +69,14 @@ function init(D: HomeData) {
   const emblemMask = (w: number, h: number) =>
     new Promise<Uint8ClampedArray | null>((res) => {
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="37 225 319 307" width="${w}" height="${h}"><g fill="#fff">${paths}</g></svg>`;
-      const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
+      // data: URL (the CSP allows data: images, not blob:).
+      const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
       const img = new Image();
       img.onload = () => {
         const c = document.createElement("canvas");
         c.width = w; c.height = h;
         const x = c.getContext("2d")!;
         x.drawImage(img, 0, 0, w, h);
-        URL.revokeObjectURL(url);
         res(x.getImageData(0, 0, w, h).data);
       };
       img.onerror = () => res(null);
@@ -385,7 +385,12 @@ function init(D: HomeData) {
       raf = active || mx > -999 ? requestAnimationFrame(draw) : null;
     };
     const kick = () => { if (!raf) raf = requestAnimationFrame(draw); };
-    const start = () => { setup(); draw(); };
+    const start = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = null;
+      setup();
+      draw();
+    };
     if (img.complete && img.width) start(); else img.onload = start;
     const at = (e: PointerEvent) => { const r = box.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; kick(); };
     box.addEventListener("pointermove", at);
