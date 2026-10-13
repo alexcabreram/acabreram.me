@@ -1,5 +1,9 @@
 ---
-import Landing from "../../components/Landing.astro";
+import Layout from "../../layouts/Layout.astro";
+import Home from "../../components/home/Home.astro";
+import { homeCopy } from "../../i18n/home";
 ---
 
-<Landing lang="es" />
+<Layout lang="es" title={homeCopy.es.meta.title} description={homeCopy.es.meta.description} turn="night">
+  <Home lang="es" />
+</Layout>
