@@ -271,7 +271,11 @@ function init(D: HomeData) {
     document.querySelectorAll<HTMLButtonElement>(".home .bill[data-node]").forEach((b) => {
       const n = NODES.find((x) => x.id === b.dataset.node);
       if (!n) return;
-      b.addEventListener("click", () => show(n, b));
+      b.addEventListener("click", () => {
+        show(n, b);
+        // On narrow screens the detail card sits below the map: bring it into view.
+        if (narrow()) dK.parentElement?.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" });
+      });
       b.addEventListener("focus", () => { sec.classList.add("hold"); show(n, b); });
       b.addEventListener("blur", () => sec.classList.remove("hold"));
       if (fine) b.addEventListener("mouseenter", () => show(n, b));
