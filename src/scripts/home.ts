@@ -259,30 +259,15 @@ function init(D: HomeData) {
       else { dS.hidden = false; dS.className = "st " + n.st; dS.innerHTML = "<i></i>" + esc(D.states[n.st]); }
       document.querySelectorAll(".home .bill").forEach((b) => b.classList.toggle("sel", b === el));
     };
-    const place = (ringId: string, list: HomeNode[], R: number, guardian = false) => {
-      const ring = $(ringId);
-      if (!ring) return;
-      list.forEach((n, i) => {
-        const a = guardian ? n.dir ?? 0 : -90 + (i * 360) / list.length;
-        const pos = document.createElement("div");
-        pos.className = "pos";
-        pos.style.transform = `rotateZ(${a}deg) translateX(${R}px) rotateZ(${-a}deg)`;
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "bill" + (guardian ? " g" + (n.st === "empty" ? " empty" : "") : "");
-        b.setAttribute("aria-label", `${n.name}: ${D.states[n.st]}`);
-        b.innerHTML = guardian ? `<b>${n.kanji}</b><span>${esc(n.name.toUpperCase())}</span>` : `<b><i class="i-${n.st}"></i></b><span>${esc(n.name.toUpperCase())}</span>`;
-        b.addEventListener("click", () => show(n, b));
-        b.addEventListener("focus", () => { sec.classList.add("hold"); show(n, b); });
-        b.addEventListener("blur", () => sec.classList.remove("hold"));
-        if (fine) b.addEventListener("mouseenter", () => show(n, b));
-        pos.appendChild(b);
-        ring.appendChild(pos);
-      });
-    };
-    place("r0", by("g"), 350, true);
-    place("r1", by(1), 145);
-    place("r2", by(2), 250);
+    // Nodes are server-rendered (complete without JS); here they only get their interactions.
+    document.querySelectorAll<HTMLButtonElement>(".home .bill[data-node]").forEach((b) => {
+      const n = NODES.find((x) => x.id === b.dataset.node);
+      if (!n) return;
+      b.addEventListener("click", () => show(n, b));
+      b.addEventListener("focus", () => { sec.classList.add("hold"); show(n, b); });
+      b.addEventListener("blur", () => sec.classList.remove("hold"));
+      if (fine) b.addEventListener("mouseenter", () => show(n, b));
+    });
     const stage = sec.querySelector(".stage3d");
     stage?.addEventListener("mouseenter", () => sec.classList.add("hold"));
     stage?.addEventListener("mouseleave", () => sec.classList.remove("hold"));
@@ -307,29 +292,11 @@ function init(D: HomeData) {
 
   // ---------- 4 · "Ahora" console ----------
   (() => {
-    const counts = $("counts"), g = document.getElementById("rdots"), log = $("log");
-    if (!counts || !g || !log) return;
-    const real = NODES.filter((n) => n.st !== "empty" && n.ring !== "g");
-    const cnt = (s: State) => real.filter((n) => n.st === s).length;
-    counts.innerHTML =
-      `<div><span>Salem</span><span class="st core"><i></i>${esc(D.states.core)}</span></div>` +
-      `<div><span>${esc(D.states.on)}</span><b style="color:var(--green)" data-count="${cnt("on")}">${cnt("on")}</b></div>` +
-      `<div><span>${esc(D.states.mid)}</span><b style="color:var(--build)" data-count="${cnt("mid")}">${cnt("mid")}</b></div>` +
-      `<div><span>${esc(D.states.off)}</span><b style="color:var(--muted)" data-count="${cnt("off")}">${cnt("off")}</b></div>`;
-    const NS = "http://www.w3.org/2000/svg";
-    real.filter((n) => n.ring !== 0).forEach((n, i) => {
-      const R = n.ring === 1 ? 46 : 80, a = i * 2.39996;
-      const c = document.createElementNS(NS, "circle");
-      c.setAttribute("cx", String(100 + Math.cos(a) * R));
-      c.setAttribute("cy", String(100 + Math.sin(a) * R));
-      c.setAttribute("r", "3.4");
-      c.setAttribute("fill", n.st === "on" ? "#2ECC8A" : n.st === "mid" ? "#F2994A" : "none");
-      if (n.st === "off") { c.setAttribute("stroke", "#5B7387"); c.setAttribute("stroke-dasharray", "2 2"); }
-      g.appendChild(c);
-    });
-    log.innerHTML = `<span class="ex">${esc(D.example)}</span><div class="lines"></div>`;
-    const box = log.querySelector(".lines")!;
-    let i = 0;
+    // Counts, radar and the first log lines are server-rendered; JS adds timestamps and new lines.
+    const log = $("log");
+    const box = log?.querySelector(".lines");
+    if (!log || !box) return;
+    let i = box.children.length;
     const stamp = () => new Intl.DateTimeFormat("es-ES", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Europe/Madrid" }).format(new Date());
     // Animated List: newest on top, max 5.
     const push = (animate: boolean) => {
@@ -340,7 +307,7 @@ function init(D: HomeData) {
       box.prepend(d);
       while (box.children.length > 5) box.lastElementChild?.remove();
     };
-    for (let k = 0; k < 4; k++) push(false);
+    box.querySelectorAll<HTMLElement>(".t").forEach((el) => (el.textContent = stamp()));
     let timer: ReturnType<typeof setInterval> | null = null;
     watch(log, () => { if (!timer) timer = setInterval(() => push(!reduce), 2600); }, () => { if (timer) clearInterval(timer); timer = null; });
   })();

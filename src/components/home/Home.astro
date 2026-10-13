@@ -32,6 +32,24 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft && data.lan
 );
 const featured = posts[0];
 
+// Server-rendered map and console so both are complete without JS.
+const ringOf = (r: 0 | 1 | 2 | "g") => NODES.filter((n) => n.ring === r);
+const angleOf = (n: (typeof NODES)[number], i: number, count: number) => (n.ring === "g" ? n.dir ?? 0 : -90 + (i * 360) / count);
+const rings = [
+  { id: "r0", R: 350, list: ringOf("g"), guardian: true },
+  { id: "r1", R: 145, list: ringOf(1), guardian: false },
+  { id: "r2", R: 250, list: ringOf(2), guardian: false },
+];
+const realNodes = NODES.filter((n) => n.st !== "empty" && n.ring !== "g");
+const countOf = (s: string) => realNodes.filter((n) => n.st === s).length;
+const radarDots = realNodes
+  .filter((n) => n.ring !== 0)
+  .map((n, i) => {
+    const R = n.ring === 1 ? 46 : 80, a = i * 2.39996;
+    return { x: +(100 + Math.cos(a) * R).toFixed(2), y: +(100 + Math.sin(a) * R).toFixed(2), st: n.st };
+  });
+const initialLog = LOG_LINES.slice(0, 4).reverse();
+
 const portrait = await getImage({ src: profile, width: 600, format: "jpeg" });
 const topCerts = CERTS.filter((c) => c.top);
 const moreCerts = CERTS.filter((c) => !c.top);
@@ -124,7 +142,21 @@ const data = {
 
     <section class="orbit" id="mapa" aria-label={t.map.aria}>
       <div class="orbit-stage">
-        <div class="stage3d"><div class="scene" id="scene"><div class="floor"></div><div class="ring3 r0" id="r0"></div><div class="ring3 r1" id="r1"></div><div class="ring3 r2" id="r2"></div></div></div>
+        <div class="stage3d"><div class="scene" id="scene"><div class="floor"></div>{rings.map((ring) => (
+          <div class={`ring3 ${ring.id}`} id={ring.id}>
+            {ring.list.map((n, i) => {
+              const a = angleOf(n, i, ring.list.length);
+              return (
+                <div class="pos" style={`transform: rotateZ(${a}deg) translateX(${ring.R}px) rotateZ(${-a}deg)`}>
+                  <button type="button" class:list={["bill", { g: ring.guardian, empty: n.st === "empty" }]} data-node={n.id} aria-label={`${n.name}: ${t.states[n.st]}`}>
+                    {ring.guardian ? <b>{n.kanji}</b> : <b><i class={`i-${n.st}`}></i></b>}
+                    <span>{n.name.toUpperCase()}</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        ))}</div></div>
         <span class="glow3d" aria-hidden="true"></span><span class="beam" aria-hidden="true"></span>
         <div class="emblem3d" aria-hidden="true"><svg><use href="#emblem" /></svg></div>
       </div>
@@ -155,11 +187,21 @@ const data = {
               <defs><linearGradient id="swg" x1="0" x2="1"><stop offset="0" stop-color="#00B4D7" stop-opacity="0" /><stop offset="1" stop-color="#00B4D7" stop-opacity=".45" /></linearGradient></defs>
               <circle class="rr" cx="100" cy="100" r="92" /><circle class="rr" cx="100" cy="100" r="62" /><circle class="rr" cx="100" cy="100" r="32" />
               <g class="sweep"><path d="M100 100 L192 100 A92 92 0 0 0 165 35 Z" fill="url(#swg)" /></g>
-              <g id="rdots"></g><circle cx="100" cy="100" r="9" fill="#A97A0C" stroke="#E6EDF2" stroke-width="2" /><circle cx="100" cy="100" r="16" fill="none" stroke="rgba(79,209,236,.5)" />
+              <g id="rdots">{radarDots.map((d) => d.st === "off"
+                ? <circle cx={d.x} cy={d.y} r="3.4" fill="none" stroke="#5B7387" stroke-dasharray="2 2" />
+                : <circle cx={d.x} cy={d.y} r="3.4" fill={d.st === "on" ? "#2ECC8A" : "#F2994A"} />)}</g><circle cx="100" cy="100" r="9" fill="#A97A0C" stroke="#E6EDF2" stroke-width="2" /><circle cx="100" cy="100" r="16" fill="none" stroke="rgba(79,209,236,.5)" />
             </svg></div>
-            <div class="counts" id="counts"></div>
+            <div class="counts" id="counts">
+              <div><span>Salem</span><span class="st core"><i></i>{t.states.core}</span></div>
+              <div><span>{t.states.on}</span><b style="color:var(--green)" data-count={countOf("on")}>{countOf("on")}</b></div>
+              <div><span>{t.states.mid}</span><b style="color:var(--build)" data-count={countOf("mid")}>{countOf("mid")}</b></div>
+              <div><span>{t.states.off}</span><b style="color:var(--muted)" data-count={countOf("off")}>{countOf("off")}</b></div>
+            </div>
           </div>
-          <div class="log" id="log"></div>
+          <div class="log" id="log">
+            <span class="ex">{t.now.example}</span>
+            <div class="lines">{initialLog.map((l) => <div class="ln"><span class="t">--:--:--</span><span class="who">[{l.who}]</span> {l[lang]}</div>)}</div>
+          </div>
         </div>
       </div>
     </section>
