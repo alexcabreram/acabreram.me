@@ -162,8 +162,8 @@
 .home .counts b { font-weight: 600; font-variant-numeric: tabular-nums; font-size: 1rem; }
 .home .log { border-top: 1px solid var(--border); padding: 12px 16px 14px; font: 400 .74rem/1.8 var(--mono); color: var(--muted); min-height: 140px; }
 .home .log .ln { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.home .log .who { color: var(--accent); } .home .log .t { color: var(--subtle); margin-right: .6rem; font-variant-numeric: tabular-nums; }
-.home .log .ex { float: right; color: var(--subtle); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; }
+.home .log .who { color: var(--accent); } .home .log .t { color: var(--muted); margin-right: .6rem; font-variant-numeric: tabular-nums; }
+.home .log .ex { float: right; color: var(--muted); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; }
 .home .caret { display: inline-block; width: 7px; height: 13px; background: var(--accent); vertical-align: -2px; margin-left: 2px; }
 @media (prefers-reduced-motion: no-preference) { .home .caret { animation: blink 1s steps(1) infinite; } }
 @keyframes blink { 50% { opacity: 0; } }
@@ -241,7 +241,7 @@
 /* footer */
 .home .foot { padding-block: 36px; display: grid; gap: 1rem; }
 .home .foot .row1 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center; }
-.home .foot .row2 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1.4rem; font: .72rem var(--mono); color: var(--subtle); }
+.home .foot .row2 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .4rem 1.4rem; font: .72rem var(--mono); color: var(--muted); }
 
 /* responsive */
 @media (max-width: 900px) {
@@ -290,3 +290,6 @@
 
 /* vertical slider on touch: the handle owns the drag */
 .home .handle button { touch-action: none; }
+
+/* keyboard focus on a night-layer control: lift the night layer so the focus ring is never hidden by the day clip */
+.home .split .layer.night:focus-within { z-index: 3; }
