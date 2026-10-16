@@ -90,7 +90,9 @@
 .home .split .day .btn.p { background: var(--day-fg); color: var(--day-bg); border-color: var(--day-fg); }
 .home .split .corner { position: absolute; bottom: 20px; font: 600 .62rem var(--mono); letter-spacing: .14em; text-transform: uppercase; }
 .home .split .day .corner { left: 24px; color: var(--day-muted); } .home .split .night .corner { right: 24px; color: var(--muted); }
-.home .handle { position: absolute; z-index: 7; top: 0; bottom: 0; left: var(--x, 50%); width: 0; }
+.home .handle { position: absolute; z-index: 7; top: 0; bottom: 0; left: var(--x, 50%); width: 0; pointer-events: none; }
+/* the border follows the cursor on desktop, so only the knob may take pointer events; the line must let clicks reach the CTAs */
+.home .handle button { pointer-events: auto; }
 .home .handle::before { content: ""; position: absolute; top: 0; bottom: 0; left: -0.5px; width: 1px; background: linear-gradient(transparent, var(--accent) 18%, var(--accent) 82%, transparent); }
 .home .handle button { position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%); width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border-accent); background: var(--surface); color: var(--fg); font: 400 1rem var(--mono); cursor: ew-resize; display: grid; place-items: center; box-shadow: 0 0 0 6px rgba(4,8,15,.22), 0 0 26px rgba(0,180,215,.35); }
 .home .split.vert .handle { left: 0; right: 0; top: var(--x, 50%); bottom: auto; width: auto; height: 0; }
