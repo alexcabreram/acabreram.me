@@ -4,7 +4,7 @@ import Home from "../components/home/Home.astro";
 import { homeCopy } from "../i18n/home";
 ---
 
-<Layout lang="en" title={homeCopy.en.meta.title} description={homeCopy.en.meta.description} turn="night">
+<Layout lang="en" title={homeCopy.en.meta.title} description={homeCopy.en.meta.description} turn="night" ogImage="/og-home-en.png">
   <Fragment slot="head">
     <script is:inline>
       // Send Spanish browsers to /es/ unless the visitor already picked a language.
