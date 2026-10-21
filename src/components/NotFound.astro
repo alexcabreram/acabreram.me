@@ -1,0 +1,312 @@
+---
+// 404 "We dropped the pearl" (acm. v2.1): the dragon without its pearl, a Seiryū console and a few easter eggs.
+// Rendered twice: /404.html (EN) and /es/404.html (ES). Cloudflare Pages serves the nearest 404.html for the path.
+// Without JS: headline, copy and the two links. With JS: console, commands, pearl and Konami swarm.
+import Layout from "../layouts/Layout.astro";
+import BrandLockup from "./BrandLockup.astro";
+import markSvg from "../assets/brand/seiryu-mark.svg?raw";
+import { notFoundCopy, type NotFoundLang } from "../i18n/notFound";
+
+interface Props { lang: NotFoundLang }
+const { lang } = Astro.props;
+const t = notFoundCopy[lang];
+const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
+---
+
+<Layout lang={lang} title={t.meta} description={t.lede} alternates={false} turn="night">
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="nf-dragon" viewBox="37 225 319 307"><g fill="currentColor">{paths.map((d) => <path d={d} />)}</g></symbol>
+    <symbol id="nf-dragon-pearl" viewBox="37 225 319 307"><circle cx="95.5" cy="428" r="23.5" fill="var(--brand-gold)" /><g fill="currentColor">{paths.map((d) => <path d={d} />)}</g></symbol>
+  </svg>
+
+  <div class="nf" data-lang={lang}>
+    <nav class="nf-top" aria-label={t.navLabel}>
+      <a class="nf-lock" href={t.home} data-k="home"><BrandLockup size={30} textSize={20} /></a>
+      <div class="nf-links"><a href={t.blog} data-k="blog" data-i="navBlog">{t.navBlog}</a><a href={t.home} data-k="home" data-i="navHome">{t.navHome}</a></div>
+    </nav>
+
+    <main id="main-content" class="nf-main">
+      <section class="nf-scene" aria-labelledby="nf-h">
+        <div class="nf-stage" id="nf-stage">
+          <svg class="nf-dragon" id="nf-dragon-svg" aria-hidden="true"><use href="#nf-dragon" width="100%" height="100%" /></svg>
+          <span class="nf-socket" id="nf-socket" aria-hidden="true" hidden></span>
+          <canvas id="nf-swarm" aria-hidden="true"></canvas>
+        </div>
+        <div class="nf-copy">
+          <p class="nf-eyebrow"><span data-i="eyebrow">{t.eyebrow}</span><span id="nf-path-wrap" hidden> · <code id="nf-path"></code></span></p>
+          <h1 id="nf-h" data-i="title" data-html set:html={t.title} />
+          <p class="nf-lede" data-i="lede">{t.lede}</p>
+          <div class="nf-ctas"><a class="nf-btn nf-btn--p" href={t.home} data-k="home" data-i="ctaHome">{t.ctaHome}</a><a class="nf-btn" href={t.blog} data-k="blog" data-i="ctaBlog">{t.ctaBlog}</a></div>
+        </div>
+        <button type="button" class="nf-pearl" id="nf-pearl" aria-label={t.pearlAria} hidden><span class="nf-tip" data-i="pearlTip">{t.pearlTip}</span></button>
+      </section>
+
+      <section class="nf-console" id="nf-console" aria-label={t.consoleAria} hidden>
+        <div class="nf-c-head"><span><b>seiryū</b> · <span data-i="console">{t.console}</span></span><span class="nf-live"><i></i><span data-i="live">{t.live}</span></span></div>
+        <div class="nf-c-body" id="nf-log" role="log" aria-live="polite"></div>
+        <form class="nf-prompt" id="nf-form" autocomplete="off">
+          <label for="nf-cmd">acm@seiryu:~$</label>
+          <input id="nf-cmd" name="cmd" spellcheck="false" autocapitalize="off" aria-describedby="nf-hint" />
+        </form>
+        <div class="nf-c-foot" id="nf-hint"><span data-i="hint">{t.hint}</span> <kbd>help</kbd> · <kbd>Tab</kbd> <span data-i="hintTab">{t.hintTab}</span> · <kbd>↑</kbd> <span data-i="hintHist">{t.hintHist}</span></div>
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<script>
+  import { notFoundCopy, type NotFoundLang } from "../i18n/notFound";
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const root = document.querySelector<HTMLElement>(".nf");
+  if (root) {
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // A wrong URL without /es/ still speaks Spanish to readers who chose it (same preference the root redirect uses).
+    let lang = root.dataset.lang as NotFoundLang;
+    const onEs = location.pathname === "/es" || location.pathname.startsWith("/es/");
+    try { if (!onEs && localStorage.getItem("acm-lang") === "es") lang = "es"; } catch { /* storage blocked */ }
+    const t = notFoundCopy[lang];
+    if (lang !== root.dataset.lang) {
+      document.documentElement.lang = lang;
+      document.title = t.meta;
+      root.querySelectorAll<HTMLElement>("[data-i]").forEach((el) => {
+        const v = (t as Record<string, unknown>)[el.dataset.i!];
+        if (typeof v !== "string") return;
+        if (el.hasAttribute("data-html")) el.innerHTML = v; else el.textContent = v;
+      });
+      root.querySelectorAll<HTMLAnchorElement>("a[data-k]").forEach((a) => { a.href = a.dataset.k === "blog" ? t.blog : t.home; });
+      $("nf-pearl").setAttribute("aria-label", t.pearlAria);
+      $("nf-console").setAttribute("aria-label", t.consoleAria);
+    }
+
+    const path = decodeURIComponent(location.pathname);
+    $("nf-path").textContent = path;
+    $("nf-path-wrap").hidden = false;
+    $("nf-console").hidden = false;
+    $("nf-pearl").hidden = false;
+    $("nf-socket").hidden = false;
+
+    // console
+    const log = $("nf-log"), input = $<HTMLInputElement>("nf-cmd");
+    const madrid = () => {
+      const s = new Intl.DateTimeFormat("es-ES", { timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(new Date());
+      const h = +s.slice(0, 2);
+      return { s, day: h >= 8 && h < 20 };
+    };
+    const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+    const line = (html: string) => {
+      const d = document.createElement("div");
+      d.className = "nf-ln";
+      d.innerHTML = `<span class="nf-t">${madrid().s}</span>${html}`;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    };
+    const agent = (who: string, msg: string, cls = "") => line(`<span class="nf-w">[${who}]</span> <span class="${cls}">${esc(msg)}</span>`);
+    const go = (href: string) => { line(`<span class="nf-dim">→ ${esc(href)}</span>`); setTimeout(() => location.assign(href), reduce ? 0 : 450); };
+
+    t.boot.forEach(([who, msg, cls], i) => setTimeout(() => agent(who, msg.replace("{path}", path), cls), reduce ? 0 : 350 + i * 650));
+
+    const CMDS = ["help", "ls", "cd", "whoami", "ping", "date", "swarm", "sudo", "clear", "exit"];
+    const hist: string[] = [];
+    let hi = 0;
+    const run = (raw: string) => {
+      const c = raw.trim();
+      line(`<span class="nf-ok">acm@seiryu:~$</span> ${esc(c)}`);
+      if (!c) return;
+      if (/^rm\s+-rf/.test(c)) return agent(t.rm[0], t.rm[1], "nf-warn");
+      const [cmd, ...args] = c.split(/\s+/);
+      const a = args.join(" ");
+      switch (cmd) {
+        case "help": return line(`<span class="nf-dim">${esc(t.help)}</span>`);
+        case "ls": return line(t.ls.map(([, href, name]) => `<a href="${href}">${name}</a>`).join("  "));
+        case "cd": {
+          if (!a || a === "~" || a === "/" || a === "..") return go(t.home);
+          const hit = t.ls.find(([key, , name]) => name.replace(/\/$/, "") === a.replace(/\/$/, "") || key === a);
+          return hit ? go(hit[1]) : line(`<span class="nf-warn">${esc(t.nodir.replace("{dir}", a))}</span>`);
+        }
+        case "whoami": return line(esc(t.whoami));
+        case "ping":
+          line(`<span class="nf-ok">pong · 0 ms</span>`);
+          if (a === "salem") agent(t.pingSalem[0], t.pingSalem[1], "nf-g");
+          return;
+        case "date": { const m = madrid(); return line(esc(`${m.s} ${t.inMadrid} · ${m.day ? t.byDay : t.byNight}`)); }
+        case "swarm": agent(t.swarm[0], t.swarm[1], "nf-g"); return swarm();
+        case "sudo": return agent(t.sudo[0], t.sudo[1], "nf-warn");
+        case "clear": log.innerHTML = ""; return;
+        case "exit": return line(`${esc(t.exit)}<a href="${t.home}">${t.exitLink}</a>`);
+        default: return line(`<span class="nf-warn">${esc(t.notfound.replace("{cmd}", cmd))}</span>`);
+      }
+    };
+    $("nf-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const v = input.value;
+      if (v.trim()) { hist.push(v); hi = hist.length; }
+      input.value = "";
+      run(v);
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowUp" && hist.length) { e.preventDefault(); hi = Math.max(0, hi - 1); input.value = hist[hi]; }
+      else if (e.key === "ArrowDown" && hist.length) { e.preventDefault(); hi = Math.min(hist.length, hi + 1); input.value = hist[hi] ?? ""; }
+      else if (e.key === "Tab") {
+        const v = input.value.trim();
+        if (!v) return;
+        const m = CMDS.filter((c) => c.startsWith(v));
+        if (m.length) { e.preventDefault(); if (m.length === 1) input.value = m[0] + " "; else line(`<span class="nf-dim">${m.join("  ")}</span>`); }
+      }
+    });
+
+    // pearl: rolls back into the dragon's claws, then home
+    const stage = $("nf-stage"), pearl = $<HTMLButtonElement>("nf-pearl"), socket = $("nf-socket"), scene = pearl.parentElement!;
+    let done = false;
+    const socketPos = () => {
+      const s = stage.getBoundingClientRect(), sc = scene.getBoundingClientRect(), k = s.width / 319;
+      return { x: s.left - sc.left + (95.5 - 37) * k, y: s.top - sc.top + (428 - 225) * k, r: 23.5 * k, s, sc };
+    };
+    const place = () => {
+      if (done) return;
+      const p = socketPos();
+      Object.assign(socket.style, { left: `${p.x - p.r - (p.s.left - p.sc.left)}px`, top: `${p.y - p.r - (p.s.top - p.sc.top)}px`, width: `${2 * p.r}px`, height: `${2 * p.r}px` });
+      const narrow = innerWidth <= 760;
+      pearl.style.left = `${narrow ? Math.min(p.sc.width - 40, p.s.right - p.sc.left + 24) : p.s.right - p.sc.left - 10}px`;
+      pearl.style.top = `${narrow ? p.s.bottom - p.sc.top - 20 : p.s.bottom - p.sc.top + 6}px`;
+    };
+    pearl.addEventListener("click", () => {
+      if (done) return;
+      done = true;
+      pearl.classList.remove("nf-idle");
+      const p = socketPos();
+      const cur = { x: parseFloat(pearl.style.left) + 13, y: parseFloat(pearl.style.top) + 13 };
+      const dx = p.x - cur.x, dy = p.y - cur.y, dist = Math.hypot(dx, dy), sc = (2 * p.r) / 26;
+      const finish = () => {
+        pearl.hidden = true;
+        socket.hidden = true;
+        stage.querySelector("use")!.setAttribute("href", "#nf-dragon-pearl");
+        agent(t.back[0], t.back[1], "nf-g");
+        go(t.home);
+      };
+      if (reduce) return finish();
+      pearl.animate(
+        [
+          { transform: "translate(0,0) rotate(0) scale(1)" },
+          { transform: `translate(${dx * 0.55}px,${dy * 0.55 - 40}px) rotate(${dist * 1.2}deg) scale(${(1 + sc) / 2})`, offset: 0.55 },
+          { transform: `translate(${dx}px,${dy}px) rotate(${dist * 2.2}deg) scale(${sc})` },
+        ],
+        { duration: 1100, easing: "cubic-bezier(.22,1,.36,1)", fill: "forwards" },
+      ).finished.then(() => setTimeout(finish, 120));
+    });
+    pearl.classList.add("nf-idle");
+    addEventListener("resize", place);
+    requestAnimationFrame(place);
+    document.fonts?.ready.then(place);
+
+    // swarm: the dragon breaks into its agents and comes back (Konami code or `swarm`)
+    const cv = $<HTMLCanvasElement>("nf-swarm"), ctx = cv.getContext("2d")!, dragon = $("nf-dragon-svg");
+    let busy = false;
+    function swarm() {
+      if (busy || reduce) return;
+      busy = true;
+      const w = cv.clientWidth, h = cv.clientHeight, dpr = Math.min(2, devicePixelRatio || 1);
+      cv.width = w * dpr; cv.height = h * dpr;
+      const col = getComputedStyle(document.documentElement).getPropertyValue("--seiryu").trim() || "#00b4d7";
+      const inner = document.getElementById("nf-dragon")!.innerHTML.replace(/currentColor/g, col);
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="37 225 319 307" width="${w / 1.4}" height="${h / 1.4}">${inner}</svg>`;
+      const img = new Image();
+      img.onload = () => {
+        const off = document.createElement("canvas");
+        off.width = cv.width; off.height = cv.height;
+        const o = off.getContext("2d")!, iw = (w / 1.4) * dpr, ih = (h / 1.4) * dpr;
+        o.drawImage(img, (off.width - iw) / 2, (off.height - ih) / 2, iw, ih);
+        const d = o.getImageData(0, 0, off.width, off.height).data, step = Math.round(5 * dpr);
+        const tags = ["#2ecc8a", "#f2994a", "#a97a0c"];
+        const pts: { hx: number; hy: number; x: number; y: number; vx: number; vy: number; c: string }[] = [];
+        for (let y = 0; y < off.height; y += step) for (let x = 0; x < off.width; x += step)
+          if (d[(y * off.width + x) * 4 + 3] > 128) pts.push({ hx: x, hy: y, x, y, vx: (Math.random() - 0.5) * 14 * dpr, vy: (Math.random() - 0.5) * 14 * dpr, c: pts.length % 9 === 0 ? tags[pts.length % 3] : col });
+        dragon.style.opacity = "0";
+        let f = 0;
+        const tick = () => {
+          f++;
+          ctx.clearRect(0, 0, cv.width, cv.height);
+          const back = f > 70;
+          let moving = 0;
+          for (const p of pts) {
+            if (back) { p.vx = (p.vx + (p.hx - p.x) * 0.06) * 0.78; p.vy = (p.vy + (p.hy - p.y) * 0.06) * 0.78; } else { p.vx *= 0.985; p.vy *= 0.985; }
+            p.x += p.vx; p.y += p.vy;
+            if (Math.abs(p.hx - p.x) + Math.abs(p.hy - p.y) > 0.6) moving++;
+            ctx.fillStyle = p.c;
+            ctx.fillRect(p.x, p.y, 2 * dpr, 2 * dpr);
+          }
+          if ((back && moving < 3) || f > 260) { ctx.clearRect(0, 0, cv.width, cv.height); dragon.style.opacity = ""; busy = false; return; }
+          requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      };
+      img.onerror = () => { busy = false; };
+      img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    }
+    const K = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+    let kp = 0;
+    addEventListener("keydown", (e) => {
+      if (e.target === input && !e.key.startsWith("Arrow")) return;
+      const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      kp = k === K[kp] ? kp + 1 : k === K[0] ? 1 : 0;
+      if (kp === K.length) { kp = 0; agent(t.konami[0], t.konami[1], "nf-warn"); swarm(); }
+    });
+  }
+</script>
+
+<style>
+  .nf { min-height: 100vh; max-width: 1040px; margin: 0 auto; padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+  .nf-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; }
+  .nf-lock { text-decoration: none; }
+  .nf-links { display: flex; gap: 18px; font: 500 12px var(--font-ui); letter-spacing: .12em; text-transform: uppercase; }
+  .nf-links a { color: var(--muted); text-decoration: none; }
+  .nf-links a:hover { color: var(--text); }
+  .nf-main { display: grid; gap: 40px; padding-block: clamp(24px, 6vw, 64px) 56px; }
+  .nf-scene { position: relative; display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: clamp(24px, 5vw, 64px); align-items: center; }
+  .nf-stage { position: relative; width: 100%; aspect-ratio: 319 / 307; }
+  .nf-dragon { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--seiryu); filter: drop-shadow(0 0 28px color-mix(in srgb, var(--seiryu) 35%, transparent)); transition: opacity .4s ease; }
+  .nf-stage canvas { position: absolute; inset: -20%; width: 140%; height: 140%; pointer-events: none; }
+  .nf-socket { position: absolute; border-radius: 50%; border: 1.5px dashed color-mix(in srgb, var(--brand-gold) 70%, transparent); pointer-events: none; }
+  .nf-pearl { position: absolute; z-index: 3; width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+    background: radial-gradient(circle at 34% 30%, #f4d27a 0, #c9971f 38%, var(--brand-gold) 62%, #6e4e06 100%);
+    box-shadow: 0 0 22px rgba(201, 151, 31, .55); }
+  @media (prefers-reduced-motion: no-preference) { .nf-pearl.nf-idle { animation: nf-glow 2.4s ease-in-out infinite; } }
+  @keyframes nf-glow { 50% { box-shadow: 0 0 0 8px rgba(169, 122, 12, 0), 0 0 34px rgba(201, 151, 31, .8); } }
+  .nf-tip { position: absolute; right: -6px; bottom: calc(100% + 10px); white-space: nowrap; font: 500 11px var(--font-ui); letter-spacing: .08em; color: var(--muted); background: var(--surface); border: 1px solid var(--border-strong); padding: 4px 8px; border-radius: 2px; opacity: 0; transition: opacity .2s; }
+  .nf-pearl:hover .nf-tip, .nf-pearl:focus-visible .nf-tip { opacity: 1; }
+  .nf-copy { display: grid; gap: 16px; min-width: 0; }
+  .nf-eyebrow { margin: 0; font: 600 12px var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--seiryu); overflow-wrap: anywhere; }
+  .nf-eyebrow code { font: inherit; color: var(--muted); text-transform: none; letter-spacing: .04em; }
+  .nf-copy h1 { margin: 0; font: 400 clamp(2.4rem, 6vw, 4.2rem)/1.02 var(--font-display); letter-spacing: -.01em; text-wrap: balance; color: var(--text); }
+  .nf-copy h1 :global(em) { color: var(--seiryu); }
+  .nf-lede { margin: 0; max-width: 52ch; font: 400 1.06rem/1.6 var(--font-body); color: var(--muted); }
+  .nf-ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .nf-btn { font: 500 12px var(--font-ui); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; padding: 12px 16px; border-radius: 2px; border: 1px solid var(--border-strong); color: var(--text); }
+  .nf-btn:hover { border-color: var(--seiryu); }
+  .nf-btn--p { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .nf-console { min-width: 0; background: var(--surface); border: 1px solid color-mix(in srgb, var(--seiryu) 32%, transparent); border-radius: 2px; font: 400 13px/1.75 var(--font-ui); }
+  .nf-c-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 12px; color: var(--muted); }
+  .nf-c-head b { color: var(--text); font-weight: 500; }
+  .nf-live { display: inline-flex; align-items: center; gap: 7px; color: var(--jade); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+  .nf-live i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .nf-c-body { padding: 12px 16px 4px; max-height: 340px; overflow: auto; overflow-wrap: anywhere; color: var(--text); }
+  .nf-c-body :global(.nf-ln) { white-space: pre-wrap; }
+  .nf-c-body :global(.nf-t) { color: var(--muted); margin-right: .6rem; font-variant-numeric: tabular-nums; }
+  .nf-c-body :global(.nf-w), .nf-c-body :global(a) { color: var(--seiryu); }
+  .nf-c-body :global(.nf-g) { color: var(--brand-gold); }
+  .nf-c-body :global(.nf-ok) { color: var(--jade); }
+  .nf-c-body :global(.nf-warn) { color: var(--build); }
+  .nf-c-body :global(.nf-dim) { color: var(--muted); }
+  .nf-prompt { display: flex; gap: .6rem; align-items: center; padding: 0 16px 12px; }
+  .nf-prompt label { color: var(--jade); white-space: nowrap; }
+  .nf-prompt input { flex: 1; min-width: 0; padding: 2px 0; border: 0; background: none; color: var(--text); font: inherit; caret-color: var(--seiryu); }
+  .nf-prompt input:focus-visible { outline: none; }
+  .nf-prompt:focus-within { box-shadow: inset 2px 0 0 var(--seiryu); }
+  .nf-c-foot { padding: 8px 16px; border-top: 1px solid var(--border-subtle); font-size: 11px; color: var(--muted); }
+  .nf-c-foot kbd { font: inherit; border: 1px solid var(--border-strong); border-radius: 2px; padding: 0 4px; }
+  .nf :is(a, button):focus-visible { outline: 2px solid var(--seiryu); outline-offset: 2px; }
+  @media (max-width: 760px) {
+    .nf-scene { grid-template-columns: minmax(0, 1fr); }
+    .nf-stage { max-width: 240px; margin: 0 auto; }
+  }
+</style>
