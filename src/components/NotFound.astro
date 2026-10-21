@@ -174,6 +174,7 @@ const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
       if (done) return;
       done = true;
       pearl.classList.remove("nf-idle");
+      pearl.classList.add("nf-rolling");
       const p = socketPos();
       const cur = { x: parseFloat(pearl.style.left) + 13, y: parseFloat(pearl.style.top) + 13 };
       const dx = p.x - cur.x, dy = p.y - cur.y, dist = Math.hypot(dx, dy), sc = (2 * p.r) / 26;
@@ -187,9 +188,10 @@ const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
       if (reduce) return finish();
       pearl.animate(
         [
-          { transform: "translate(0,0) rotate(0) scale(1)" },
-          { transform: `translate(${dx * 0.55}px,${dy * 0.55 - 40}px) rotate(${dist * 1.2}deg) scale(${(1 + sc) / 2})`, offset: 0.55 },
-          { transform: `translate(${dx}px,${dy}px) rotate(${dist * 2.2}deg) scale(${sc})` },
+          // no rotation: the highlight is a gradient, so spinning it reads as a wobble
+          { transform: "translate(0,0) scale(1)" },
+          { transform: `translate(${dx * 0.55}px,${dy * 0.55 - Math.min(40, dist * 0.25)}px) scale(${(1 + sc) / 2})`, offset: 0.55 },
+          { transform: `translate(${dx}px,${dy}px) scale(${sc})` },
         ],
         { duration: 1100, easing: "cubic-bezier(.22,1,.36,1)", fill: "forwards" },
       ).finished.then(() => setTimeout(finish, 120));
@@ -273,7 +275,10 @@ const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
   @media (prefers-reduced-motion: no-preference) { .nf-pearl.nf-idle { animation: nf-glow 2.4s ease-in-out infinite; } }
   @keyframes nf-glow { 50% { box-shadow: 0 0 0 8px rgba(169, 122, 12, 0), 0 0 34px rgba(201, 151, 31, .8); } }
   .nf-tip { position: absolute; right: -6px; bottom: calc(100% + 10px); white-space: nowrap; font: 500 11px var(--font-ui); letter-spacing: .08em; color: var(--muted); background: var(--surface); border: 1px solid var(--border-strong); padding: 4px 8px; border-radius: 2px; opacity: 0; transition: opacity .2s; }
-  .nf-pearl:hover .nf-tip, .nf-pearl:focus-visible .nf-tip { opacity: 1; }
+  /* touch keeps :hover after a tap, so the tip only shows for a real pointer or keyboard focus, never while the pearl travels */
+  @media (hover: hover) and (pointer: fine) { .nf-pearl:hover .nf-tip { opacity: 1; } }
+  .nf-pearl:focus-visible .nf-tip { opacity: 1; }
+  .nf-pearl.nf-rolling .nf-tip { display: none; }
   .nf-copy { display: grid; gap: 16px; min-width: 0; }
   .nf-eyebrow { margin: 0; font: 600 12px var(--font-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--seiryu); overflow-wrap: anywhere; }
   .nf-eyebrow code { font: inherit; color: var(--muted); text-transform: none; letter-spacing: .04em; }
