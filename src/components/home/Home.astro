@@ -111,7 +111,7 @@ const data = {
       <div class="layer night">
         <div class="stack">
           <svg class="em" aria-hidden="true"><use href="#emblem" /></svg>
-          <h1 class="big tag"><span class="d">{t.hero.day}</span><span class="n">{t.hero.night}</span></h1>
+          <h1 class="big tag"><span class="d">{t.hero.day}</span>{" "}<span class="n">{t.hero.night}</span></h1>
           <p class="who" set:html={t.hero.whoNight} />
           <div class="ctas"><a class="btn p" href="#enjambre">{t.hero.build}</a><a class="btn" href={blogHref}>{t.hero.read}</a></div>
         </div>
@@ -120,7 +120,7 @@ const data = {
       <div class="layer day" aria-hidden="true">
         <div class="stack">
           <svg class="em"><use href="#emblem" /></svg>
-          <div class="big tag"><span class="d">{t.hero.day}</span><span class="n">{t.hero.night}</span></div>
+          <div class="big tag"><span class="d">{t.hero.day}</span>{" "}<span class="n">{t.hero.night}</span></div>
           <p class="who" set:html={t.hero.whoDay} />
           <div class="ctas"><a class="btn p" href="#enjambre" tabindex="-1">{t.hero.build}</a><a class="btn" href={blogHref} tabindex="-1">{t.hero.read}</a></div>
         </div>
