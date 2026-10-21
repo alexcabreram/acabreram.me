@@ -1,0 +1,5 @@
+# Old standalone About pages: the section now lives on the home page.
+/about     /#sobre     301
+/about/    /#sobre     301
+/es/about  /es/#sobre  301
+/es/about/ /es/#sobre  301
