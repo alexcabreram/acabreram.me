@@ -57,14 +57,6 @@ type Translation = {
     closing: string;
     ctaBlog: string;
   };
-  redirect: {
-    title: string;
-    description: string;
-    label: string;
-    heading: string;
-    bodyPrefix: string;
-    linkText: string;
-  };
 };
 
 export const translations = {
@@ -141,14 +133,6 @@ export const translations = {
       posts: "Posts drafted with AI agents, shipped by a human.",
       closing: "It's not theory — it's practice.",
       ctaBlog: "Read the blog"
-    },
-    redirect: {
-      title: "About — Alex Cabrera",
-      description: "Redirecting to the about section on the homepage.",
-      label: "Redirecting",
-      heading: "Taking you to the full story.",
-      bodyPrefix: "If the redirect does not happen automatically, continue to the",
-      linkText: "about section"
     }
   },
   es: {
@@ -224,14 +208,6 @@ export const translations = {
       posts: "Posts escritos con agentes IA, publicados por un humano.",
       closing: "No es teoría — es práctica.",
       ctaBlog: "Lee el blog"
-    },
-    redirect: {
-      title: "Sobre mí — Alex Cabrera",
-      description: "Redirigiendo a la sección sobre mí de la página principal.",
-      label: "Redirigiendo",
-      heading: "Te llevo a la historia completa.",
-      bodyPrefix: "Si la redirección no ocurre automáticamente, continúa a la",
-      linkText: "sección sobre mí"
     }
   }
 } satisfies Record<Locale, Translation>;
