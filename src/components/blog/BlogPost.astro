@@ -38,11 +38,39 @@ const copy = es
 
 <Layout
   lang={lang}
-  title={`${post.data.title} — acabreram.com`}
+  title={`${post.data.title} — Alex Cabrera`}
   description={post.data.description}
   ogImage={`/og/${post.id}.png`}
   turn={post.data.turn}
   alternates={twin ? { en: postHref(es ? twin : post), es: postHref(es ? post : twin) } : false}
+  ogType="article"
+  article={{ published: post.data.date, modified: post.data.updatedDate, tags: post.data.tags }}
+  schema={[
+    {
+      "@type": "BlogPosting",
+      "@id": new URL(`${postHref(post)}#post`, Astro.site).toString(),
+      "headline": post.data.title,
+      "description": post.data.description,
+      "inLanguage": lang,
+      "datePublished": post.data.date.toISOString(),
+      "dateModified": (post.data.updatedDate ?? post.data.date).toISOString(),
+      "url": new URL(postHref(post), Astro.site).toString(),
+      "mainEntityOfPage": new URL(postHref(post), Astro.site).toString(),
+      "image": new URL(`/og/${post.id}.png`, Astro.site).toString(),
+      "keywords": post.data.tags.join(", "),
+      "author": { "@id": new URL("/#person", Astro.site).toString() },
+      "publisher": { "@id": new URL("/#person", Astro.site).toString() },
+      "isPartOf": { "@id": new URL("/#website", Astro.site).toString() },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": es ? "Inicio" : "Home", "item": new URL(es ? "/es/" : "/", Astro.site).toString() },
+        { "@type": "ListItem", "position": 2, "name": es ? "Escritos" : "Writing", "item": new URL(es ? "/es/blog/" : "/blog/", Astro.site).toString() },
+        { "@type": "ListItem", "position": 3, "name": post.data.title },
+      ],
+    },
+  ]}
 >
   <div class="blog-progress" aria-hidden="true"></div>
 
