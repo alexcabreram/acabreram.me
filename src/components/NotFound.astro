@@ -79,7 +79,8 @@ const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
       $("nf-console").setAttribute("aria-label", t.consoleAria);
     }
 
-    const path = decodeURIComponent(location.pathname);
+    let path = location.pathname;
+    try { path = decodeURIComponent(path); } catch { /* malformed escapes like /100%: show the raw path */ }
     $("nf-path").textContent = path;
     $("nf-path-wrap").hidden = false;
     $("nf-console").hidden = false;
@@ -148,6 +149,8 @@ const paths = [...markSvg.matchAll(/ d="([^"]+)"/g)].map((m) => m[1]);
       if (e.key === "ArrowUp" && hist.length) { e.preventDefault(); hi = Math.max(0, hi - 1); input.value = hist[hi]; }
       else if (e.key === "ArrowDown" && hist.length) { e.preventDefault(); hi = Math.min(hist.length, hi + 1); input.value = hist[hi] ?? ""; }
       else if (e.key === "Tab") {
+        // Shift+Tab, an empty prompt or an already completed command let focus move on (no keyboard trap).
+        if (e.shiftKey || input.value.endsWith(" ")) return;
         const v = input.value.trim();
         if (!v) return;
         const m = CMDS.filter((c) => c.startsWith(v));
